@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "created_at": "2020-01-01T00:00:00+00:00",
+  "created_by": "Synthetic Rule2Test fixture",
+  "policies": [
+    {
+      "label": "v1",
+      "table_id": "DT-eligibility",
+      "version": 1,
+      "hit_policy": "unique",
+      "default_outcome": "deny",
+      "default_amount": null,
+      "default_deductible": null,
+      "currency": null,
+      "as_of": null
+    },
+    {
+      "label": "v2",
+      "table_id": "DT-eligibility",
+      "version": 2,
+      "hit_policy": "unique",
+      "default_outcome": "deny",
+      "default_amount": null,
+      "default_deductible": null,
+      "currency": null,
+      "as_of": null
+    }
+  ],
+  "rules_v1": [
+    {
+      "rule_id": "R-eligibility",
+      "version": 1,
+      "title": "Eligibility",
+      "field": "age",
+      "operator": "ge",
+      "value_type": "integer",
+      "value": 18,
+      "currency": null,
+      "outcome": "allow",
+      "payout_amount": null,
+      "deductible": null,
+      "effective_from": null,
+      "effective_to": null,
+      "quote": "Age from 18 through 60 inclusive is allowed; otherwise denied."
+    },
+    {
+      "rule_id": "R-eligibility",
+      "version": 1,
+      "title": "Eligibility",
+      "field": "age",
+      "operator": "le",
+      "value_type": "integer",
+      "value": 60,
+      "currency": null,
+      "outcome": "allow",
+      "payout_amount": null,
+      "deductible": null,
+      "effective_from": null,
+      "effective_to": null,
+      "quote": "Age from 18 through 60 inclusive is allowed; otherwise denied."
+    }
+  ],
+  "rules_v2": [
+    {
+      "rule_id": "R-eligibility",
+      "version": 2,
+      "title": "Eligibility",
+      "field": "age",
+      "operator": "ge",
+      "value_type": "integer",
+      "value": 18,
+      "currency": null,
+      "outcome": "allow",
+      "payout_amount": null,
+      "deductible": null,
+      "effective_from": null,
+      "effective_to": null,
+      "quote": "Age from 18 through 65 inclusive is allowed; otherwise denied."
+    },
+    {
+      "rule_id": "R-eligibility",
+      "version": 2,
+      "title": "Eligibility",
+      "field": "age",
+      "operator": "le",
+      "value_type": "integer",
+      "value": 65,
+      "currency": null,
+      "outcome": "allow",
+      "payout_amount": null,
+      "deductible": null,
+      "effective_from": null,
+      "effective_to": null,
+      "quote": "Age from 18 through 65 inclusive is allowed; otherwise denied."
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "EXISTING-18",
+      "revision": 1,
+      "title": "Existing age = 18",
+      "inputs_json": [
+        {
+          "field": "age",
+          "kind": "integer",
+          "value": 18,
+          "currency": null
+        }
+      ],
+      "expected_outcome": "allow",
+      "expected_amount": null,
+      "currency": null,
+      "rule_ids": "R-eligibility",
+      "kind": "boundary",
+      "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+    },
+    {
+      "test_id": "EXISTING-60",
+      "revision": 1,
+      "title": "Existing age = 60",
+      "inputs_json": [
+        {
+          "field": "age",
+          "kind": "integer",
+          "value": 60,
+          "currency": null
+        }
+      ],
+      "expected_outcome": "allow",
+      "expected_amount": null,
+      "currency": null,
+      "rule_ids": "R-eligibility",
+      "kind": "boundary",
+      "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+    },
+    {
+      "test_id": "EXISTING-61",
+      "revision": 1,
+      "title": "Existing age = 61",
+      "inputs_json": [
+        {
+          "field": "age",
+          "kind": "integer",
+          "value": 61,
+          "currency": null
+        }
+      ],
+      "expected_outcome": "deny",
+      "expected_amount": null,
+      "currency": null,
+      "rule_ids": "R-eligibility",
+      "kind": "boundary",
+      "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+    }
+  ]
+}

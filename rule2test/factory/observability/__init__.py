@@ -1,0 +1,1 @@
+"""Rule2Test package."""

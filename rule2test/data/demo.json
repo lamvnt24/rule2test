@@ -1,0 +1,57 @@
+{
+  "old": [
+    {
+      "id": "R01",
+      "field": "age",
+      "threshold": 60,
+      "source": "Product A: maximum eligible age is 60."
+    },
+    {
+      "id": "R02",
+      "field": "claim_amount",
+      "threshold": 100000000,
+      "source": "Claims above 100000000 VND require manual review."
+    }
+  ],
+  "new": [
+    {
+      "id": "R01",
+      "field": "age",
+      "threshold": 65,
+      "source": "Product A: maximum eligible age is 65."
+    },
+    {
+      "id": "R02",
+      "field": "claim_amount",
+      "threshold": 150000000,
+      "source": "Claims above 150000000 VND require manual review."
+    }
+  ],
+  "existing": [
+    {
+      "id": "TC01",
+      "rule_id": "R01",
+      "value": 18
+    },
+    {
+      "id": "TC02",
+      "rule_id": "R01",
+      "value": 60
+    },
+    {
+      "id": "TC03",
+      "rule_id": "R01",
+      "value": 61
+    },
+    {
+      "id": "TC04",
+      "rule_id": "R02",
+      "value": 100000000
+    },
+    {
+      "id": "TC05",
+      "rule_id": "R02",
+      "value": 101000000
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[project]
+name = "rule2test"
+version = "0.1.0"
+description = "Insurance rule change to regression evidence hackathon base"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+excel = ["openpyxl==3.1.5", "defusedxml==0.7.1"]

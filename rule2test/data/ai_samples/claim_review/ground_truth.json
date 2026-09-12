@@ -1,0 +1,17 @@
+{
+  "status": "pending_review",
+  "field": "claim_amount",
+  "old_values": [
+    "100000000"
+  ],
+  "new_values": [
+    "150000000"
+  ],
+  "operators": [
+    "gt"
+  ],
+  "outcome": "review",
+  "default": "allow",
+  "old_deductible": null,
+  "new_deductible": null
+}

@@ -1,0 +1,20 @@
+{
+  "status": "pending_review",
+  "field": "age",
+  "old_values": [
+    18,
+    60
+  ],
+  "new_values": [
+    18,
+    65
+  ],
+  "operators": [
+    "ge",
+    "le"
+  ],
+  "outcome": "allow",
+  "default": "deny",
+  "old_deductible": null,
+  "new_deductible": null
+}

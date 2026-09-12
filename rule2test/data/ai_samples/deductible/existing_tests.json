@@ -1,0 +1,40 @@
+[
+  {
+    "test_id": "EXISTING-5000000",
+    "revision": 1,
+    "title": "Existing claim_amount = 5000000",
+    "inputs_json": [
+      {
+        "field": "claim_amount",
+        "kind": "money",
+        "value": "5000000",
+        "currency": "VND"
+      }
+    ],
+    "expected_outcome": "payout",
+    "expected_amount": "0",
+    "currency": "VND",
+    "rule_ids": "R-deductible",
+    "kind": "boundary",
+    "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+  },
+  {
+    "test_id": "EXISTING-5000001",
+    "revision": 1,
+    "title": "Existing claim_amount = 5000001",
+    "inputs_json": [
+      {
+        "field": "claim_amount",
+        "kind": "money",
+        "value": "5000001",
+        "currency": "VND"
+      }
+    ],
+    "expected_outcome": "payout",
+    "expected_amount": "1",
+    "currency": "VND",
+    "rule_ids": "R-deductible",
+    "kind": "boundary",
+    "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+  }
+]

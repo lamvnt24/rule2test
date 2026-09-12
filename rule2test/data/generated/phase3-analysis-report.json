@@ -1,0 +1,3770 @@
+{
+  "approval_mode": "synthetic fixture; services never approve tests",
+  "delta": {
+    "deltas": [
+      {
+        "delta_id": "DELTA-65c9ec5a425611f6693d",
+        "kind": "modified",
+        "before": {
+          "rule_id": "R-eligibility",
+          "version": 1,
+          "title": "eligibility",
+          "conditions": [
+            {
+              "field": "age",
+              "operator": "ge",
+              "value": {
+                "kind": "integer",
+                "data": 18,
+                "currency": null
+              }
+            },
+            {
+              "field": "age",
+              "operator": "le",
+              "value": {
+                "kind": "integer",
+                "data": 60,
+                "currency": null
+              }
+            }
+          ],
+          "action": {
+            "outcome": "allow",
+            "amount": null,
+            "formula": null
+          },
+          "sources": [
+            {
+              "document_id": "eligibility.txt",
+              "document_hash": "d29645d2e39c8852cda56a38f84846235391278b0a19c3c799c39cec3635a69d",
+              "quote": "Age from 18 through 65 inclusive is allowed; otherwise denied.",
+              "sheet": null,
+              "cell": null,
+              "page": null
+            }
+          ],
+          "metadata": {
+            "created_at": {
+              "$datetime": "2020-01-01T00:00:00+00:00"
+            },
+            "created_by": "Synthetic fixture",
+            "schema_version": 1
+          },
+          "effective_from": null,
+          "effective_to": null
+        },
+        "after": {
+          "rule_id": "R-eligibility",
+          "version": 2,
+          "title": "eligibility",
+          "conditions": [
+            {
+              "field": "age",
+              "operator": "ge",
+              "value": {
+                "kind": "integer",
+                "data": 18,
+                "currency": null
+              }
+            },
+            {
+              "field": "age",
+              "operator": "le",
+              "value": {
+                "kind": "integer",
+                "data": 65,
+                "currency": null
+              }
+            }
+          ],
+          "action": {
+            "outcome": "allow",
+            "amount": null,
+            "formula": null
+          },
+          "sources": [
+            {
+              "document_id": "eligibility.txt",
+              "document_hash": "d29645d2e39c8852cda56a38f84846235391278b0a19c3c799c39cec3635a69d",
+              "quote": "Age from 18 through 65 inclusive is allowed; otherwise denied.",
+              "sheet": null,
+              "cell": null,
+              "page": null
+            }
+          ],
+          "metadata": {
+            "created_at": {
+              "$datetime": "2020-01-01T00:00:00+00:00"
+            },
+            "created_by": "Synthetic fixture",
+            "schema_version": 1
+          },
+          "effective_from": null,
+          "effective_to": null
+        },
+        "changed_fields": [
+          "conditions"
+        ],
+        "explanation": "modified rule R-eligibility: conditions"
+      }
+    ],
+    "presentation_only_rule_ids": []
+  },
+  "impact": [
+    {
+      "test_id": "EXISTING-18",
+      "revision": 1,
+      "related": true,
+      "status": "unchanged",
+      "old_expected": {
+        "outcome": "allow",
+        "amount": null,
+        "formula": null
+      },
+      "new_expected": {
+        "outcome": "allow",
+        "amount": null,
+        "formula": null
+      },
+      "expected_is_stale": false,
+      "reason": "Compared deterministic outcomes across table versions"
+    },
+    {
+      "test_id": "EXISTING-60",
+      "revision": 1,
+      "related": true,
+      "status": "unchanged",
+      "old_expected": {
+        "outcome": "allow",
+        "amount": null,
+        "formula": null
+      },
+      "new_expected": {
+        "outcome": "allow",
+        "amount": null,
+        "formula": null
+      },
+      "expected_is_stale": false,
+      "reason": "Compared deterministic outcomes across table versions"
+    },
+    {
+      "test_id": "EXISTING-61",
+      "revision": 1,
+      "related": true,
+      "status": "changed",
+      "old_expected": {
+        "outcome": "deny",
+        "amount": null,
+        "formula": null
+      },
+      "new_expected": {
+        "outcome": "allow",
+        "amount": null,
+        "formula": null
+      },
+      "expected_is_stale": true,
+      "reason": "Compared deterministic outcomes across table versions"
+    }
+  ],
+  "gaps": {
+    "evaluation_date": null,
+    "money_step": {
+      "$decimal": "1"
+    },
+    "table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+    "obligations": [
+      {
+        "obligation_id": "OBL-fcd13de86a9776674cfb",
+        "category": "branch",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "row selected",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 18,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-64af01768a07f9c5f819",
+        "category": "boundary",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "condition 0: age below 18",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 17,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-599cba043efec01c004d",
+        "category": "boundary",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "condition 0: age at 18",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 18,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-e0bb3aee92747af6b867",
+        "category": "boundary",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "condition 0: age above 18",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 19,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-410121d50cea093f1d83",
+        "category": "boundary",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "condition 1: age below 65",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 64,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-a1bae0b6179e07f5cf78",
+        "category": "boundary",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "condition 1: age at 65",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 65,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-ec792c0881f10c697ad9",
+        "category": "boundary",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "condition 1: age above 65",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 66,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-aace3f50719cadf7120b",
+        "category": "exception",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "age: null",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "null",
+              "data": null,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-831494fcffe5107cbd8a",
+        "category": "exception",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "age: missing",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "missing",
+              "data": null,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-96e39fbce07808ddc042",
+        "category": "exception",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "age: negative",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": -1,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-f3a75aefc690e393b689",
+        "category": "exception",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "age: overflow",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 121,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-94df0bde7426ade3fd09",
+        "category": "exception",
+        "rule_id": "R-eligibility",
+        "row_id": "ROW1",
+        "label": "age: wrong_type",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "text",
+              "data": "invalid",
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      },
+      {
+        "obligation_id": "OBL-aeaf24d46eb7acd531cd",
+        "category": "branch",
+        "rule_id": null,
+        "row_id": null,
+        "label": "default selected",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 0,
+              "currency": null
+            }
+          }
+        ],
+        "unresolved_reason": null
+      }
+    ],
+    "covered_ids": [
+      "OBL-fcd13de86a9776674cfb",
+      "OBL-599cba043efec01c004d"
+    ],
+    "missing_ids": [
+      "OBL-64af01768a07f9c5f819",
+      "OBL-e0bb3aee92747af6b867",
+      "OBL-410121d50cea093f1d83",
+      "OBL-a1bae0b6179e07f5cf78",
+      "OBL-ec792c0881f10c697ad9",
+      "OBL-aace3f50719cadf7120b",
+      "OBL-831494fcffe5107cbd8a",
+      "OBL-96e39fbce07808ddc042",
+      "OBL-f3a75aefc690e393b689",
+      "OBL-94df0bde7426ade3fd09",
+      "OBL-aeaf24d46eb7acd531cd"
+    ],
+    "unresolved_ids": [],
+    "search_size": 10
+  },
+  "candidates": {
+    "candidates": [
+      {
+        "test_id": "GEN-89a4f2c934a2ad635ee3",
+        "revision": 1,
+        "title": "Cover age: negative",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": -1,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "invalid",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "exception",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: age: negative",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-96e39fbce07808ddc042"
+        ]
+      },
+      {
+        "test_id": "GEN-d91d8910144a8c73617a",
+        "revision": 1,
+        "title": "Cover default selected",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 0,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "deny",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "positive",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: default selected",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-aeaf24d46eb7acd531cd"
+        ]
+      },
+      {
+        "test_id": "GEN-a829f95bf877cb38fcb5",
+        "revision": 1,
+        "title": "Cover age: overflow",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 121,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "invalid",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "exception",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: age: overflow",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-f3a75aefc690e393b689"
+        ]
+      },
+      {
+        "test_id": "GEN-0f23b76c54d79ec622b0",
+        "revision": 1,
+        "title": "Cover condition 0: age below 18",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 17,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "deny",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "boundary",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: condition 0: age below 18",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-64af01768a07f9c5f819"
+        ]
+      },
+      {
+        "test_id": "GEN-6d75afd33d9a839e5d3b",
+        "revision": 1,
+        "title": "Cover condition 0: age above 18",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 19,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "allow",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "boundary",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: condition 0: age above 18",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-e0bb3aee92747af6b867"
+        ]
+      },
+      {
+        "test_id": "GEN-471bb49adb666a878949",
+        "revision": 1,
+        "title": "Cover condition 1: age below 65",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 64,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "allow",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "boundary",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: condition 1: age below 65",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-410121d50cea093f1d83"
+        ]
+      },
+      {
+        "test_id": "GEN-4b069f3f2eefebfdf4d9",
+        "revision": 1,
+        "title": "Cover condition 1: age at 65",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 65,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "allow",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "boundary",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: condition 1: age at 65",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-a1bae0b6179e07f5cf78"
+        ]
+      },
+      {
+        "test_id": "GEN-55eaaf9c69cb19845f91",
+        "revision": 1,
+        "title": "Cover condition 1: age above 65",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "integer",
+              "data": 66,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "deny",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "boundary",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: condition 1: age above 65",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-ec792c0881f10c697ad9"
+        ]
+      },
+      {
+        "test_id": "GEN-0bd9bc9c5fd15b7d0804",
+        "revision": 1,
+        "title": "Cover age: null",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "null",
+              "data": null,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "invalid",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "exception",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: age: null",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-aace3f50719cadf7120b"
+        ]
+      },
+      {
+        "test_id": "GEN-2da3eb9d7e814ffdc0e0",
+        "revision": 1,
+        "title": "Cover age: wrong_type",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "text",
+              "data": "invalid",
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "invalid",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "exception",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: age: wrong_type",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-94df0bde7426ade3fd09"
+        ]
+      },
+      {
+        "test_id": "GEN-75c05915a5716ce7bf6e",
+        "revision": 1,
+        "title": "Cover age: missing",
+        "inputs": [
+          {
+            "field": "age",
+            "value": {
+              "kind": "missing",
+              "data": null,
+              "currency": null
+            }
+          }
+        ],
+        "expected": {
+          "outcome": "invalid",
+          "amount": null,
+          "formula": null
+        },
+        "kind": "exception",
+        "origin": "deterministic",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+          }
+        ],
+        "rationale": "Requires QA review. Covers: age: missing",
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.284338+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "obligation_ids": [
+          "OBL-831494fcffe5107cbd8a"
+        ]
+      }
+    ],
+    "unresolved_ids": []
+  },
+  "baseline_coverage": {
+    "mode": "designed inputs",
+    "rule": {
+      "covered": 1,
+      "total": 1
+    },
+    "branch": {
+      "covered": 1,
+      "total": 2
+    },
+    "boundary": {
+      "covered": 1,
+      "total": 6
+    },
+    "exception": {
+      "covered": 0,
+      "total": 5
+    },
+    "covered_ids": [
+      "OBL-fcd13de86a9776674cfb",
+      "OBL-599cba043efec01c004d"
+    ],
+    "uncovered_ids": [
+      "OBL-64af01768a07f9c5f819",
+      "OBL-e0bb3aee92747af6b867",
+      "OBL-410121d50cea093f1d83",
+      "OBL-a1bae0b6179e07f5cf78",
+      "OBL-ec792c0881f10c697ad9",
+      "OBL-aace3f50719cadf7120b",
+      "OBL-831494fcffe5107cbd8a",
+      "OBL-96e39fbce07808ddc042",
+      "OBL-f3a75aefc690e393b689",
+      "OBL-94df0bde7426ade3fd09",
+      "OBL-aeaf24d46eb7acd531cd"
+    ],
+    "unresolved_ids": []
+  },
+  "final_design_coverage": {
+    "mode": "designed inputs",
+    "rule": {
+      "covered": 1,
+      "total": 1
+    },
+    "branch": {
+      "covered": 2,
+      "total": 2
+    },
+    "boundary": {
+      "covered": 6,
+      "total": 6
+    },
+    "exception": {
+      "covered": 5,
+      "total": 5
+    },
+    "covered_ids": [
+      "OBL-fcd13de86a9776674cfb",
+      "OBL-64af01768a07f9c5f819",
+      "OBL-599cba043efec01c004d",
+      "OBL-e0bb3aee92747af6b867",
+      "OBL-410121d50cea093f1d83",
+      "OBL-a1bae0b6179e07f5cf78",
+      "OBL-ec792c0881f10c697ad9",
+      "OBL-aace3f50719cadf7120b",
+      "OBL-831494fcffe5107cbd8a",
+      "OBL-96e39fbce07808ddc042",
+      "OBL-f3a75aefc690e393b689",
+      "OBL-94df0bde7426ade3fd09",
+      "OBL-aeaf24d46eb7acd531cd"
+    ],
+    "uncovered_ids": [],
+    "unresolved_ids": []
+  },
+  "baseline_boundary_percent": 16.67,
+  "final_boundary_percent": 100.0,
+  "mutation_score": 100.0,
+  "mutations": {
+    "results": [
+      {
+        "mutation_id": "MUT-6fb79e9cbe2d11b71b50",
+        "rule_id": "R-eligibility",
+        "description": "condition 0: comparator ge -> gt",
+        "status": "killed",
+        "witnesses": [
+          "EXISTING-18@2"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-952a425f6c69729cbdac",
+        "rule_id": "R-eligibility",
+        "description": "condition 0: threshold shift -1 step",
+        "status": "killed",
+        "witnesses": [
+          "GEN-0f23b76c54d79ec622b0@1"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-86338b0b7c65993a869f",
+        "rule_id": "R-eligibility",
+        "description": "condition 0: threshold shift 1 step",
+        "status": "killed",
+        "witnesses": [
+          "EXISTING-18@2"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-b44ed685a0645b8cfa05",
+        "rule_id": "R-eligibility",
+        "description": "condition 1: comparator le -> lt",
+        "status": "killed",
+        "witnesses": [
+          "GEN-4b069f3f2eefebfdf4d9@1"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-2300058afbba19beff04",
+        "rule_id": "R-eligibility",
+        "description": "condition 1: threshold shift -1 step",
+        "status": "killed",
+        "witnesses": [
+          "GEN-4b069f3f2eefebfdf4d9@1"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-a530db6b5c376597fdd8",
+        "rule_id": "R-eligibility",
+        "description": "condition 1: threshold shift 1 step",
+        "status": "killed",
+        "witnesses": [
+          "GEN-55eaaf9c69cb19845f91@1"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-9cbe2f8147745448999f",
+        "rule_id": "R-eligibility",
+        "description": "restore previous conditions/action",
+        "status": "killed",
+        "witnesses": [
+          "EXISTING-61@2",
+          "GEN-471bb49adb666a878949@1",
+          "GEN-4b069f3f2eefebfdf4d9@1"
+        ],
+        "reason": null
+      },
+      {
+        "mutation_id": "MUT-d1173ed683ba804bc008",
+        "rule_id": null,
+        "description": "change default outcome",
+        "status": "killed",
+        "witnesses": [
+          "GEN-0f23b76c54d79ec622b0@1",
+          "GEN-55eaaf9c69cb19845f91@1",
+          "GEN-d91d8910144a8c73617a@1"
+        ],
+        "reason": null
+      }
+    ],
+    "test_count": 14
+  },
+  "runs": [
+    {
+      "fault": "none",
+      "passed": 14,
+      "failed": 0,
+      "errors": 0,
+      "execution_boundary_percent": 100.0,
+      "evidence_hash": "9a9a30e05e0452ab721413609f31692a8485bc846bb24766fa8e10948538f825",
+      "evidence": {
+        "evidence_id": "EV-ANALYSIS-none",
+        "run_id": "ANALYSIS-none",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "title": "eligibility",
+            "conditions": [
+              {
+                "field": "age",
+                "operator": "ge",
+                "value": {
+                  "kind": "integer",
+                  "data": 18,
+                  "currency": null
+                }
+              },
+              {
+                "field": "age",
+                "operator": "le",
+                "value": {
+                  "kind": "integer",
+                  "data": 65,
+                  "currency": null
+                }
+              }
+            ],
+            "action": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "sources": [
+              {
+                "document_id": "eligibility.txt",
+                "document_hash": "d29645d2e39c8852cda56a38f84846235391278b0a19c3c799c39cec3635a69d",
+                "quote": "Age from 18 through 65 inclusive is allowed; otherwise denied.",
+                "sheet": null,
+                "cell": null,
+                "page": null
+              }
+            ],
+            "metadata": {
+              "created_at": {
+                "$datetime": "2020-01-01T00:00:00+00:00"
+              },
+              "created_by": "Synthetic fixture",
+              "schema_version": 1
+            },
+            "effective_from": null,
+            "effective_to": null
+          }
+        ],
+        "tests": [
+          {
+            "test_id": "EXISTING-18",
+            "revision": 2,
+            "title": "Boundary",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 18,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Revision proposal; previous approval is invalid. Explicit synthetic expected, independently specified",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": []
+          },
+          {
+            "test_id": "EXISTING-60",
+            "revision": 2,
+            "title": "Boundary",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 60,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Revision proposal; previous approval is invalid. Explicit synthetic expected, independently specified",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": []
+          },
+          {
+            "test_id": "EXISTING-61",
+            "revision": 2,
+            "title": "Boundary",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 61,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Revision proposal; previous approval is invalid. Explicit synthetic expected, independently specified",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": []
+          },
+          {
+            "test_id": "GEN-89a4f2c934a2ad635ee3",
+            "revision": 1,
+            "title": "Cover age: negative",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": -1,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: negative",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-96e39fbce07808ddc042"
+            ]
+          },
+          {
+            "test_id": "GEN-d91d8910144a8c73617a",
+            "revision": 1,
+            "title": "Cover default selected",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 0,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "positive",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: default selected",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-aeaf24d46eb7acd531cd"
+            ]
+          },
+          {
+            "test_id": "GEN-a829f95bf877cb38fcb5",
+            "revision": 1,
+            "title": "Cover age: overflow",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 121,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: overflow",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-f3a75aefc690e393b689"
+            ]
+          },
+          {
+            "test_id": "GEN-0f23b76c54d79ec622b0",
+            "revision": 1,
+            "title": "Cover condition 0: age below 18",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 17,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 0: age below 18",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-64af01768a07f9c5f819"
+            ]
+          },
+          {
+            "test_id": "GEN-6d75afd33d9a839e5d3b",
+            "revision": 1,
+            "title": "Cover condition 0: age above 18",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 19,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 0: age above 18",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-e0bb3aee92747af6b867"
+            ]
+          },
+          {
+            "test_id": "GEN-471bb49adb666a878949",
+            "revision": 1,
+            "title": "Cover condition 1: age below 65",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 64,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 1: age below 65",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-410121d50cea093f1d83"
+            ]
+          },
+          {
+            "test_id": "GEN-4b069f3f2eefebfdf4d9",
+            "revision": 1,
+            "title": "Cover condition 1: age at 65",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 65,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 1: age at 65",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-a1bae0b6179e07f5cf78"
+            ]
+          },
+          {
+            "test_id": "GEN-55eaaf9c69cb19845f91",
+            "revision": 1,
+            "title": "Cover condition 1: age above 65",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 66,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 1: age above 65",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-ec792c0881f10c697ad9"
+            ]
+          },
+          {
+            "test_id": "GEN-0bd9bc9c5fd15b7d0804",
+            "revision": 1,
+            "title": "Cover age: null",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "null",
+                  "data": null,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: null",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-aace3f50719cadf7120b"
+            ]
+          },
+          {
+            "test_id": "GEN-2da3eb9d7e814ffdc0e0",
+            "revision": 1,
+            "title": "Cover age: wrong_type",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "text",
+                  "data": "invalid",
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: wrong_type",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-94df0bde7426ade3fd09"
+            ]
+          },
+          {
+            "test_id": "GEN-75c05915a5716ce7bf6e",
+            "revision": 1,
+            "title": "Cover age: missing",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "missing",
+                  "data": null,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: missing",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-831494fcffe5107cbd8a"
+            ]
+          }
+        ],
+        "approvals": [
+          {
+            "approval_id": "DEMO-APPROVAL-EXISTING-18",
+            "subject_kind": "test",
+            "subject_id": "EXISTING-18",
+            "revision": 2,
+            "content_hash": "9443509a861017a73cc3d7624caf8ca7fe9ad933cfb0ad23c2e1e6c7a4aa361b",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306287+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-EXISTING-60",
+            "subject_kind": "test",
+            "subject_id": "EXISTING-60",
+            "revision": 2,
+            "content_hash": "681052223476eb35a348c1101ab19954df52e4b6654059845fbb8507d6bb27d9",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306384+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-EXISTING-61",
+            "subject_kind": "test",
+            "subject_id": "EXISTING-61",
+            "revision": 2,
+            "content_hash": "06f3392a487195f4d984fc2d33bbc6756c7dd88fec58a697934a488c2f11a91f",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306466+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-89a4f2c934a2ad635ee3",
+            "subject_kind": "test",
+            "subject_id": "GEN-89a4f2c934a2ad635ee3",
+            "revision": 1,
+            "content_hash": "4a6da367c6ca8e2bb70e396cba6e61b3a4ece1c844c6222b677b0b16b24dd55b",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306548+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-d91d8910144a8c73617a",
+            "subject_kind": "test",
+            "subject_id": "GEN-d91d8910144a8c73617a",
+            "revision": 1,
+            "content_hash": "10af946cf3a4d930b42bfb525afffaebac6431fe9a12284cf5831f75c09c5a05",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306629+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-a829f95bf877cb38fcb5",
+            "subject_kind": "test",
+            "subject_id": "GEN-a829f95bf877cb38fcb5",
+            "revision": 1,
+            "content_hash": "412de0e9617c4035a28ede5521fa9bb51bb00b8e44bcebb36e05f92f71176768",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306708+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-0f23b76c54d79ec622b0",
+            "subject_kind": "test",
+            "subject_id": "GEN-0f23b76c54d79ec622b0",
+            "revision": 1,
+            "content_hash": "a5c8df60474974f125e0fb00636ff8429626bf0c20b8e8c4a78c598a3f254282",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306789+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-6d75afd33d9a839e5d3b",
+            "subject_kind": "test",
+            "subject_id": "GEN-6d75afd33d9a839e5d3b",
+            "revision": 1,
+            "content_hash": "395bc19828462b6fb1b61dacb0d784ad8ee654c2735de64b24f1a2ad4c6df9fc",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306869+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-471bb49adb666a878949",
+            "subject_kind": "test",
+            "subject_id": "GEN-471bb49adb666a878949",
+            "revision": 1,
+            "content_hash": "40fd3fae5e19f7656889416c99e12579b9338e144a69a09ee6d56f5fe1f64c81",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306947+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-4b069f3f2eefebfdf4d9",
+            "subject_kind": "test",
+            "subject_id": "GEN-4b069f3f2eefebfdf4d9",
+            "revision": 1,
+            "content_hash": "a76a172cb15be2cc601a8c50cde04c0af705a740c94ed6217078d30d55ad8c6b",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307026+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-55eaaf9c69cb19845f91",
+            "subject_kind": "test",
+            "subject_id": "GEN-55eaaf9c69cb19845f91",
+            "revision": 1,
+            "content_hash": "dfb0f1a90fb6181e05c5711e2db004f08292a0b99746efdf29fcd74a2b0164a3",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307106+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-0bd9bc9c5fd15b7d0804",
+            "subject_kind": "test",
+            "subject_id": "GEN-0bd9bc9c5fd15b7d0804",
+            "revision": 1,
+            "content_hash": "5411b405c120582c4b8fc9ba3c011b42910bae140004e8b75eaaf4b3c0897855",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307184+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-2da3eb9d7e814ffdc0e0",
+            "subject_kind": "test",
+            "subject_id": "GEN-2da3eb9d7e814ffdc0e0",
+            "revision": 1,
+            "content_hash": "4bf746654554def78b3d48b9089070b91b5ca0cec2724c0cf559e75d38a04d71",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307274+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-75c05915a5716ce7bf6e",
+            "subject_kind": "test",
+            "subject_id": "GEN-75c05915a5716ce7bf6e",
+            "revision": 1,
+            "content_hash": "b15d2bdc93e8c04c2fa23296f30d1191ea56b45ded2a3a1922756ceaa762a324",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307353+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          }
+        ],
+        "executions": [
+          {
+            "execution_id": "2f2ed961-2c2f-4fa1-b1f9-1bcd26894fb0",
+            "run_id": "ANALYSIS-none",
+            "test_id": "EXISTING-18",
+            "test_revision": 2,
+            "test_hash": "9443509a861017a73cc3d7624caf8ca7fe9ad933cfb0ad23c2e1e6c7a4aa361b",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-EXISTING-18",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.377017+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.377602+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "8627ead5-f27a-4db1-abad-77678dfe56ec",
+            "run_id": "ANALYSIS-none",
+            "test_id": "EXISTING-60",
+            "test_revision": 2,
+            "test_hash": "681052223476eb35a348c1101ab19954df52e4b6654059845fbb8507d6bb27d9",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-EXISTING-60",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.377755+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.378349+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "b9a0aa61-2ab9-49ce-b3a4-a9825f1af6ff",
+            "run_id": "ANALYSIS-none",
+            "test_id": "EXISTING-61",
+            "test_revision": 2,
+            "test_hash": "06f3392a487195f4d984fc2d33bbc6756c7dd88fec58a697934a488c2f11a91f",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-EXISTING-61",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.378510+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.379145+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "704ee054-6b6b-45b1-b9ed-bc66eef5a00b",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-89a4f2c934a2ad635ee3",
+            "test_revision": 1,
+            "test_hash": "4a6da367c6ca8e2bb70e396cba6e61b3a4ece1c844c6222b677b0b16b24dd55b",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-89a4f2c934a2ad635ee3",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.379306+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.379717+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "cd61215f-fcf1-4fc5-8114-d3df878fafc3",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-d91d8910144a8c73617a",
+            "test_revision": 1,
+            "test_hash": "10af946cf3a4d930b42bfb525afffaebac6431fe9a12284cf5831f75c09c5a05",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-d91d8910144a8c73617a",
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.379859+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.380359+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "efa6692b-8720-46d9-8208-cadf1795edf2",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-a829f95bf877cb38fcb5",
+            "test_revision": 1,
+            "test_hash": "412de0e9617c4035a28ede5521fa9bb51bb00b8e44bcebb36e05f92f71176768",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-a829f95bf877cb38fcb5",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.380501+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.380868+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "06a577bf-b4db-4843-895d-67b3bff21807",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-0f23b76c54d79ec622b0",
+            "test_revision": 1,
+            "test_hash": "a5c8df60474974f125e0fb00636ff8429626bf0c20b8e8c4a78c598a3f254282",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-0f23b76c54d79ec622b0",
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.381001+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.381425+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "9adc2e77-8ee4-4b17-af68-e6b2f4309bed",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-6d75afd33d9a839e5d3b",
+            "test_revision": 1,
+            "test_hash": "395bc19828462b6fb1b61dacb0d784ad8ee654c2735de64b24f1a2ad4c6df9fc",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-6d75afd33d9a839e5d3b",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.381570+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.382094+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "fe84a9a6-406d-470c-8cde-44c16da84bc6",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-471bb49adb666a878949",
+            "test_revision": 1,
+            "test_hash": "40fd3fae5e19f7656889416c99e12579b9338e144a69a09ee6d56f5fe1f64c81",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-471bb49adb666a878949",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.382228+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.382746+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "3d4fff2b-5e1e-491b-a391-e1a9021fc547",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-4b069f3f2eefebfdf4d9",
+            "test_revision": 1,
+            "test_hash": "a76a172cb15be2cc601a8c50cde04c0af705a740c94ed6217078d30d55ad8c6b",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-4b069f3f2eefebfdf4d9",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.382879+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.383393+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "7c4f91c7-5b57-4c29-9a61-f21a12343217",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-55eaaf9c69cb19845f91",
+            "test_revision": 1,
+            "test_hash": "dfb0f1a90fb6181e05c5711e2db004f08292a0b99746efdf29fcd74a2b0164a3",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-55eaaf9c69cb19845f91",
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.383537+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.384056+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "f7e8e4c2-1267-402b-bb05-7910e3a2bbe4",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-0bd9bc9c5fd15b7d0804",
+            "test_revision": 1,
+            "test_hash": "5411b405c120582c4b8fc9ba3c011b42910bae140004e8b75eaaf4b3c0897855",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-0bd9bc9c5fd15b7d0804",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.384190+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.384546+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "73768fd9-39d3-4c7b-8cbf-e6a8c8dbe3e9",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-2da3eb9d7e814ffdc0e0",
+            "test_revision": 1,
+            "test_hash": "4bf746654554def78b3d48b9089070b91b5ca0cec2724c0cf559e75d38a04d71",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-2da3eb9d7e814ffdc0e0",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.384679+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.385057+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "3d92f02b-4c5c-4511-850c-54e663e2fcbb",
+            "run_id": "ANALYSIS-none",
+            "test_id": "GEN-75c05915a5716ce7bf6e",
+            "test_revision": 1,
+            "test_hash": "b15d2bdc93e8c04c2fa23296f30d1191ea56b45ded2a3a1922756ceaa762a324",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-75c05915a5716ce7bf6e",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/none",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.385205+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.385629+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          }
+        ],
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.404234+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "decision_tables": [
+          {
+            "table_id": "DT-eligibility",
+            "version": 2,
+            "hit_policy": "unique",
+            "rows": [
+              {
+                "row_id": "ROW1",
+                "conditions": [
+                  {
+                    "field": "age",
+                    "operator": "ge",
+                    "value": {
+                      "kind": "integer",
+                      "data": 18,
+                      "currency": null
+                    }
+                  },
+                  {
+                    "field": "age",
+                    "operator": "le",
+                    "value": {
+                      "kind": "integer",
+                      "data": 65,
+                      "currency": null
+                    }
+                  }
+                ],
+                "action": {
+                  "outcome": "allow",
+                  "amount": null,
+                  "formula": null
+                },
+                "rule": {
+                  "rule_id": "R-eligibility",
+                  "version": 2,
+                  "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+                }
+              }
+            ],
+            "default_action": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fault": "boundary",
+      "passed": 13,
+      "failed": 1,
+      "errors": 0,
+      "execution_boundary_percent": 100.0,
+      "evidence_hash": "411f3b56db36b3e464db86f83e633ebfe8c782f58498c46b452c188cf167fcef",
+      "evidence": {
+        "evidence_id": "EV-ANALYSIS-boundary",
+        "run_id": "ANALYSIS-boundary",
+        "rules": [
+          {
+            "rule_id": "R-eligibility",
+            "version": 2,
+            "title": "eligibility",
+            "conditions": [
+              {
+                "field": "age",
+                "operator": "ge",
+                "value": {
+                  "kind": "integer",
+                  "data": 18,
+                  "currency": null
+                }
+              },
+              {
+                "field": "age",
+                "operator": "le",
+                "value": {
+                  "kind": "integer",
+                  "data": 65,
+                  "currency": null
+                }
+              }
+            ],
+            "action": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "sources": [
+              {
+                "document_id": "eligibility.txt",
+                "document_hash": "d29645d2e39c8852cda56a38f84846235391278b0a19c3c799c39cec3635a69d",
+                "quote": "Age from 18 through 65 inclusive is allowed; otherwise denied.",
+                "sheet": null,
+                "cell": null,
+                "page": null
+              }
+            ],
+            "metadata": {
+              "created_at": {
+                "$datetime": "2020-01-01T00:00:00+00:00"
+              },
+              "created_by": "Synthetic fixture",
+              "schema_version": 1
+            },
+            "effective_from": null,
+            "effective_to": null
+          }
+        ],
+        "tests": [
+          {
+            "test_id": "EXISTING-18",
+            "revision": 2,
+            "title": "Boundary",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 18,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Revision proposal; previous approval is invalid. Explicit synthetic expected, independently specified",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": []
+          },
+          {
+            "test_id": "EXISTING-60",
+            "revision": 2,
+            "title": "Boundary",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 60,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Revision proposal; previous approval is invalid. Explicit synthetic expected, independently specified",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": []
+          },
+          {
+            "test_id": "EXISTING-61",
+            "revision": 2,
+            "title": "Boundary",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 61,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Revision proposal; previous approval is invalid. Explicit synthetic expected, independently specified",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": []
+          },
+          {
+            "test_id": "GEN-89a4f2c934a2ad635ee3",
+            "revision": 1,
+            "title": "Cover age: negative",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": -1,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: negative",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-96e39fbce07808ddc042"
+            ]
+          },
+          {
+            "test_id": "GEN-d91d8910144a8c73617a",
+            "revision": 1,
+            "title": "Cover default selected",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 0,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "positive",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: default selected",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-aeaf24d46eb7acd531cd"
+            ]
+          },
+          {
+            "test_id": "GEN-a829f95bf877cb38fcb5",
+            "revision": 1,
+            "title": "Cover age: overflow",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 121,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: overflow",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-f3a75aefc690e393b689"
+            ]
+          },
+          {
+            "test_id": "GEN-0f23b76c54d79ec622b0",
+            "revision": 1,
+            "title": "Cover condition 0: age below 18",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 17,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 0: age below 18",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-64af01768a07f9c5f819"
+            ]
+          },
+          {
+            "test_id": "GEN-6d75afd33d9a839e5d3b",
+            "revision": 1,
+            "title": "Cover condition 0: age above 18",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 19,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 0: age above 18",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-e0bb3aee92747af6b867"
+            ]
+          },
+          {
+            "test_id": "GEN-471bb49adb666a878949",
+            "revision": 1,
+            "title": "Cover condition 1: age below 65",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 64,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 1: age below 65",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-410121d50cea093f1d83"
+            ]
+          },
+          {
+            "test_id": "GEN-4b069f3f2eefebfdf4d9",
+            "revision": 1,
+            "title": "Cover condition 1: age at 65",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 65,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 1: age at 65",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-a1bae0b6179e07f5cf78"
+            ]
+          },
+          {
+            "test_id": "GEN-55eaaf9c69cb19845f91",
+            "revision": 1,
+            "title": "Cover condition 1: age above 65",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "integer",
+                  "data": 66,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "boundary",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: condition 1: age above 65",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-ec792c0881f10c697ad9"
+            ]
+          },
+          {
+            "test_id": "GEN-0bd9bc9c5fd15b7d0804",
+            "revision": 1,
+            "title": "Cover age: null",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "null",
+                  "data": null,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: null",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-aace3f50719cadf7120b"
+            ]
+          },
+          {
+            "test_id": "GEN-2da3eb9d7e814ffdc0e0",
+            "revision": 1,
+            "title": "Cover age: wrong_type",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "text",
+                  "data": "invalid",
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: wrong_type",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-94df0bde7426ade3fd09"
+            ]
+          },
+          {
+            "test_id": "GEN-75c05915a5716ce7bf6e",
+            "revision": 1,
+            "title": "Cover age: missing",
+            "inputs": [
+              {
+                "field": "age",
+                "value": {
+                  "kind": "missing",
+                  "data": null,
+                  "currency": null
+                }
+              }
+            ],
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "kind": "exception",
+            "origin": "deterministic",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "rationale": "Requires QA review. Covers: age: missing",
+            "metadata": {
+              "created_at": {
+                "$datetime": "2026-09-11T12:42:10.284338+00:00"
+              },
+              "created_by": "Synthetic demo",
+              "schema_version": 1
+            },
+            "obligation_ids": [
+              "OBL-831494fcffe5107cbd8a"
+            ]
+          }
+        ],
+        "approvals": [
+          {
+            "approval_id": "DEMO-APPROVAL-EXISTING-18",
+            "subject_kind": "test",
+            "subject_id": "EXISTING-18",
+            "revision": 2,
+            "content_hash": "9443509a861017a73cc3d7624caf8ca7fe9ad933cfb0ad23c2e1e6c7a4aa361b",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306287+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-EXISTING-60",
+            "subject_kind": "test",
+            "subject_id": "EXISTING-60",
+            "revision": 2,
+            "content_hash": "681052223476eb35a348c1101ab19954df52e4b6654059845fbb8507d6bb27d9",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306384+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-EXISTING-61",
+            "subject_kind": "test",
+            "subject_id": "EXISTING-61",
+            "revision": 2,
+            "content_hash": "06f3392a487195f4d984fc2d33bbc6756c7dd88fec58a697934a488c2f11a91f",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306466+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-89a4f2c934a2ad635ee3",
+            "subject_kind": "test",
+            "subject_id": "GEN-89a4f2c934a2ad635ee3",
+            "revision": 1,
+            "content_hash": "4a6da367c6ca8e2bb70e396cba6e61b3a4ece1c844c6222b677b0b16b24dd55b",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306548+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-d91d8910144a8c73617a",
+            "subject_kind": "test",
+            "subject_id": "GEN-d91d8910144a8c73617a",
+            "revision": 1,
+            "content_hash": "10af946cf3a4d930b42bfb525afffaebac6431fe9a12284cf5831f75c09c5a05",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306629+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-a829f95bf877cb38fcb5",
+            "subject_kind": "test",
+            "subject_id": "GEN-a829f95bf877cb38fcb5",
+            "revision": 1,
+            "content_hash": "412de0e9617c4035a28ede5521fa9bb51bb00b8e44bcebb36e05f92f71176768",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306708+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-0f23b76c54d79ec622b0",
+            "subject_kind": "test",
+            "subject_id": "GEN-0f23b76c54d79ec622b0",
+            "revision": 1,
+            "content_hash": "a5c8df60474974f125e0fb00636ff8429626bf0c20b8e8c4a78c598a3f254282",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306789+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-6d75afd33d9a839e5d3b",
+            "subject_kind": "test",
+            "subject_id": "GEN-6d75afd33d9a839e5d3b",
+            "revision": 1,
+            "content_hash": "395bc19828462b6fb1b61dacb0d784ad8ee654c2735de64b24f1a2ad4c6df9fc",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306869+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-471bb49adb666a878949",
+            "subject_kind": "test",
+            "subject_id": "GEN-471bb49adb666a878949",
+            "revision": 1,
+            "content_hash": "40fd3fae5e19f7656889416c99e12579b9338e144a69a09ee6d56f5fe1f64c81",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.306947+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-4b069f3f2eefebfdf4d9",
+            "subject_kind": "test",
+            "subject_id": "GEN-4b069f3f2eefebfdf4d9",
+            "revision": 1,
+            "content_hash": "a76a172cb15be2cc601a8c50cde04c0af705a740c94ed6217078d30d55ad8c6b",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307026+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-55eaaf9c69cb19845f91",
+            "subject_kind": "test",
+            "subject_id": "GEN-55eaaf9c69cb19845f91",
+            "revision": 1,
+            "content_hash": "dfb0f1a90fb6181e05c5711e2db004f08292a0b99746efdf29fcd74a2b0164a3",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307106+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-0bd9bc9c5fd15b7d0804",
+            "subject_kind": "test",
+            "subject_id": "GEN-0bd9bc9c5fd15b7d0804",
+            "revision": 1,
+            "content_hash": "5411b405c120582c4b8fc9ba3c011b42910bae140004e8b75eaaf4b3c0897855",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307184+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-2da3eb9d7e814ffdc0e0",
+            "subject_kind": "test",
+            "subject_id": "GEN-2da3eb9d7e814ffdc0e0",
+            "revision": 1,
+            "content_hash": "4bf746654554def78b3d48b9089070b91b5ca0cec2724c0cf559e75d38a04d71",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307274+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          },
+          {
+            "approval_id": "DEMO-APPROVAL-GEN-75c05915a5716ce7bf6e",
+            "subject_kind": "test",
+            "subject_id": "GEN-75c05915a5716ce7bf6e",
+            "revision": 1,
+            "content_hash": "b15d2bdc93e8c04c2fa23296f30d1191ea56b45ded2a3a1922756ceaa762a324",
+            "reviewer": "Synthetic demo reviewer",
+            "decision": "approved",
+            "decided_at": {
+              "$datetime": "2026-09-11T12:42:10.307353+00:00"
+            },
+            "reason": "Scripted synthetic fixture; not a real QA approval"
+          }
+        ],
+        "executions": [
+          {
+            "execution_id": "c6c6240d-1c8d-4816-955c-7ab16d301590",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "EXISTING-18",
+            "test_revision": 2,
+            "test_hash": "9443509a861017a73cc3d7624caf8ca7fe9ad933cfb0ad23c2e1e6c7a4aa361b",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-EXISTING-18",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.409005+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.409828+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "ce9b1607-0f47-4638-bd77-6d82ef3a8234",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "EXISTING-60",
+            "test_revision": 2,
+            "test_hash": "681052223476eb35a348c1101ab19954df52e4b6654059845fbb8507d6bb27d9",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-EXISTING-60",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.410013+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.410730+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "3f0c23e4-245f-4573-ab5d-a329d8f7073f",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "EXISTING-61",
+            "test_revision": 2,
+            "test_hash": "06f3392a487195f4d984fc2d33bbc6756c7dd88fec58a697934a488c2f11a91f",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-EXISTING-61",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.410912+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.411609+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "b15dbaa5-012d-4644-a3b3-5bc86d437e73",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-89a4f2c934a2ad635ee3",
+            "test_revision": 1,
+            "test_hash": "4a6da367c6ca8e2bb70e396cba6e61b3a4ece1c844c6222b677b0b16b24dd55b",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-89a4f2c934a2ad635ee3",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.411782+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.412418+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "57844fc3-a127-45a6-8f6c-80c0b9d27a29",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-d91d8910144a8c73617a",
+            "test_revision": 1,
+            "test_hash": "10af946cf3a4d930b42bfb525afffaebac6431fe9a12284cf5831f75c09c5a05",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-d91d8910144a8c73617a",
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.412613+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.413611+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "2ad1adfb-6a66-461c-89c0-5f33d6de1693",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-a829f95bf877cb38fcb5",
+            "test_revision": 1,
+            "test_hash": "412de0e9617c4035a28ede5521fa9bb51bb00b8e44bcebb36e05f92f71176768",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-a829f95bf877cb38fcb5",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.413814+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.414302+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "ad1852c3-aaec-4660-9e44-b7060a7b8ec6",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-0f23b76c54d79ec622b0",
+            "test_revision": 1,
+            "test_hash": "a5c8df60474974f125e0fb00636ff8429626bf0c20b8e8c4a78c598a3f254282",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-0f23b76c54d79ec622b0",
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.414458+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.414906+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "1d5fcf14-c21d-4148-a6b7-91e184668be0",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-6d75afd33d9a839e5d3b",
+            "test_revision": 1,
+            "test_hash": "395bc19828462b6fb1b61dacb0d784ad8ee654c2735de64b24f1a2ad4c6df9fc",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-6d75afd33d9a839e5d3b",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.415038+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.415563+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "584bbc67-d9e7-4626-90d2-48c31d203583",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-471bb49adb666a878949",
+            "test_revision": 1,
+            "test_hash": "40fd3fae5e19f7656889416c99e12579b9338e144a69a09ee6d56f5fe1f64c81",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-471bb49adb666a878949",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.415697+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.416216+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "38a578ac-2e4e-44b5-b549-bda0d8cce94a",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-4b069f3f2eefebfdf4d9",
+            "test_revision": 1,
+            "test_hash": "a76a172cb15be2cc601a8c50cde04c0af705a740c94ed6217078d30d55ad8c6b",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-4b069f3f2eefebfdf4d9",
+            "expected": {
+              "outcome": "allow",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "fail",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.416349+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.416879+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "489470c5-e6db-47ea-bfda-d17b30f7e218",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-55eaaf9c69cb19845f91",
+            "test_revision": 1,
+            "test_hash": "dfb0f1a90fb6181e05c5711e2db004f08292a0b99746efdf29fcd74a2b0164a3",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-55eaaf9c69cb19845f91",
+            "expected": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.417017+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.417548+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "e3d199f0-d0ae-4f79-ae6f-fd770df343e2",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-0bd9bc9c5fd15b7d0804",
+            "test_revision": 1,
+            "test_hash": "5411b405c120582c4b8fc9ba3c011b42910bae140004e8b75eaaf4b3c0897855",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-0bd9bc9c5fd15b7d0804",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.417681+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.418038+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "a44f5163-1b58-41c0-94a4-0345cf3b4275",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-2da3eb9d7e814ffdc0e0",
+            "test_revision": 1,
+            "test_hash": "4bf746654554def78b3d48b9089070b91b5ca0cec2724c0cf559e75d38a04d71",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-2da3eb9d7e814ffdc0e0",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.418173+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.418525+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          },
+          {
+            "execution_id": "746879a8-f8db-4981-804d-53236b20650e",
+            "run_id": "ANALYSIS-boundary",
+            "test_id": "GEN-75c05915a5716ce7bf6e",
+            "test_revision": 1,
+            "test_hash": "b15d2bdc93e8c04c2fa23296f30d1191ea56b45ded2a3a1922756ceaa762a324",
+            "rules": [
+              {
+                "rule_id": "R-eligibility",
+                "version": 2,
+                "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+              }
+            ],
+            "approval_id": "DEMO-APPROVAL-GEN-75c05915a5716ce7bf6e",
+            "expected": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "actual": {
+              "outcome": "invalid",
+              "amount": null,
+              "formula": null
+            },
+            "status": "pass",
+            "adapter": "mock-insurance-v2/eligibility/boundary",
+            "started_at": {
+              "$datetime": "2026-09-11T12:42:10.418658+00:00"
+            },
+            "finished_at": {
+              "$datetime": "2026-09-11T12:42:10.419024+00:00"
+            },
+            "error": null,
+            "decision_table_hash": "855474a2fa1d6a8ff1234445539ee42eebb16911c88cacd6463ce08fbf262679",
+            "evaluation_date": null
+          }
+        ],
+        "metadata": {
+          "created_at": {
+            "$datetime": "2026-09-11T12:42:10.433872+00:00"
+          },
+          "created_by": "Synthetic demo",
+          "schema_version": 1
+        },
+        "decision_tables": [
+          {
+            "table_id": "DT-eligibility",
+            "version": 2,
+            "hit_policy": "unique",
+            "rows": [
+              {
+                "row_id": "ROW1",
+                "conditions": [
+                  {
+                    "field": "age",
+                    "operator": "ge",
+                    "value": {
+                      "kind": "integer",
+                      "data": 18,
+                      "currency": null
+                    }
+                  },
+                  {
+                    "field": "age",
+                    "operator": "le",
+                    "value": {
+                      "kind": "integer",
+                      "data": 65,
+                      "currency": null
+                    }
+                  }
+                ],
+                "action": {
+                  "outcome": "allow",
+                  "amount": null,
+                  "formula": null
+                },
+                "rule": {
+                  "rule_id": "R-eligibility",
+                  "version": 2,
+                  "rule_hash": "a26a7cc36aae96df5486120bb8aad702c1a269c4e5e59a47ad34dab6ed2f3354"
+                }
+              }
+            ],
+            "default_action": {
+              "outcome": "deny",
+              "amount": null,
+              "formula": null
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

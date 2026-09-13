@@ -1,5 +1,7 @@
-"""base module.
-
-Architecture scaffold: implementation pending.
-The running demo currently uses factory.core and factory.server.
-"""
+"""Embedding contract. Identity must change when model or preprocessing changes."""
+from typing import Protocol
+class EmbeddingProvider(Protocol):
+    identity: str
+    dimensions: int
+    simulated: bool
+    def embed(self,texts: tuple[str,...]) -> tuple[tuple[float,...],...]: ...

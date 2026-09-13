@@ -20,6 +20,17 @@ The original Ollama adapter validates supported threshold fields and literal sou
 
 ## Remaining work
 
-Authenticated reviewer identity, role enforcement, cloud providers, semantic retrieval, broader adversarial evaluation, signed evidence and stronger audit storage are not implemented. Hashes do not prevent an administrator rewriting content and hashes.
+Authenticated reviewer identity, role enforcement, cloud providers, broader semantic/adversarial evaluation, signed evidence and stronger audit storage are not implemented. Hashes do not prevent an administrator rewriting content and hashes.
 
 Use synthetic data for the hackathon demo. Never commit secrets. See [AI_EXTRACTION.md](AI_EXTRACTION.md) for executable commands, supported input and limitations.
+
+## Phase 7 retrieval
+
+- Corpus scope is explicit; rule/test reviews are independently checked and revalidated at search/proposal/attachment.
+- Old expected results are never authoritative for a new policy. The current oracle supplies candidate expected values.
+- Only IDs in the actual retrieved context can be cited; schema validation rejects provider-supplied expected values and approvals.
+- Canonical input deduplication removes repeated cases. Missing-gap claims require matching deterministic obligations.
+- Candidate attachment archives the batch/corpus atomically and creates no approvals.
+- Mock lexical embeddings and scripted suggestions are labeled simulated; three-query fixture metrics are not semantic accuracy.
+- Embedding model revision is operator-declared. Change it and rebuild after changing weights/preprocessing.
+- Reviewer authentication, cross-tenant authorization and signed evidence remain unimplemented.

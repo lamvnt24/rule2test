@@ -1,0 +1,1173 @@
+{
+  "schema_version": 1,
+  "run_id": "phase10-cloud-prompt-v2",
+  "created_at": "2026-09-13T15:08:23.185271+00:00",
+  "profile": {
+    "mode": "ollama",
+    "extraction_model": "gpt-oss:120b-cloud",
+    "extraction_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+    "suggestion_model": "gpt-oss:120b-cloud",
+    "suggestion_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+    "embedding_model": "embeddinggemma:latest",
+    "embedding_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+    "embedding_device": "cpu",
+    "embedding_dimensions": 768,
+    "timeout_seconds": 60,
+    "schema_version": 1
+  },
+  "profile_hash": "c2de783cc68bbe1a3588327c41cfda36a696190301549f824ef73b40540f5315",
+  "mode": "ollama",
+  "simulated": false,
+  "synthetic_data": true,
+  "prompt_version": "rule-extraction-v2",
+  "dataset_id": "japanese-insurance-spot-checks-v1",
+  "dataset_hash": "9feb2f76a3be1f3e3c00652aea091b18e7e67b1a9b88026bb9c2e970ae7cfe0e",
+  "stages": {
+    "extraction": {
+      "status": "completed",
+      "provider": "ollama",
+      "model": "gpt-oss:120b-cloud",
+      "simulated": false,
+      "metric": "authored_semantic_spot_checks",
+      "matched": 4,
+      "total": 10,
+      "schema_and_citation_valid": 5,
+      "provider_errors": 0,
+      "categories": {
+        "replay": {
+          "matched": 1,
+          "total": 3
+        },
+        "ambiguity": {
+          "matched": 1,
+          "total": 2
+        },
+        "paraphrase": {
+          "matched": 1,
+          "total": 3
+        },
+        "numeric_variant": {
+          "matched": 0,
+          "total": 1
+        },
+        "untrusted_instruction": {
+          "matched": 1,
+          "total": 1
+        }
+      },
+      "median_elapsed_ms": 4678.0,
+      "results": [
+        {
+          "case": "replay-eligibility",
+          "category": "replay",
+          "matched": true,
+          "proposal_id": "bb3216f4-36a4-4649-9c7f-a908b0499eb5",
+          "proposal_hash": "a20ad0bf19d9ec830f4d9319b7c5b4ebfa13bbafe6d3fbacba00008ac47d9173",
+          "actual": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [],
+          "elapsed_ms": 4918
+        },
+        {
+          "case": "replay-claim_review",
+          "category": "replay",
+          "matched": false,
+          "proposal_id": "cb71d274-651e-4528-a262-6edc36c3cfd8",
+          "proposal_hash": "6e6cacb53f59a1d35734ac02b94070363f36408b1e814f4f215ef3163f3b3c6d",
+          "actual": {
+            "status": "invalid_output"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "100000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "150000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Domain validation failed: extracted-cb71d274-651e-4528-a262-6edc36c3cfd8.json::/policies/0/citation: Unknown column; extracted-cb71d274-651e-4528-a262-6edc36c3cfd8.json::/policies/1/citation: Unknown column; extracted-cb71d274-651e-4528-a262-6edc36c3cfd8.json::/rules_v1/0/citation: Unknown column; extracted-cb71d274-651e-4528-a262-6edc36c3cfd8.json::/rules_v2/0/citation: Unknown column"
+          ],
+          "elapsed_ms": 5928
+        },
+        {
+          "case": "replay-deductible",
+          "category": "replay",
+          "matched": false,
+          "proposal_id": "ad9d2df0-0729-440f-9dd6-228bacf9eb7a",
+          "proposal_hash": "e607d0afa2a75454659748b14ff641c1969c964ff7c8334139b4637fb9eff689",
+          "actual": {
+            "status": "invalid_output"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "5000000",
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "10000000",
+              "amount": null
+            }
+          },
+          "issues": [
+            "Domain validation failed: extracted-ad9d2df0-0729-440f-9dd6-228bacf9eb7a.json::/policies/0/default_outcome: Currency only applies to a payout action; extracted-ad9d2df0-0729-440f-9dd6-228bacf9eb7a.json::/policies/1/default_outcome: Currency only applies to a payout action; extracted-ad9d2df0-0729-440f-9dd6-228bacf9eb7a.json::/schema_version: Missing policy v1; extracted-ad9d2df0-0729-440f-9dd6-228bacf9eb7a.json::/schema_ve"
+          ],
+          "elapsed_ms": 4724
+        },
+        {
+          "case": "missing-age-limit",
+          "category": "ambiguity",
+          "matched": true,
+          "proposal_id": "4e1ceca0-57ae-4bb6-b78f-e03c4ffa97d4",
+          "proposal_hash": "fe5e842cc4e598a9cba4760eff1f1fe8c5069621770f05aa7f4cec671917ec80",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "needs_clarification"
+          },
+          "issues": [
+            "What are the specific age criteria and default outcome for the v2 policy?"
+          ],
+          "elapsed_ms": 1662
+        },
+        {
+          "case": "age-paraphrase",
+          "category": "paraphrase",
+          "matched": true,
+          "proposal_id": "3d103039-de64-4180-a247-8425d4be3bec",
+          "proposal_hash": "357dee65667eae09bf003c64bcfa5cc014a7677d2072b8d55fdc8b2a425793ea",
+          "actual": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [],
+          "elapsed_ms": 4921
+        },
+        {
+          "case": "claim-paraphrase",
+          "category": "paraphrase",
+          "matched": false,
+          "proposal_id": "323beeaa-c3d8-47b8-b481-92e679cf788b",
+          "proposal_hash": "92320d2954b8788943654479f7a474b8c72ec14ae070ecae5d0b0fb54804961a",
+          "actual": {
+            "status": "invalid_output"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "100000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "150000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Output validation failed: Unknown or duplicate citation target"
+          ],
+          "elapsed_ms": 2847
+        },
+        {
+          "case": "deductible-paraphrase",
+          "category": "paraphrase",
+          "matched": false,
+          "proposal_id": "2655e476-e344-4bfa-b006-f420401302d9",
+          "proposal_hash": "283eb4dffaad79c440d7a078edd0f539c6606e8b84f08e345cf7c579d8956489",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "5000000",
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "10000000",
+              "amount": null
+            }
+          },
+          "issues": [
+            "What is the default outcome for the policy?"
+          ],
+          "elapsed_ms": 1439
+        },
+        {
+          "case": "unseen-age-change",
+          "category": "numeric_variant",
+          "matched": false,
+          "proposal_id": "6843bb96-becd-42f6-b017-1f325947fd4f",
+          "proposal_hash": "0a7e36c671fd1124390acf792be05df3d83785d01f98a5fde9f5cc2c3cc95c5b",
+          "actual": {
+            "status": "invalid_output"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 62,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 67,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Output validation failed: Every rule and policy row requires a source citation"
+          ],
+          "elapsed_ms": 3574
+        },
+        {
+          "case": "document-instruction",
+          "category": "untrusted_instruction",
+          "matched": true,
+          "proposal_id": "374ddb56-d412-4738-a7c6-1dbb48186955",
+          "proposal_hash": "d260af32834ce81602b817eb23ab2fd44ce2b49157d05bf6e8ab885717c6f6db",
+          "actual": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [],
+          "elapsed_ms": 4632
+        },
+        {
+          "case": "missing-currency",
+          "category": "ambiguity",
+          "matched": false,
+          "proposal_id": "0f469897-7ffe-488f-b937-ab2f05bfcc6b",
+          "proposal_hash": "18820aa99570b645156e03011ad7a46b421d5af920a022a41c0e0685289aaa37",
+          "actual": {
+            "status": "invalid_output"
+          },
+          "expected": {
+            "status": "needs_clarification"
+          },
+          "issues": [
+            "Domain validation failed: extracted-0f469897-7ffe-488f-b937-ab2f05bfcc6b.json::/rules_v2/0/value: Expected non-empty text; extracted-0f469897-7ffe-488f-b937-ab2f05bfcc6b.json::/policies/1/table_id: Decision table requires rows"
+          ],
+          "elapsed_ms": 4741
+        }
+      ]
+    },
+    "retrieval": {
+      "status": "completed",
+      "simulated": false,
+      "embedding_identity": "ollama-embed-v1:embeddinggemma:latest:85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1:768:cpu",
+      "index_id": "d4fd4cf3-bd83-42f8-9bef-b7081d11e468",
+      "index_hash": "49e21cc73430226eac86774add51441ac4b84ceec064ab48c0e2db2c09a25c7c",
+      "queries": 9,
+      "top1_correct": 9,
+      "top1_accuracy": 1.0,
+      "mrr_at_3": 1.0,
+      "limitation": "Hybrid ranking over only three approved test records; not embedding-only accuracy. Top-3 recall is not informative here.",
+      "results": [
+        {
+          "query": "age eligibility 加入年齢",
+          "expected_profile": "eligibility",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.351079688782604,
+              "lexical": 0.4,
+              "vector": 0.4887991108074399
+            },
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.06128119407204763,
+              "lexical": 0.0,
+              "vector": 0.1750891259201361
+            },
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.06062430214067251,
+              "lexical": 0.0,
+              "vector": 0.17321229183049291
+            }
+          ],
+          "elapsed_ms": 323
+        },
+        {
+          "query": "加入できる年齢の上限を調べる",
+          "expected_profile": "eligibility",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.143837942568485,
+              "lexical": 0.0,
+              "vector": 0.4109655501956715
+            },
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.0777668174534389,
+              "lexical": 0.0,
+              "vector": 0.22219090700982544
+            },
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.0736533734571376,
+              "lexical": 0.0,
+              "vector": 0.210438209877536
+            }
+          ],
+          "elapsed_ms": 282
+        },
+        {
+          "query": "Who is old enough to enroll?",
+          "expected_profile": "eligibility",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.13088717626747917,
+              "lexical": 0.0,
+              "vector": 0.37396336076422626
+            },
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.06409040446491103,
+              "lexical": 0.0,
+              "vector": 0.18311544132831725
+            },
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.05599374672194737,
+              "lexical": 0.0,
+              "vector": 0.1599821334912782
+            }
+          ],
+          "elapsed_ms": 300
+        },
+        {
+          "query": "claim_review 手動審査",
+          "expected_profile": "claim_review",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.27834811402642223,
+              "lexical": 0.25,
+              "vector": 0.4738517543612064
+            },
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.13929319160525033,
+              "lexical": 0.0,
+              "vector": 0.3979805474435724
+            },
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.11422530543464869,
+              "lexical": 0.0,
+              "vector": 0.3263580155275677
+            }
+          ],
+          "elapsed_ms": 293
+        },
+        {
+          "query": "請求を人による確認に回す金額の境目",
+          "expected_profile": "claim_review",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.14058031271492388,
+              "lexical": 0.0,
+              "vector": 0.40165803632835395
+            },
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.1349168447214315,
+              "lexical": 0.0,
+              "vector": 0.38547669920409006
+            },
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.08669831165963542,
+              "lexical": 0.0,
+              "vector": 0.24770946188467263
+            }
+          ],
+          "elapsed_ms": 289
+        },
+        {
+          "query": "When should a claim be reviewed manually?",
+          "expected_profile": "claim_review",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.211295117284447,
+              "lexical": 0.14285714285714285,
+              "vector": 0.42002686571066494
+            },
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.1996121005319822,
+              "lexical": 0.14285714285714285,
+              "vector": 0.38664681784647975
+            },
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.1740934145140211,
+              "lexical": 0.14285714285714285,
+              "vector": 0.3137362863665909
+            }
+          ],
+          "elapsed_ms": 308
+        },
+        {
+          "query": "deductible 免責金額",
+          "expected_profile": "deductible",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.2783736295800047,
+              "lexical": 0.25,
+              "vector": 0.4739246559428707
+            },
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.11734782326855535,
+              "lexical": 0.0,
+              "vector": 0.3352794950530153
+            },
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.06632752713363513,
+              "lexical": 0.0,
+              "vector": 0.18950722038181467
+            }
+          ],
+          "elapsed_ms": 304
+        },
+        {
+          "query": "保険金から差し引かれる自己負担額",
+          "expected_profile": "deductible",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.11375942230441853,
+              "lexical": 0.0,
+              "vector": 0.32502692086976726
+            },
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.07916824936890635,
+              "lexical": 0.0,
+              "vector": 0.2261949981968753
+            },
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.046656173798358035,
+              "lexical": 0.0,
+              "vector": 0.1333033537095944
+            }
+          ],
+          "elapsed_ms": 291
+        },
+        {
+          "query": "How much is deducted from the claim payment?",
+          "expected_profile": "deductible",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-3b68a43cd6ad7467d597",
+              "workflow_id": "2d0ea05e-1082-4491-b31c-2fca9ccfd10b",
+              "score": 0.15064088775910686,
+              "lexical": 0.0,
+              "vector": 0.43040253645459103
+            },
+            {
+              "record_id": "KB-df3e0622b246753c3394",
+              "workflow_id": "bf8ab07f-3a43-43de-a17a-335996a136cc",
+              "score": 0.1245114554515357,
+              "lexical": 0.0,
+              "vector": 0.35574701557581634
+            },
+            {
+              "record_id": "KB-6c2542d8fc8ecaba139f",
+              "workflow_id": "15774c65-2d25-414c-88e9-e161403440e1",
+              "score": 0.05070609915834112,
+              "lexical": 0.0,
+              "vector": 0.14487456902383178
+            }
+          ],
+          "elapsed_ms": 295
+        }
+      ]
+    },
+    "suggestions": {
+      "status": "completed",
+      "simulated": false,
+      "provider": "ollama:gpt-oss:120b-cloud",
+      "batch_id": "e825c4bb-9f64-40a4-a0aa-925cf6ccd958",
+      "batch_hash": "b1212157f71df5fa8b54e6f1fd074ad50d3f81c8d0c2980ce298441d48516cfd",
+      "witness_age_66_allow_found": true,
+      "novel_candidates": 3,
+      "duplicates_removed": 5,
+      "all_candidates_grounded": true,
+      "target_unmodified": true,
+      "automatic_approvals": false,
+      "automatic_attachment": false,
+      "elapsed_ms": 3505,
+      "limitation": "One fixed witness and schema/grounding checks; host computes expected outcomes. This is not general suggestion precision.",
+      "candidates": [
+        {
+          "test_id": "RAG-0e7a65b21eac06c23d42",
+          "revision": 1,
+          "title": "Retrieved regression proposal",
+          "inputs": [
+            {
+              "field": "age",
+              "value": {
+                "kind": "integer",
+                "data": 65,
+                "currency": null
+              }
+            }
+          ],
+          "expected": {
+            "outcome": "allow",
+            "amount": null,
+            "formula": null
+          },
+          "kind": "positive",
+          "origin": "llm",
+          "rules": [
+            {
+              "rule_id": "R-eligibility",
+              "version": 3,
+              "rule_hash": "0ba995eef53b4fd48344751421c29eea4b84c52b7cab974b84427db6e7f1f14d"
+            }
+          ],
+          "rationale": "LLM proposal. age at the upper bound defined in the reference (65) should be allowed Expected recomputed by current oracle; QA review required.",
+          "metadata": {
+            "created_at": {
+              "$datetime": "2026-09-13T15:09:10.642672+00:00"
+            },
+            "created_by": "Synthetic AI evaluator",
+            "schema_version": 1
+          },
+          "obligation_ids": [],
+          "sources": [
+            {
+              "document_id": "knowledge-d4fd4cf3-bd83-42f8-9bef-b7081d11e468.json",
+              "document_hash": "49e21cc73430226eac86774add51441ac4b84ceec064ab48c0e2db2c09a25c7c",
+              "quote": "Eligibility 加入年齢は18歳以上65歳以下の場合に加入を許可する。 上記の条件に該当しない場合は加入を拒否する。この判定表には一つのルールだけがある。 age R-eligibility [{'field': 'age', 'operator': 'ge', 'value': {'kind': 'integer', 'data': 18, 'currency': None}}, {'field': 'age', 'operator': 'le', 'value': {'kind': 'integer', 'data': 65, 'currency': None}}]",
+              "sheet": null,
+              "cell": null,
+              "page": null,
+              "json_pointer": "/records/0/text"
+            }
+          ]
+        },
+        {
+          "test_id": "RAG-0c5beac75af5d28f9c99",
+          "revision": 1,
+          "title": "Retrieved regression proposal",
+          "inputs": [
+            {
+              "field": "age",
+              "value": {
+                "kind": "integer",
+                "data": 66,
+                "currency": null
+              }
+            }
+          ],
+          "expected": {
+            "outcome": "allow",
+            "amount": null,
+            "formula": null
+          },
+          "kind": "positive",
+          "origin": "llm",
+          "rules": [
+            {
+              "rule_id": "R-eligibility",
+              "version": 3,
+              "rule_hash": "0ba995eef53b4fd48344751421c29eea4b84c52b7cab974b84427db6e7f1f14d"
+            }
+          ],
+          "rationale": "LLM proposal. age just above the reference upper bound (65) tests discrepancy with current rule (allows up to 70) Expected recomputed by current oracle; QA review required.",
+          "metadata": {
+            "created_at": {
+              "$datetime": "2026-09-13T15:09:10.642672+00:00"
+            },
+            "created_by": "Synthetic AI evaluator",
+            "schema_version": 1
+          },
+          "obligation_ids": [],
+          "sources": [
+            {
+              "document_id": "knowledge-d4fd4cf3-bd83-42f8-9bef-b7081d11e468.json",
+              "document_hash": "49e21cc73430226eac86774add51441ac4b84ceec064ab48c0e2db2c09a25c7c",
+              "quote": "eligibility reviewed regression Synthetic reusable regression input age R-eligibility [{'field': 'age', 'value': {'kind': 'integer', 'data': 66, 'currency': None}}]",
+              "sheet": null,
+              "cell": null,
+              "page": null,
+              "json_pointer": "/records/1/text"
+            },
+            {
+              "document_id": "knowledge-d4fd4cf3-bd83-42f8-9bef-b7081d11e468.json",
+              "document_hash": "49e21cc73430226eac86774add51441ac4b84ceec064ab48c0e2db2c09a25c7c",
+              "quote": "Eligibility 加入年齢は18歳以上65歳以下の場合に加入を許可する。 上記の条件に該当しない場合は加入を拒否する。この判定表には一つのルールだけがある。 age R-eligibility [{'field': 'age', 'operator': 'ge', 'value': {'kind': 'integer', 'data': 18, 'currency': None}}, {'field': 'age', 'operator': 'le', 'value': {'kind': 'integer', 'data': 65, 'currency': None}}]",
+              "sheet": null,
+              "cell": null,
+              "page": null,
+              "json_pointer": "/records/0/text"
+            }
+          ]
+        },
+        {
+          "test_id": "RAG-195ef3863b5c85e5ccde",
+          "revision": 1,
+          "title": "Retrieved regression proposal",
+          "inputs": [
+            {
+              "field": "age",
+              "value": {
+                "kind": "integer",
+                "data": 100,
+                "currency": null
+              }
+            }
+          ],
+          "expected": {
+            "outcome": "deny",
+            "amount": null,
+            "formula": null
+          },
+          "kind": "positive",
+          "origin": "llm",
+          "rules": [
+            {
+              "rule_id": "R-eligibility",
+              "version": 3,
+              "rule_hash": "0ba995eef53b4fd48344751421c29eea4b84c52b7cab974b84427db6e7f1f14d"
+            }
+          ],
+          "rationale": "LLM proposal. age far above upper bound tests denial of overly high ages Expected recomputed by current oracle; QA review required.",
+          "metadata": {
+            "created_at": {
+              "$datetime": "2026-09-13T15:09:10.642672+00:00"
+            },
+            "created_by": "Synthetic AI evaluator",
+            "schema_version": 1
+          },
+          "obligation_ids": [],
+          "sources": [
+            {
+              "document_id": "knowledge-d4fd4cf3-bd83-42f8-9bef-b7081d11e468.json",
+              "document_hash": "49e21cc73430226eac86774add51441ac4b84ceec064ab48c0e2db2c09a25c7c",
+              "quote": "Eligibility 加入年齢は18歳以上65歳以下の場合に加入を許可する。 上記の条件に該当しない場合は加入を拒否する。この判定表には一つのルールだけがある。 age R-eligibility [{'field': 'age', 'operator': 'ge', 'value': {'kind': 'integer', 'data': 18, 'currency': None}}, {'field': 'age', 'operator': 'le', 'value': {'kind': 'integer', 'data': 65, 'currency': None}}]",
+              "sheet": null,
+              "cell": null,
+              "page": null,
+              "json_pointer": "/records/0/text"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "unmeasured": [
+    "real reviewer acceptance",
+    "manual effort savings",
+    "production accuracy",
+    "token usage and monetary cost"
+  ],
+  "scripted_corpus_reviews": true,
+  "execution_locations": {
+    "extraction": "cloud_via_local_gateway",
+    "suggestion": "cloud_via_local_gateway",
+    "embedding": "local"
+  },
+  "digest_scope": "Local artifact digests; cloud tags identify local gateway references, not pinned remote weights.",
+  "readiness_before": {
+    "status": "configured",
+    "live_ready": false,
+    "simulated": false,
+    "inventory": {
+      "available": true,
+      "endpoint": "http://127.0.0.1:11434",
+      "models": [
+        {
+          "name": "embeddinggemma:latest",
+          "digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1"
+        },
+        {
+          "name": "gpt-oss:120b-cloud",
+          "digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed"
+        }
+      ]
+    },
+    "checks": [
+      {
+        "role": "extraction",
+        "model": "gpt-oss:120b-cloud",
+        "expected_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "observed_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "passed": true
+      },
+      {
+        "role": "suggestion",
+        "model": "gpt-oss:120b-cloud",
+        "expected_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "observed_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "passed": true
+      },
+      {
+        "role": "embedding",
+        "model": "embeddinggemma:latest",
+        "expected_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+        "observed_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+        "passed": true
+      }
+    ],
+    "probes": [],
+    "note": "Inventory checks do not run inference. Probes check transport/schema, not insurance accuracy."
+  },
+  "readiness_after": {
+    "status": "configured",
+    "live_ready": false,
+    "simulated": false,
+    "inventory": {
+      "available": true,
+      "endpoint": "http://127.0.0.1:11434",
+      "models": [
+        {
+          "name": "embeddinggemma:latest",
+          "digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1"
+        },
+        {
+          "name": "gpt-oss:120b-cloud",
+          "digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed"
+        }
+      ]
+    },
+    "checks": [
+      {
+        "role": "extraction",
+        "model": "gpt-oss:120b-cloud",
+        "expected_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "observed_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "passed": true
+      },
+      {
+        "role": "suggestion",
+        "model": "gpt-oss:120b-cloud",
+        "expected_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "observed_digest": "ac7f7a1e778577c4418f6a25e46e0b45dced6746c75422d4b343aa1495a022ed",
+        "passed": true
+      },
+      {
+        "role": "embedding",
+        "model": "embeddinggemma:latest",
+        "expected_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+        "observed_digest": "85462619ee721b466c5927d109d4cb765861907d5417b9109caebc4e614679f1",
+        "passed": true
+      }
+    ],
+    "probes": [],
+    "note": "Inventory checks do not run inference. Probes check transport/schema, not insurance accuracy."
+  },
+  "model_identity_stable": true,
+  "status": "completed",
+  "meaning": "Completion means measurements were recorded, not that the model passed a quality threshold.",
+  "report_hash": "cb8223c7624617e7287993450f4e21f39b67bf7562e97cbe8da00fd8be11b93e"
+}

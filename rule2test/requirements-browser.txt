@@ -1,0 +1,2 @@
+# Optional development-only real-browser smoke check.
+playwright==1.62.0

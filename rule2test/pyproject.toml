@@ -7,3 +7,7 @@ dependencies = []
 
 [project.optional-dependencies]
 excel = ["openpyxl==3.1.5", "defusedxml==0.7.1"]
+retrieval = ["faiss-cpu==1.15.0"]
+
+
+browser = ["playwright==1.62.0"]

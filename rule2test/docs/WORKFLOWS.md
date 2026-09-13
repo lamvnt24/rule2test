@@ -152,4 +152,5 @@ Tests cover reopen/restart persistence, migration idempotency, legacy-table pres
 
 Reviewer/actor names are self-declared. Authentication, RBAC, separate rule-owner approval and signed append-only audit storage are not implemented. Hashes detect inconsistent content but do not prevent a database administrator from rewriting data and hashes.
 
-The workflow layer is available through Python and CLI. The original web server still uses its legacy workflow; the new API/UI integration remains a later phase.
+The workflow layer is available through Python, CLI and the phase-8 browser workspace. The root UI and /api/v1 use the same services; /legacy retains the original demo. See [WORKSPACE.md](WORKSPACE.md).
+

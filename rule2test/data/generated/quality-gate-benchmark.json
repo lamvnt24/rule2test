@@ -1,0 +1,1033 @@
+{
+  "benchmark": "synthetic-gate-contract-v1",
+  "simulated": true,
+  "meaning": "Gate contract checks; not seeded-gap recall or real-model quality",
+  "matched": 6,
+  "total": 6,
+  "cases": [
+    {
+      "profile": "eligibility",
+      "fault": "none",
+      "expected": "GO",
+      "actual": "GO",
+      "matched": true,
+      "elapsed_ms": 1641,
+      "report": {
+        "schema_version": 1,
+        "policy_version": "local-regression-v1",
+        "workflow_id": "b934072b-3e61-4ea8-89e4-239d7633f0d0",
+        "workflow_revision": 8,
+        "workflow_hash": "bda7dd2bbcd693d44cc12d01202ed3260eafb9ba658cd6ae216a5091fe64ab7a",
+        "run_id": "d02d77b9-f9f7-4ca5-8fd8-b7faf272243a",
+        "scope": "local regression readiness; not production release authorization",
+        "checks": [
+          {
+            "key": "current_evidence",
+            "status": "PASS",
+            "actual": "evidenced",
+            "requirement": "Current workflow must be EVIDENCED"
+          },
+          {
+            "key": "complete_run",
+            "status": "PASS",
+            "actual": {
+              "status": "completed",
+              "expected": 14,
+              "recorded": 14
+            },
+            "requirement": "One execution per approved test in a completed run"
+          },
+          {
+            "key": "execution_results",
+            "status": "PASS",
+            "actual": {
+              "pass": 14,
+              "fail": 0,
+              "error": 0,
+              "skipped": 0
+            },
+            "requirement": "Every approved execution must PASS; zero FAIL/ERROR/SKIPPED"
+          },
+          {
+            "key": "rule_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 1,
+              "total": 1,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "branch_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 2,
+              "total": 2,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "boundary_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "exception_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 5,
+              "total": 5,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "resolved_obligations",
+            "status": "PASS",
+            "actual": [],
+            "requirement": "No unresolved bounded-search obligations"
+          },
+          {
+            "key": "candidate_acceptance",
+            "status": "PASS",
+            "actual": {
+              "approved": 14,
+              "total": 14,
+              "percent": 100.0
+            },
+            "requirement": "At least 70% of current non-existing-origin candidates approved"
+          },
+          {
+            "key": "archived_rule_traceability",
+            "status": "PASS",
+            "actual": {
+              "traced": 14,
+              "total": 14,
+              "percent": 100.0
+            },
+            "requirement": "Every execution links through verified rule snapshots to archived source bytes"
+          },
+          {
+            "key": "evidence_consistency",
+            "status": "PASS",
+            "actual": "91b82197-ef1e-4bfc-8e47-0c792747e0b8",
+            "requirement": "Evidence must match the approved snapshot and completed journal"
+          }
+        ],
+        "metrics": {
+          "executions": {
+            "pass": 14,
+            "fail": 0,
+            "error": 0,
+            "skipped": 0
+          },
+          "coverage_mode": "executed inputs",
+          "rule_coverage": {
+            "covered": 1,
+            "total": 1,
+            "percent": 100.0
+          },
+          "branch_coverage": {
+            "covered": 2,
+            "total": 2,
+            "percent": 100.0
+          },
+          "boundary_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "exception_coverage": {
+            "covered": 5,
+            "total": 5,
+            "percent": 100.0
+          },
+          "candidate_acceptance": {
+            "approved": 14,
+            "total": 14,
+            "percent": 100.0
+          },
+          "archived_rule_traceability": {
+            "traced": 14,
+            "total": 14,
+            "percent": 100.0
+          }
+        },
+        "unmeasured": [
+          "seeded-gap recall (requires independent labeled benchmark)",
+          "real-model extraction and retrieval accuracy",
+          "manual effort savings and production performance"
+        ],
+        "approved_revision": 5,
+        "approved_snapshot_hash": "c724c7d0f4d26f0e917698fa2a1e7acfc858eadba0f5427fe1b51a301496df85",
+        "run_hash": "aeba196a25e8f7635dec3cd1911c9d3a4ec9f9f3faa3d8ce4fcc634c2fa88a61",
+        "evidence_id": "91b82197-ef1e-4bfc-8e47-0c792747e0b8",
+        "evidence_hash": "98a223e742ec47696796ce4b2eb566d78cb5c5e5e6e0df2ca3845473b6d91175",
+        "verdict": "GO",
+        "reason": "All required checks passed.",
+        "report_hash": "57944844029e47685517e03208d1787343080a6a3d492690de4ccc0e91dec5e1"
+      }
+    },
+    {
+      "profile": "eligibility",
+      "fault": "boundary",
+      "expected": "NO-GO",
+      "actual": "NO-GO",
+      "matched": true,
+      "elapsed_ms": 1637,
+      "report": {
+        "schema_version": 1,
+        "policy_version": "local-regression-v1",
+        "workflow_id": "3a82266b-a444-41d4-90d5-a333472b0797",
+        "workflow_revision": 8,
+        "workflow_hash": "bd4daabc9e1dd0d839f2986ab25ab1184cfdc1d57d12cb836810d963b77c1504",
+        "run_id": "b2f106f5-1045-491f-b9e7-4966b11167c8",
+        "scope": "local regression readiness; not production release authorization",
+        "checks": [
+          {
+            "key": "current_evidence",
+            "status": "PASS",
+            "actual": "evidenced",
+            "requirement": "Current workflow must be EVIDENCED"
+          },
+          {
+            "key": "complete_run",
+            "status": "PASS",
+            "actual": {
+              "status": "completed",
+              "expected": 14,
+              "recorded": 14
+            },
+            "requirement": "One execution per approved test in a completed run"
+          },
+          {
+            "key": "execution_results",
+            "status": "FAIL",
+            "actual": {
+              "pass": 13,
+              "fail": 1,
+              "error": 0,
+              "skipped": 0
+            },
+            "requirement": "Every approved execution must PASS; zero FAIL/ERROR/SKIPPED"
+          },
+          {
+            "key": "rule_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 1,
+              "total": 1,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "branch_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 2,
+              "total": 2,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "boundary_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "exception_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 5,
+              "total": 5,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "resolved_obligations",
+            "status": "PASS",
+            "actual": [],
+            "requirement": "No unresolved bounded-search obligations"
+          },
+          {
+            "key": "candidate_acceptance",
+            "status": "PASS",
+            "actual": {
+              "approved": 14,
+              "total": 14,
+              "percent": 100.0
+            },
+            "requirement": "At least 70% of current non-existing-origin candidates approved"
+          },
+          {
+            "key": "archived_rule_traceability",
+            "status": "PASS",
+            "actual": {
+              "traced": 14,
+              "total": 14,
+              "percent": 100.0
+            },
+            "requirement": "Every execution links through verified rule snapshots to archived source bytes"
+          },
+          {
+            "key": "evidence_consistency",
+            "status": "PASS",
+            "actual": "438dce8f-bd91-46dc-a1b6-a9da4a1a163c",
+            "requirement": "Evidence must match the approved snapshot and completed journal"
+          }
+        ],
+        "metrics": {
+          "executions": {
+            "pass": 13,
+            "fail": 1,
+            "error": 0,
+            "skipped": 0
+          },
+          "coverage_mode": "executed inputs",
+          "rule_coverage": {
+            "covered": 1,
+            "total": 1,
+            "percent": 100.0
+          },
+          "branch_coverage": {
+            "covered": 2,
+            "total": 2,
+            "percent": 100.0
+          },
+          "boundary_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "exception_coverage": {
+            "covered": 5,
+            "total": 5,
+            "percent": 100.0
+          },
+          "candidate_acceptance": {
+            "approved": 14,
+            "total": 14,
+            "percent": 100.0
+          },
+          "archived_rule_traceability": {
+            "traced": 14,
+            "total": 14,
+            "percent": 100.0
+          }
+        },
+        "unmeasured": [
+          "seeded-gap recall (requires independent labeled benchmark)",
+          "real-model extraction and retrieval accuracy",
+          "manual effort savings and production performance"
+        ],
+        "approved_revision": 5,
+        "approved_snapshot_hash": "a40d9575137708abe75fde2e4d64f96459c75cb8d213bbe6c8a191c179bc87c1",
+        "run_hash": "63baa045c03b02d8b5a1d66e7240bc1ce499a7f6abf8d63b613d7aede1add553",
+        "evidence_id": "438dce8f-bd91-46dc-a1b6-a9da4a1a163c",
+        "evidence_hash": "5c4c4533b86d9428ba2b5b374d6b832afcf24393e764fc5335ecab661e3e8a2f",
+        "verdict": "NO-GO",
+        "reason": "Blocked by: execution_results",
+        "report_hash": "034c61a68f26d3719ad55644fce974e379ff88c63fc703b04e342ae5a23ee9aa"
+      }
+    },
+    {
+      "profile": "claim_review",
+      "fault": "none",
+      "expected": "GO",
+      "actual": "GO",
+      "matched": true,
+      "elapsed_ms": 1101,
+      "report": {
+        "schema_version": 1,
+        "policy_version": "local-regression-v1",
+        "workflow_id": "fc287c1f-ca9c-40b2-a8d7-8f5af9d3f0c1",
+        "workflow_revision": 8,
+        "workflow_hash": "b7b0d9d5e1a760f17bbc95cb3657cd2a6b49aab451a446e8ccdd3e5c7ce2a7a2",
+        "run_id": "4b252ec1-6c39-4a4e-a9a1-bd697c1b2c9e",
+        "scope": "local regression readiness; not production release authorization",
+        "checks": [
+          {
+            "key": "current_evidence",
+            "status": "PASS",
+            "actual": "evidenced",
+            "requirement": "Current workflow must be EVIDENCED"
+          },
+          {
+            "key": "complete_run",
+            "status": "PASS",
+            "actual": {
+              "status": "completed",
+              "expected": 11,
+              "recorded": 11
+            },
+            "requirement": "One execution per approved test in a completed run"
+          },
+          {
+            "key": "execution_results",
+            "status": "PASS",
+            "actual": {
+              "pass": 11,
+              "fail": 0,
+              "error": 0,
+              "skipped": 0
+            },
+            "requirement": "Every approved execution must PASS; zero FAIL/ERROR/SKIPPED"
+          },
+          {
+            "key": "rule_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 1,
+              "total": 1,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "branch_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 2,
+              "total": 2,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "boundary_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 3,
+              "total": 3,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "exception_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "resolved_obligations",
+            "status": "PASS",
+            "actual": [],
+            "requirement": "No unresolved bounded-search obligations"
+          },
+          {
+            "key": "candidate_acceptance",
+            "status": "PASS",
+            "actual": {
+              "approved": 11,
+              "total": 11,
+              "percent": 100.0
+            },
+            "requirement": "At least 70% of current non-existing-origin candidates approved"
+          },
+          {
+            "key": "archived_rule_traceability",
+            "status": "PASS",
+            "actual": {
+              "traced": 11,
+              "total": 11,
+              "percent": 100.0
+            },
+            "requirement": "Every execution links through verified rule snapshots to archived source bytes"
+          },
+          {
+            "key": "evidence_consistency",
+            "status": "PASS",
+            "actual": "1095b1d0-a2a7-4313-bb73-d0f72962ef90",
+            "requirement": "Evidence must match the approved snapshot and completed journal"
+          }
+        ],
+        "metrics": {
+          "executions": {
+            "pass": 11,
+            "fail": 0,
+            "error": 0,
+            "skipped": 0
+          },
+          "coverage_mode": "executed inputs",
+          "rule_coverage": {
+            "covered": 1,
+            "total": 1,
+            "percent": 100.0
+          },
+          "branch_coverage": {
+            "covered": 2,
+            "total": 2,
+            "percent": 100.0
+          },
+          "boundary_coverage": {
+            "covered": 3,
+            "total": 3,
+            "percent": 100.0
+          },
+          "exception_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "candidate_acceptance": {
+            "approved": 11,
+            "total": 11,
+            "percent": 100.0
+          },
+          "archived_rule_traceability": {
+            "traced": 11,
+            "total": 11,
+            "percent": 100.0
+          }
+        },
+        "unmeasured": [
+          "seeded-gap recall (requires independent labeled benchmark)",
+          "real-model extraction and retrieval accuracy",
+          "manual effort savings and production performance"
+        ],
+        "approved_revision": 5,
+        "approved_snapshot_hash": "87ba10f77788b0a9dccaf925584884b97959c2b82ab83e0af6f5f9bebcd11e15",
+        "run_hash": "3063746aab4d143b648e2957acaaf9210d6ba4df22289359e0f62ca78c3036d0",
+        "evidence_id": "1095b1d0-a2a7-4313-bb73-d0f72962ef90",
+        "evidence_hash": "fefde45fb28ae0984cd87ffddcfcff6afb48ae92870243ba0746b20076006e98",
+        "verdict": "GO",
+        "reason": "All required checks passed.",
+        "report_hash": "037f8106be084090190ddc8275e85549e00ef178739fbdcacdeae54e55e6219b"
+      }
+    },
+    {
+      "profile": "claim_review",
+      "fault": "boundary",
+      "expected": "NO-GO",
+      "actual": "NO-GO",
+      "matched": true,
+      "elapsed_ms": 1102,
+      "report": {
+        "schema_version": 1,
+        "policy_version": "local-regression-v1",
+        "workflow_id": "01985c62-007c-47dd-ad22-cbbe857c0389",
+        "workflow_revision": 8,
+        "workflow_hash": "a0c6ac1edd08bed395bf6f8dd425564a4b3f8e4233db4bf7c718bffc61a51a57",
+        "run_id": "b28d80bc-64b8-4994-8c49-93b43972d622",
+        "scope": "local regression readiness; not production release authorization",
+        "checks": [
+          {
+            "key": "current_evidence",
+            "status": "PASS",
+            "actual": "evidenced",
+            "requirement": "Current workflow must be EVIDENCED"
+          },
+          {
+            "key": "complete_run",
+            "status": "PASS",
+            "actual": {
+              "status": "completed",
+              "expected": 11,
+              "recorded": 11
+            },
+            "requirement": "One execution per approved test in a completed run"
+          },
+          {
+            "key": "execution_results",
+            "status": "FAIL",
+            "actual": {
+              "pass": 10,
+              "fail": 1,
+              "error": 0,
+              "skipped": 0
+            },
+            "requirement": "Every approved execution must PASS; zero FAIL/ERROR/SKIPPED"
+          },
+          {
+            "key": "rule_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 1,
+              "total": 1,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "branch_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 2,
+              "total": 2,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "boundary_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 3,
+              "total": 3,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "exception_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "resolved_obligations",
+            "status": "PASS",
+            "actual": [],
+            "requirement": "No unresolved bounded-search obligations"
+          },
+          {
+            "key": "candidate_acceptance",
+            "status": "PASS",
+            "actual": {
+              "approved": 11,
+              "total": 11,
+              "percent": 100.0
+            },
+            "requirement": "At least 70% of current non-existing-origin candidates approved"
+          },
+          {
+            "key": "archived_rule_traceability",
+            "status": "PASS",
+            "actual": {
+              "traced": 11,
+              "total": 11,
+              "percent": 100.0
+            },
+            "requirement": "Every execution links through verified rule snapshots to archived source bytes"
+          },
+          {
+            "key": "evidence_consistency",
+            "status": "PASS",
+            "actual": "64cb0cfa-5867-48a9-aabc-27b68ae7a57d",
+            "requirement": "Evidence must match the approved snapshot and completed journal"
+          }
+        ],
+        "metrics": {
+          "executions": {
+            "pass": 10,
+            "fail": 1,
+            "error": 0,
+            "skipped": 0
+          },
+          "coverage_mode": "executed inputs",
+          "rule_coverage": {
+            "covered": 1,
+            "total": 1,
+            "percent": 100.0
+          },
+          "branch_coverage": {
+            "covered": 2,
+            "total": 2,
+            "percent": 100.0
+          },
+          "boundary_coverage": {
+            "covered": 3,
+            "total": 3,
+            "percent": 100.0
+          },
+          "exception_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "candidate_acceptance": {
+            "approved": 11,
+            "total": 11,
+            "percent": 100.0
+          },
+          "archived_rule_traceability": {
+            "traced": 11,
+            "total": 11,
+            "percent": 100.0
+          }
+        },
+        "unmeasured": [
+          "seeded-gap recall (requires independent labeled benchmark)",
+          "real-model extraction and retrieval accuracy",
+          "manual effort savings and production performance"
+        ],
+        "approved_revision": 5,
+        "approved_snapshot_hash": "3fd1676ba1466cd1ad18481387802af5670f0d6d4be6afc71fcfc6a7fa33cc10",
+        "run_hash": "01288fe0aa782f71afab848cda6e092eea83e0ef05c80f99910c5b57ed842c4d",
+        "evidence_id": "64cb0cfa-5867-48a9-aabc-27b68ae7a57d",
+        "evidence_hash": "5348b7f762fe598de9efd772d98294e15a6038f419f0618319da41007850381a",
+        "verdict": "NO-GO",
+        "reason": "Blocked by: execution_results",
+        "report_hash": "321204bef07177423cf82a59de80a05c061a617e2edb2c2e75a23447ca0dd956"
+      }
+    },
+    {
+      "profile": "deductible",
+      "fault": "none",
+      "expected": "NO-GO",
+      "actual": "NO-GO",
+      "matched": true,
+      "elapsed_ms": 1549,
+      "report": {
+        "schema_version": 1,
+        "policy_version": "local-regression-v1",
+        "workflow_id": "b16f4417-8d0e-4a4b-a643-2882f8d0ed2e",
+        "workflow_revision": 8,
+        "workflow_hash": "5c93d09b28d7aa9a38397679e0c8347fe8fe77e44bc449af2b5bc4109ef097e2",
+        "run_id": "7eed60af-a82b-4c68-a2ff-27b168ab9384",
+        "scope": "local regression readiness; not production release authorization",
+        "checks": [
+          {
+            "key": "current_evidence",
+            "status": "PASS",
+            "actual": "evidenced",
+            "requirement": "Current workflow must be EVIDENCED"
+          },
+          {
+            "key": "complete_run",
+            "status": "PASS",
+            "actual": {
+              "status": "completed",
+              "expected": 13,
+              "recorded": 13
+            },
+            "requirement": "One execution per approved test in a completed run"
+          },
+          {
+            "key": "execution_results",
+            "status": "PASS",
+            "actual": {
+              "pass": 13,
+              "fail": 0,
+              "error": 0,
+              "skipped": 0
+            },
+            "requirement": "Every approved execution must PASS; zero FAIL/ERROR/SKIPPED"
+          },
+          {
+            "key": "rule_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 1,
+              "total": 1,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "branch_coverage",
+            "status": "FAIL",
+            "actual": {
+              "covered": 1,
+              "total": 2,
+              "percent": 50.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "boundary_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "exception_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "resolved_obligations",
+            "status": "FAIL",
+            "actual": [
+              "OBL-ba2da93c9918c9d47107"
+            ],
+            "requirement": "No unresolved bounded-search obligations"
+          },
+          {
+            "key": "candidate_acceptance",
+            "status": "PASS",
+            "actual": {
+              "approved": 13,
+              "total": 13,
+              "percent": 100.0
+            },
+            "requirement": "At least 70% of current non-existing-origin candidates approved"
+          },
+          {
+            "key": "archived_rule_traceability",
+            "status": "PASS",
+            "actual": {
+              "traced": 13,
+              "total": 13,
+              "percent": 100.0
+            },
+            "requirement": "Every execution links through verified rule snapshots to archived source bytes"
+          },
+          {
+            "key": "evidence_consistency",
+            "status": "PASS",
+            "actual": "3af822b5-c541-4985-8440-81f17a259e38",
+            "requirement": "Evidence must match the approved snapshot and completed journal"
+          }
+        ],
+        "metrics": {
+          "executions": {
+            "pass": 13,
+            "fail": 0,
+            "error": 0,
+            "skipped": 0
+          },
+          "coverage_mode": "executed inputs",
+          "rule_coverage": {
+            "covered": 1,
+            "total": 1,
+            "percent": 100.0
+          },
+          "branch_coverage": {
+            "covered": 1,
+            "total": 2,
+            "percent": 50.0
+          },
+          "boundary_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "exception_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "candidate_acceptance": {
+            "approved": 13,
+            "total": 13,
+            "percent": 100.0
+          },
+          "archived_rule_traceability": {
+            "traced": 13,
+            "total": 13,
+            "percent": 100.0
+          }
+        },
+        "unmeasured": [
+          "seeded-gap recall (requires independent labeled benchmark)",
+          "real-model extraction and retrieval accuracy",
+          "manual effort savings and production performance"
+        ],
+        "approved_revision": 5,
+        "approved_snapshot_hash": "11a49d225b8b3473f75a0116065f7616f25135586a52c0b187d9af6e852f114b",
+        "run_hash": "1c75f012734c6888b5517eccd6de401800df0e0c61e345591120a368876d4d53",
+        "evidence_id": "3af822b5-c541-4985-8440-81f17a259e38",
+        "evidence_hash": "95af5d532dbd87aacb601d6fec03f6ddc8021822fd121c24bf8cc7124436fbdd",
+        "verdict": "NO-GO",
+        "reason": "Blocked by: branch_coverage, resolved_obligations",
+        "report_hash": "a144a2cf88dbb813800b40b61d23806099be8f40635155f41814ce8fc412f448"
+      }
+    },
+    {
+      "profile": "deductible",
+      "fault": "deductible_off_by_one",
+      "expected": "NO-GO",
+      "actual": "NO-GO",
+      "matched": true,
+      "elapsed_ms": 1534,
+      "report": {
+        "schema_version": 1,
+        "policy_version": "local-regression-v1",
+        "workflow_id": "fa906f54-e815-401f-8183-a243e6d6e27e",
+        "workflow_revision": 8,
+        "workflow_hash": "fce6b2b3b0cf225ee2b64bb6ee8f39f8d9eb7b354815dfe58df97498cc90dfed",
+        "run_id": "076d83b4-785f-42f6-a637-2536e6825c92",
+        "scope": "local regression readiness; not production release authorization",
+        "checks": [
+          {
+            "key": "current_evidence",
+            "status": "PASS",
+            "actual": "evidenced",
+            "requirement": "Current workflow must be EVIDENCED"
+          },
+          {
+            "key": "complete_run",
+            "status": "PASS",
+            "actual": {
+              "status": "completed",
+              "expected": 13,
+              "recorded": 13
+            },
+            "requirement": "One execution per approved test in a completed run"
+          },
+          {
+            "key": "execution_results",
+            "status": "FAIL",
+            "actual": {
+              "pass": 12,
+              "fail": 1,
+              "error": 0,
+              "skipped": 0
+            },
+            "requirement": "Every approved execution must PASS; zero FAIL/ERROR/SKIPPED"
+          },
+          {
+            "key": "rule_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 1,
+              "total": 1,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "branch_coverage",
+            "status": "FAIL",
+            "actual": {
+              "covered": 1,
+              "total": 2,
+              "percent": 50.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "boundary_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "exception_coverage",
+            "status": "PASS",
+            "actual": {
+              "covered": 6,
+              "total": 6,
+              "percent": 100.0
+            },
+            "requirement": "At least 90% of executed-input obligations"
+          },
+          {
+            "key": "resolved_obligations",
+            "status": "FAIL",
+            "actual": [
+              "OBL-ba2da93c9918c9d47107"
+            ],
+            "requirement": "No unresolved bounded-search obligations"
+          },
+          {
+            "key": "candidate_acceptance",
+            "status": "PASS",
+            "actual": {
+              "approved": 13,
+              "total": 13,
+              "percent": 100.0
+            },
+            "requirement": "At least 70% of current non-existing-origin candidates approved"
+          },
+          {
+            "key": "archived_rule_traceability",
+            "status": "PASS",
+            "actual": {
+              "traced": 13,
+              "total": 13,
+              "percent": 100.0
+            },
+            "requirement": "Every execution links through verified rule snapshots to archived source bytes"
+          },
+          {
+            "key": "evidence_consistency",
+            "status": "PASS",
+            "actual": "19e11eb9-78af-4f60-b1f8-5e2d23f4431b",
+            "requirement": "Evidence must match the approved snapshot and completed journal"
+          }
+        ],
+        "metrics": {
+          "executions": {
+            "pass": 12,
+            "fail": 1,
+            "error": 0,
+            "skipped": 0
+          },
+          "coverage_mode": "executed inputs",
+          "rule_coverage": {
+            "covered": 1,
+            "total": 1,
+            "percent": 100.0
+          },
+          "branch_coverage": {
+            "covered": 1,
+            "total": 2,
+            "percent": 50.0
+          },
+          "boundary_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "exception_coverage": {
+            "covered": 6,
+            "total": 6,
+            "percent": 100.0
+          },
+          "candidate_acceptance": {
+            "approved": 13,
+            "total": 13,
+            "percent": 100.0
+          },
+          "archived_rule_traceability": {
+            "traced": 13,
+            "total": 13,
+            "percent": 100.0
+          }
+        },
+        "unmeasured": [
+          "seeded-gap recall (requires independent labeled benchmark)",
+          "real-model extraction and retrieval accuracy",
+          "manual effort savings and production performance"
+        ],
+        "approved_revision": 5,
+        "approved_snapshot_hash": "6b725e71f7dfb143b908e7b981da8ec3bb6cb82a707ed2640c3c35a5e36a62d8",
+        "run_hash": "5b28da4127c975cd32e8176271d21d79b8218369bf31076bf0f11bf65ddb07f1",
+        "evidence_id": "19e11eb9-78af-4f60-b1f8-5e2d23f4431b",
+        "evidence_hash": "847892eb80c169bbc5395e171f47135833a2c79bab480ec0b457746a20985c9c",
+        "verdict": "NO-GO",
+        "reason": "Blocked by: execution_results, branch_coverage, resolved_obligations",
+        "report_hash": "339c8358d87b3b6c0fbae4911885130e5932fbe2a22fe5a5e7e46c203a013378"
+      }
+    }
+  ]
+}

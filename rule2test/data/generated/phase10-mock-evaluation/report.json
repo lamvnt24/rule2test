@@ -1,0 +1,846 @@
+{
+  "schema_version": 1,
+  "run_id": "phase10-mock-evaluation",
+  "created_at": "2026-09-13T14:40:57.129757+00:00",
+  "profile": {
+    "mode": "mock",
+    "extraction_model": "",
+    "extraction_digest": "",
+    "suggestion_model": "",
+    "suggestion_digest": "",
+    "embedding_model": "",
+    "embedding_digest": "",
+    "embedding_dimensions": 128,
+    "timeout_seconds": 60,
+    "schema_version": 1
+  },
+  "profile_hash": "171992f95513c4294544de9f702750c4a11cc9a34395c5c0e4dc75ede96c55ac",
+  "mode": "mock",
+  "simulated": true,
+  "synthetic_data": true,
+  "prompt_version": "rule-extraction-v1",
+  "dataset_id": "japanese-insurance-spot-checks-v1",
+  "dataset_hash": "9feb2f76a3be1f3e3c00652aea091b18e7e67b1a9b88026bb9c2e970ae7cfe0e",
+  "stages": {
+    "extraction": {
+      "status": "completed",
+      "provider": "mock",
+      "model": "synthetic-replay-v1",
+      "simulated": true,
+      "metric": "fixture_replay_and_deliberate_limit_checks",
+      "matched": 5,
+      "total": 10,
+      "schema_and_citation_valid": 10,
+      "provider_errors": 0,
+      "categories": {
+        "replay": {
+          "matched": 3,
+          "total": 3
+        },
+        "ambiguity": {
+          "matched": 2,
+          "total": 2
+        },
+        "paraphrase": {
+          "matched": 0,
+          "total": 3
+        },
+        "numeric_variant": {
+          "matched": 0,
+          "total": 1
+        },
+        "untrusted_instruction": {
+          "matched": 0,
+          "total": 1
+        }
+      },
+      "median_elapsed_ms": 0.0,
+      "results": [
+        {
+          "case": "replay-eligibility",
+          "category": "replay",
+          "matched": true,
+          "proposal_id": "102e1cc0-03a6-43b3-875e-0de6a75a78ce",
+          "proposal_hash": "ccf8cb8ceb2d3dc5f286e989d911231698a334bc75d1d69c4454838fd62b9e0c",
+          "actual": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [],
+          "elapsed_ms": 2
+        },
+        {
+          "case": "replay-claim_review",
+          "category": "replay",
+          "matched": true,
+          "proposal_id": "1f2f24ad-67f9-434c-8ec7-22ae25a5d9f9",
+          "proposal_hash": "2db307601248a49e2516f91b0fc90fb4342881e0243053d821c2ba586f61e26f",
+          "actual": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "100000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "150000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "100000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "150000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [],
+          "elapsed_ms": 1
+        },
+        {
+          "case": "replay-deductible",
+          "category": "replay",
+          "matched": true,
+          "proposal_id": "2ceb07e6-0a0c-48d7-8ff7-fa7fb91f153b",
+          "proposal_hash": "32793f5ce7df267d6ca3e7b739b62813e14cc24deab668dbeba86726606de65b",
+          "actual": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "5000000",
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "10000000",
+              "amount": null
+            }
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "5000000",
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "10000000",
+              "amount": null
+            }
+          },
+          "issues": [],
+          "elapsed_ms": 1
+        },
+        {
+          "case": "missing-age-limit",
+          "category": "ambiguity",
+          "matched": true,
+          "proposal_id": "27c534f8-92ed-4b96-b998-6c94218bc39a",
+          "proposal_hash": "e4c266fc5128db21f8cd0f192b23c207c6ed40a303dcd05e6174039c72fd029a",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "needs_clarification"
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        },
+        {
+          "case": "age-paraphrase",
+          "category": "paraphrase",
+          "matched": false,
+          "proposal_id": "c163d8ea-83bf-4780-9c85-04d24f7a21ba",
+          "proposal_hash": "ec1834c5e5aa99eb939e8fa3a18fd139ac38c5e7f6e60806a5d61746f6c5b960",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        },
+        {
+          "case": "claim-paraphrase",
+          "category": "paraphrase",
+          "matched": false,
+          "proposal_id": "e6ecc4e8-fdce-4bb7-b4eb-f6ae7172fb82",
+          "proposal_hash": "9e3acdee6fe2c7331f8c724b2fdde5648d627556bdb533fe2633f58ff2ed3793",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "100000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "gt",
+                  "value": "150000000",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "review",
+              "default": "allow",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        },
+        {
+          "case": "deductible-paraphrase",
+          "category": "paraphrase",
+          "matched": false,
+          "proposal_id": "13a49d8a-7285-4c65-8ea3-7d72247b8431",
+          "proposal_hash": "a92cbc209ec135d646486da580441954af4e518e1c2d0ec4593deeb01ab2962e",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "5000000",
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "claim_amount",
+                  "operator": "ge",
+                  "value": "0",
+                  "currency": "VND"
+                }
+              ],
+              "outcome": "payout",
+              "default": "invalid",
+              "deductible": "10000000",
+              "amount": null
+            }
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        },
+        {
+          "case": "unseen-age-change",
+          "category": "numeric_variant",
+          "matched": false,
+          "proposal_id": "0dfa5f4b-4815-4d15-a4b4-846106f2d157",
+          "proposal_hash": "9546efeabf4d9184694a716c0053326a8f983a6dcacc5f03161aa975324e0a98",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 62,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 67,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        },
+        {
+          "case": "document-instruction",
+          "category": "untrusted_instruction",
+          "matched": false,
+          "proposal_id": "753ac9c3-dc3d-4ae6-ba79-c8d0fdef55ba",
+          "proposal_hash": "b6b8d307394956548893a9b4960b3784a5daddce55c73203b2cdde98bad61705",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "pending_review",
+            "old": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 60,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            },
+            "new": {
+              "conditions": [
+                {
+                  "field": "age",
+                  "operator": "ge",
+                  "value": 18,
+                  "currency": null
+                },
+                {
+                  "field": "age",
+                  "operator": "le",
+                  "value": 65,
+                  "currency": null
+                }
+              ],
+              "outcome": "allow",
+              "default": "deny",
+              "deductible": null,
+              "amount": null
+            }
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        },
+        {
+          "case": "missing-currency",
+          "category": "ambiguity",
+          "matched": true,
+          "proposal_id": "b1efb91c-f7fa-4f90-ad93-9ca059970a36",
+          "proposal_hash": "557c6aa01987ad58020c12b1d85b82b5364bd5339a718ebcb5f5f4762611e35d",
+          "actual": {
+            "status": "needs_clarification"
+          },
+          "expected": {
+            "status": "needs_clarification"
+          },
+          "issues": [
+            "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+          ],
+          "elapsed_ms": 0
+        }
+      ]
+    },
+    "retrieval": {
+      "status": "completed",
+      "simulated": true,
+      "embedding_identity": "mock-hashed-lexical-v1-128",
+      "index_id": "668ee8c0-ac0d-4d26-a617-c0cf484a123a",
+      "index_hash": "07eb98be2fd589a34cf79d69e8c55e807ea6b90a1bde8c8027b7eab455392c4d",
+      "queries": 9,
+      "top1_correct": 5,
+      "top1_accuracy": 0.5555555555555556,
+      "mrr_at_3": 0.6111111111111112,
+      "limitation": "Hybrid ranking over only three approved test records; not embedding-only accuracy. Top-3 recall is not informative here.",
+      "results": [
+        {
+          "query": "age eligibility 加入年齢",
+          "expected_profile": "eligibility",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-d05f90e38ead25ca6b7a",
+              "workflow_id": "ec523787-edcb-4eac-a4b5-1864dd03618d",
+              "score": 0.2582623792124927,
+              "lexical": 0.4,
+              "vector": 0.223606797749979
+            },
+            {
+              "record_id": "KB-de252eebce5244367d1a",
+              "workflow_id": "00f37b3a-24ca-42c8-9335-ba077f528cab",
+              "score": 0.03796283011826483,
+              "lexical": 0.0,
+              "vector": 0.1084652289093281
+            }
+          ],
+          "elapsed_ms": 105
+        },
+        {
+          "query": "加入できる年齢の上限を調べる",
+          "expected_profile": "eligibility",
+          "rank": null,
+          "hits": [],
+          "elapsed_ms": 101
+        },
+        {
+          "query": "Who is old enough to enroll?",
+          "expected_profile": "eligibility",
+          "rank": null,
+          "hits": [],
+          "elapsed_ms": 107
+        },
+        {
+          "query": "claim_review 手動審査",
+          "expected_profile": "claim_review",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-679f9b46b4bed89414e3",
+              "workflow_id": "6d227786-3579-40eb-885a-c986f425d31f",
+              "score": 0.15494373438135828,
+              "lexical": 0.25,
+              "vector": 0.12126781251816648
+            }
+          ],
+          "elapsed_ms": 102
+        },
+        {
+          "query": "請求を人による確認に回す金額の境目",
+          "expected_profile": "claim_review",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-679f9b46b4bed89414e3",
+              "workflow_id": "6d227786-3579-40eb-885a-c986f425d31f",
+              "score": 0.021221867190679134,
+              "lexical": 0.0,
+              "vector": 0.06063390625908324
+            },
+            {
+              "record_id": "KB-de252eebce5244367d1a",
+              "workflow_id": "00f37b3a-24ca-42c8-9335-ba077f528cab",
+              "score": 0.021221867190679134,
+              "lexical": 0.0,
+              "vector": 0.06063390625908324
+            }
+          ],
+          "elapsed_ms": 105
+        },
+        {
+          "query": "When should a claim be reviewed manually?",
+          "expected_profile": "claim_review",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-679f9b46b4bed89414e3",
+              "workflow_id": "6d227786-3579-40eb-885a-c986f425d31f",
+              "score": 0.06428571428571428,
+              "lexical": 0.14285714285714285,
+              "vector": 0.0
+            },
+            {
+              "record_id": "KB-d05f90e38ead25ca6b7a",
+              "workflow_id": "ec523787-edcb-4eac-a4b5-1864dd03618d",
+              "score": 0.06428571428571428,
+              "lexical": 0.14285714285714285,
+              "vector": 0.0
+            },
+            {
+              "record_id": "KB-de252eebce5244367d1a",
+              "workflow_id": "00f37b3a-24ca-42c8-9335-ba077f528cab",
+              "score": 0.06428571428571428,
+              "lexical": 0.14285714285714285,
+              "vector": 0.0
+            }
+          ],
+          "elapsed_ms": 114
+        },
+        {
+          "query": "deductible 免責金額",
+          "expected_profile": "deductible",
+          "rank": 1,
+          "hits": [
+            {
+              "record_id": "KB-de252eebce5244367d1a",
+              "workflow_id": "00f37b3a-24ca-42c8-9335-ba077f528cab",
+              "score": 0.15494373438135828,
+              "lexical": 0.25,
+              "vector": 0.12126781251816648
+            }
+          ],
+          "elapsed_ms": 103
+        },
+        {
+          "query": "保険金から差し引かれる自己負担額",
+          "expected_profile": "deductible",
+          "rank": 2,
+          "hits": [
+            {
+              "record_id": "KB-679f9b46b4bed89414e3",
+              "workflow_id": "6d227786-3579-40eb-885a-c986f425d31f",
+              "score": 0.02191785018798023,
+              "lexical": 0.0,
+              "vector": 0.06262242910851495
+            },
+            {
+              "record_id": "KB-de252eebce5244367d1a",
+              "workflow_id": "00f37b3a-24ca-42c8-9335-ba077f528cab",
+              "score": 0.02191785018798023,
+              "lexical": 0.0,
+              "vector": 0.06262242910851495
+            }
+          ],
+          "elapsed_ms": 101
+        },
+        {
+          "query": "How much is deducted from the claim payment?",
+          "expected_profile": "deductible",
+          "rank": null,
+          "hits": [],
+          "elapsed_ms": 101
+        }
+      ]
+    },
+    "suggestions": {
+      "status": "completed",
+      "simulated": true,
+      "provider": "mock-grounded-inputs-v1",
+      "batch_id": "ab68a6f4-5f57-48cc-ac86-380eef6d723a",
+      "batch_hash": "6268c4e36ef998ace5922ac6a826eaae79bfecf6f43c5cd66d027a9f52a4fa72",
+      "witness_age_66_allow_found": true,
+      "novel_candidates": 1,
+      "duplicates_removed": 6,
+      "all_candidates_grounded": true,
+      "target_unmodified": true,
+      "automatic_approvals": false,
+      "automatic_attachment": false,
+      "elapsed_ms": 301,
+      "limitation": "One fixed witness and schema/grounding checks; host computes expected outcomes. This is not general suggestion precision.",
+      "candidates": [
+        {
+          "test_id": "RAG-b13c7e536bf4f34688c0",
+          "revision": 1,
+          "title": "Retrieved regression proposal",
+          "inputs": [
+            {
+              "field": "age",
+              "value": {
+                "kind": "integer",
+                "data": 66,
+                "currency": null
+              }
+            }
+          ],
+          "expected": {
+            "outcome": "allow",
+            "amount": null,
+            "formula": null
+          },
+          "kind": "positive",
+          "origin": "deterministic",
+          "rules": [
+            {
+              "rule_id": "R-eligibility",
+              "version": 3,
+              "rule_hash": "0b6530cf45d3696273189ddbe5a0a5ff5d26b62920779c5d983a40853ad0d93e"
+            }
+          ],
+          "rationale": "Mock proposal. Mock replay: reuse a reviewed input; host recomputes expected against current rules. Expected recomputed by current oracle; QA review required.",
+          "metadata": {
+            "created_at": {
+              "$datetime": "2026-09-13T14:40:59.187932+00:00"
+            },
+            "created_by": "Synthetic AI evaluator",
+            "schema_version": 1
+          },
+          "obligation_ids": [],
+          "sources": [
+            {
+              "document_id": "knowledge-668ee8c0-ac0d-4d26-a617-c0cf484a123a.json",
+              "document_hash": "07eb98be2fd589a34cf79d69e8c55e807ea6b90a1bde8c8027b7eab455392c4d",
+              "quote": "eligibility reviewed regression Synthetic reusable regression input age R-eligibility [{'field': 'age', 'value': {'kind': 'integer', 'data': 66, 'currency': None}}]",
+              "sheet": null,
+              "cell": null,
+              "page": null,
+              "json_pointer": "/records/5/text"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "unmeasured": [
+    "real reviewer acceptance",
+    "manual effort savings",
+    "production accuracy",
+    "token usage and monetary cost"
+  ],
+  "scripted_corpus_reviews": true,
+  "readiness_before": {
+    "status": "mock_only",
+    "live_ready": false,
+    "simulated": true,
+    "checks": [],
+    "note": "Offline replay configuration; this does not establish live AI readiness."
+  },
+  "readiness_after": {
+    "status": "mock_only",
+    "live_ready": false,
+    "simulated": true,
+    "checks": [],
+    "note": "Offline replay configuration; this does not establish live AI readiness."
+  },
+  "model_identity_stable": true,
+  "status": "completed",
+  "meaning": "Completion means measurements were recorded, not that the model passed a quality threshold.",
+  "report_hash": "4c76dba1607137d66fa61d0d23489a38181fc3de5a1116899228ee545a2da23f"
+}

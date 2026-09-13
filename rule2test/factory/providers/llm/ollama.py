@@ -1,4 +1,4 @@
-"""Optional local Ollama adapter. No model download, cloud call or mock fallback."""
+"""Ollama gateway adapter: local JSON mode or explicit -cloud tag with host validation."""
 import json
 from urllib.request import Request,build_opener,ProxyHandler,HTTPRedirectHandler
 from factory.exceptions import ConfigurationError,ProviderError
@@ -16,9 +16,17 @@ class OllamaLLMProvider:
         if type(model) is not str or not model.strip():raise ConfigurationError("Set RULE2TEST_EXTRACTION_MODEL to an installed Ollama model")
         self.model=model
     def extract(self,request,*,system_prompt,timeout_seconds):
-        body=json.dumps(dict(model=self.model,stream=False,format="json",
-            messages=[dict(role="system",content=system_prompt),dict(role="user",content=document_message(request))],
-            options=dict(temperature=0)),ensure_ascii=False).encode("utf-8")
+        return self.complete(system_prompt=system_prompt,user_message=document_message(request),timeout_seconds=timeout_seconds)
+    def complete(self,*,system_prompt,user_message,timeout_seconds):
+        cloud=self.model.endswith("-cloud")
+        instructions=system_prompt
+        if cloud:
+            instructions+="\nReturn only the requested JSON object, without Markdown fences or explanatory prose."
+        payload=dict(model=self.model,stream=False,
+            messages=[dict(role="system",content=instructions),dict(role="user",content=user_message)],
+            options=dict(temperature=0))
+        if not cloud:payload["format"]="json"
+        body=json.dumps(payload,ensure_ascii=False).encode("utf-8")
         req=Request("http://127.0.0.1:11434/api/chat",data=body,headers={"Content-Type":"application/json"},method="POST")
         try:
             opener=build_opener(ProxyHandler({}),NoRedirect())

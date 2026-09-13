@@ -108,3 +108,23 @@ class OllamaTransportTests(unittest.TestCase):
                 with self.assertRaises(ProviderError):OllamaLLMProvider("test").extract(request(),system_prompt=SYSTEM_PROMPT,timeout_seconds=1)
     def test_redirect_disabled(self):
         with self.assertRaises(ProviderError):NoRedirect().redirect_request(None)
+
+
+class CloudGatewayTests(unittest.TestCase):
+    def test_cloud_omits_format_and_preserves_host_validation(self):
+        body=json.dumps(dict(done=True,message=dict(content='{"ready":true}'))).encode()
+        with patch("factory.providers.llm.ollama.build_opener") as build:
+            build.return_value.open.return_value=BytesIO(body)
+            output=OllamaLLMProvider("gpt-oss:120b-cloud").complete(system_prompt="Return JSON",user_message="synthetic",timeout_seconds=10)
+            payload=json.loads(build.return_value.open.call_args.args[0].data)
+            self.assertNotIn("format",payload)
+            self.assertEqual(payload["model"],"gpt-oss:120b-cloud")
+            self.assertIn("without Markdown",payload["messages"][0]["content"])
+            self.assertEqual(output,'{"ready":true}')
+    def test_cloud_invalid_json_remains_rejected_by_extraction_validator(self):
+        raw="Here is the result: {}"
+        body=json.dumps(dict(done=True,message=dict(content=raw))).encode()
+        with patch("factory.providers.llm.ollama.build_opener") as build:
+            build.return_value.open.return_value=BytesIO(body)
+            output=OllamaLLMProvider("gpt-oss:120b-cloud").extract(request(),system_prompt=SYSTEM_PROMPT,timeout_seconds=10)
+        with self.assertRaises(ValidationError):validate_response(output,request())

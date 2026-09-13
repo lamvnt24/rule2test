@@ -7,16 +7,18 @@ A runnable Python 3.11+ hackathon project that turns insurance rule changes into
 Open PowerShell in the project directory:
 
 ```powershell
-Set-Location -LiteralPath "E:\AI hackathon\rule2test"
-python -B -m factory.server
+Set-Location -LiteralPath "<path to this repository>"
+py -3 -B scripts/run_demo.py --seed
 ```
+
+`run_demo.py` runs an explicit preflight (Python version, free port, writable database directory, optional dependencies, fixtures) and then starts the workspace. Use `--check` for the preflight alone, `--reset-database` to discard the selected database, and `--profile` to start with a digest-pinned live AI profile. `py -3 -B -m factory.server` still works and skips the preflight.
 
 Open http://127.0.0.1:8000. Enter your reviewer identity, then use **Document intake → Create synthetic workflow**. The default database is **data/workspace.db**; workflow reviews and evidence survive restarts.
 
 To inspect an existing typed CLI database:
 
 ```powershell
-python -B -m factory.server --db data/retrieval-demo.db --port 8001
+py -3 -B scripts/run_demo.py --db data/retrieval-demo.db --port 8001
 ```
 
 The original threshold demo remains at **/legacy**, with its separate data/factory.db. The new workspace uses the typed services from phases 1–7. Streamlit and FastAPI are not required.
@@ -37,6 +39,8 @@ See [workspace guide](docs/WORKSPACE.md) and [demo flow](docs/DEMO_FLOW.md).
 | 8 | Unified browser workspace, versioned REST API, atomic selected-test review, downloads and audit inspection |
 | 9 | Versioned regression quality gate, revision-bound reports and synthetic gate benchmark |
 | 10 | Digest-pinned local AI profiles, readiness probes and three-role evaluation tooling; Cloud Free connection verified on synthetic data |
+| 11 | Structured logging, request tracing, bounded metrics, classified provider failures and a preflighted demo launcher |
+| 12 | Aggregated benchmark artifacts, architecture diagrams, a timed demo script, a generated pitch deck and an offline screenshot replay |
 
 The AI providers propose rules or test inputs. The typed oracle computes expected results; an independent SUT computes actual results. AI never decides PASS/FAIL or approves its own output.
 
@@ -108,7 +112,7 @@ Files under factory/models are importable package modules, not standalone entry 
 - SHA-256 is an integrity check, not a digital signature or protection from an administrator rewriting both data and hashes.
 - The workspace exposes the independent mock SUT. The HTTP SUT adapter remains available through Python.
 
-See [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [project structure](docs/STRUCTURE.md), [domain models](docs/DOMAIN_MODELS.md), [engines](docs/ENGINES.md), [analysis](docs/ANALYSIS_SERVICES.md), [workflows](docs/WORKFLOWS.md), [AI extraction](docs/AI_EXTRACTION.md) and [pitch](docs/PITCH.md).
+See [benchmarks](docs/BENCHMARKS.md), [diagrams](docs/DIAGRAMS.md), [observability](docs/OBSERVABILITY.md), [competition demo](docs/COMPETITION_DEMO.md), [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [project structure](docs/STRUCTURE.md), [domain models](docs/DOMAIN_MODELS.md), [engines](docs/ENGINES.md), [analysis](docs/ANALYSIS_SERVICES.md), [workflows](docs/WORKFLOWS.md), [AI extraction](docs/AI_EXTRACTION.md) and [pitch](docs/PITCH.md).
 
 ## Next development
 
@@ -139,3 +143,40 @@ The initial environment had no Ollama service. A subsequent Cloud Free run verif
     python -B scripts/run_ai_workspace.py --profile data/ai_profiles/ollama-cloud.local.json
 
 Plain factory.server does not load this profile. See [LIVE_AI.md](docs/LIVE_AI.md) for the real synthetic evaluation and remaining extraction failures.
+
+
+## Phase 11: diagnostics and demo packaging
+
+```powershell
+py -3 -B scripts/run_demo.py --check
+$env:RULE2TEST_LOG_LEVEL="debug"; py -3 -B scripts/run_demo.py --seed
+```
+
+Every response carries `X-Trace-Id`, and every error body repeats it as `trace_id`. Logs are single-line JSON
+restricted to an allowlist of fields, so document text, prompts, reviewer names and session tokens cannot reach a
+log line. Provider failures are classified into eleven kinds with a remediation hint and are surfaced as HTTP 502
+with `retried: false` and `fallback_used: false` — there is still no automatic retry, no fallback to mock and no
+automatic approval.
+
+Inspect a run at **Overview → Run diagnostics** or `GET /api/v1/diagnostics`. Metrics are process-local and reset
+on restart. See [observability guide](docs/OBSERVABILITY.md).
+
+
+## Phase 12: competition materials
+
+```powershell
+py -3 -B scripts/collect_benchmarks.py --force
+py -3 -B scripts/capture_demo_screens.py
+py -3 -B scripts/build_slides.py
+```
+
+`collect_benchmarks.py` copies every measured value out of the artifacts under data/generated into
+[docs/BENCHMARKS.md](docs/BENCHMARKS.md); it computes nothing and invents nothing. `build_slides.py` reads that
+summary, so [docs/slides/index.html](docs/slides/index.html) cannot quote a number the repository has not measured.
+
+`capture_demo_screens.py` needs requirements-browser.txt and writes numbered screenshots, a captured JSON log and
+a self-contained `replay.html` under data/generated/demo-capture, using a temporary database. **No video file is
+produced** — screen-record the replay page if a video is required.
+
+Run the presentation from [docs/COMPETITION_DEMO.md](docs/COMPETITION_DEMO.md), which gives 5 and 10 minute
+scripts, a recovery path for every step that can fail, and the questions to expect.

@@ -1,6 +1,6 @@
 # Demo flow
 
-1. Run `python -B -m factory.server` from the project root.
+1. Run `py -3 -B scripts/run_demo.py --seed` from the project root (preflight plus workspace). `py -3 -B -m factory.server` still works and skips the preflight.
 2. Open http://127.0.0.1:8000 and enter a reviewer identity.
 3. Under Document intake, create the synthetic eligibility workflow.
 4. Analyze & generate; inspect rule versions, delta, impact, gaps and designed coverage.
@@ -10,6 +10,8 @@
 8. Reopen review with a reason and repeat explicit approval/finalization before running the boundary fault. Inspect the FAIL result.
 
 The default UI is web/workspace.html. The original threshold demo remains at /legacy. streamlit_app remains a scaffold. See [WORKSPACE.md](WORKSPACE.md) for the complete screen guide and database options.
+
+For a timed competition run with speaker notes and recovery paths, use [COMPETITION_DEMO.md](COMPETITION_DEMO.md).
 
 ## Phase 3 CLI
 Run python -B scripts/run_analysis_demo.py from the project directory for rule delta, related/changed tests, gap candidates, coverage, mutation and independent execution evidence. This CLI uses scripted synthetic approvals and does not alter the web workflow.

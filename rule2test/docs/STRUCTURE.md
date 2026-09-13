@@ -23,6 +23,7 @@
 | tests/integration | HTTP adapter and full analysis-to-evidence tests |
 | tests/evaluation | Independent synthetic seeded-gap truth sets |
 | tests/fixtures | Shared synthetic business examples |
+| factory/observability | Structured logs, request traces and process-local metrics |
 
 The legacy Ollama extraction adapter remains in factory/legacy_server.py. Phase 6 implements a typed mock/Ollama LLM provider package. Phase 7 implements mock/Ollama embeddings, Python/FAISS search and test suggestions. Cloud LLM integrations remain scaffolds.
 
@@ -37,7 +38,7 @@ Run from the project directory. Model files are importable modules, not executab
 
 ## Remaining scaffolds
 
-Workflow, approval and evidence services plus SQLite repositories are implemented in phase 4. Phase 5 implements JSON/XLSX parsers and source archives. Phase 6 implements extraction orchestration and rule review. Phase 8 implements typed API routes, request contracts and browser integration. Observability infrastructure and Streamlit remain scaffolds.
+Workflow, approval and evidence services plus SQLite repositories are implemented in phase 4. Phase 5 implements JSON/XLSX parsers and source archives. Phase 6 implements extraction orchestration and rule review. Phase 8 implements typed API routes, request contracts and browser integration. Phase 11 implements factory/observability. Streamlit remains a scaffold.
 seed_demo.py creates missing synthetic imports; reset_demo.py restores only the six known fixture files.
 
 ## Data
@@ -128,3 +129,23 @@ The existing API and Run & evidence screen expose the gate. See [QUALITY_GATE.md
 - tests/integration/test_ai_evaluation.py: readiness, truth separation and evaluation contracts.
 
 Live-model evaluation remains pending until a local model service is available. See [LIVE_AI.md](LIVE_AI.md).
+
+## Phase 11 entry points
+
+- factory/observability/logger.py: allowlisted single-line JSON diagnostics; off until an entry point configures it.
+- factory/observability/tracing.py: one trace per request or run, nested spans, contextvars isolation.
+- factory/observability/metrics.py: bounded counters and duration histograms; process-local, reset on restart.
+- factory/providers/failure.py: transport exception to a classified ProviderError kind and a remediation hint.
+- scripts/run_demo.py: preflight, optional seeding, explicit database reset and workspace start.
+- GET /api/v1/diagnostics and Overview -> Run diagnostics in the browser.
+- tests/unit/test_observability.py and tests/integration/test_diagnostics.py.
+
+See [OBSERVABILITY.md](OBSERVABILITY.md).
+
+## Phase 12 entry points
+
+- scripts/collect_benchmarks.py: aggregate every measured number into docs/BENCHMARKS.md and data/generated/benchmark-summary.json.
+- scripts/capture_demo_screens.py: deterministic screenshots, a captured log and a self-contained offline replay page.
+- scripts/build_slides.py: self-contained pitch deck at docs/slides/index.html, numbers read from the benchmark summary.
+- docs/COMPETITION_DEMO.md: timed 5 and 10 minute scripts with recovery paths.
+- docs/DIAGRAMS.md: trust boundary, layer and review state-machine diagrams.

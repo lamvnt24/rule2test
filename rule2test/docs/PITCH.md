@@ -23,3 +23,5 @@ AI helps interpret documents; deterministic engines verify behavior. When runnin
 ## Evidence-based claims
 
 Present synthetic seeded-gap benchmark results and the current DSL limitations. Do not claim time savings or production accuracy without measurements.
+
+Every quotable number lives in [BENCHMARKS.md](BENCHMARKS.md) with its source artifact and an explicit statement of what it does not prove. The deck at [slides/index.html](slides/index.html) is generated from that file, so it cannot drift. Use the timed script in [COMPETITION_DEMO.md](COMPETITION_DEMO.md) and the diagrams in [DIAGRAMS.md](DIAGRAMS.md).

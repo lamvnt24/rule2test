@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "entries": [
+    {
+      "name": "Quality-gate contract cases matched",
+      "value": "6/6",
+      "source": "data/generated/quality-gate-benchmark.json",
+      "measures": "Six synthetic workflows reach the GO/NO-GO verdict the contract requires, including the deliberate NO-GO fixtures.",
+      "does_not_prove": "Not seeded-gap recall, not real-model quality, and not production release authorization.",
+      "created_at": ""
+    },
+    {
+      "name": "Designed boundary coverage, baseline to final",
+      "value": "16.67% → 100.0%",
+      "source": "data/generated/phase3-analysis-report.json",
+      "measures": "Boundary obligations covered by the existing suite versus the suite after generated candidates, on the synthetic eligibility scenario.",
+      "does_not_prove": "Designed coverage on one synthetic scenario. Coverage is not a pass rate and not release approval.",
+      "created_at": ""
+    },
+    {
+      "name": "Mutation score on the same scenario",
+      "value": "100.0%",
+      "source": "data/generated/phase3-analysis-report.json",
+      "measures": "Specification mutants killed by the designed suite.",
+      "does_not_prove": "A small fixed mutant set on one scenario; not a general fault-detection rate.",
+      "created_at": ""
+    },
+    {
+      "name": "Offline mock replay — extraction cases matched",
+      "value": "5/10",
+      "source": "data/generated/phase10-mock-evaluation/report.json",
+      "measures": "Authored Japanese single-rule spot checks against separate ground truth (synthetic-replay-v1). Breakdown: ambiguity 2/2, numeric_variant 0/1, paraphrase 0/3, replay 3/3, untrusted_instruction 0/1.",
+      "does_not_prove": "Ten authored cases only. Not representative Japanese document accuracy and not an SME-reviewed benchmark.",
+      "created_at": "2026-09-13T14:40:57.129757+00:00"
+    },
+    {
+      "name": "Offline mock replay — schema and citation valid",
+      "value": "10/10",
+      "source": "data/generated/phase10-mock-evaluation/report.json",
+      "measures": "Outputs that survived strict JSON, schema and exact-line citation validation before truth comparison.",
+      "does_not_prove": "A valid citation proves the quote exists, not that the interpretation is semantically correct.",
+      "created_at": "2026-09-13T14:40:57.129757+00:00"
+    },
+    {
+      "name": "Offline mock replay — median extraction latency",
+      "value": "0 ms",
+      "source": "data/generated/phase10-mock-evaluation/report.json",
+      "measures": "Host-measured wall-clock time per case on the machine that produced this artifact.",
+      "does_not_prove": "Includes cold model loading and host validation. Not a throughput or cost measurement.",
+      "created_at": "2026-09-13T14:40:57.129757+00:00"
+    },
+    {
+      "name": "Offline mock replay — retrieval top-1",
+      "value": "5/9",
+      "source": "data/generated/phase10-mock-evaluation/report.json",
+      "measures": "Hybrid lexical+vector ranking put the expected workflow first. MRR@3 0.611.",
+      "does_not_prove": "Only three approved test records are indexed, so this measures ranking on a tiny corpus, not embedding quality.",
+      "created_at": "2026-09-13T14:40:57.129757+00:00"
+    },
+    {
+      "name": "Offline mock replay — age-66 ALLOW witness found",
+      "value": "True",
+      "source": "data/generated/phase10-mock-evaluation/report.json",
+      "measures": "One fixed witness: the retrieved age-66 input is recomputed as ALLOW against the new 18..70 policy.",
+      "does_not_prove": "A single witness plus grounding checks. The host oracle computes the expected outcome, so this is not model reasoning accuracy.",
+      "created_at": "2026-09-13T14:40:57.129757+00:00"
+    },
+    {
+      "name": "Offline mock replay — evaluated proposals auto-approved",
+      "value": "False",
+      "source": "data/generated/phase10-mock-evaluation/report.json",
+      "measures": "The evaluator never approves, promotes or attaches anything it generated.",
+      "does_not_prove": "Nothing. This is a guardrail check, not a performance measurement.",
+      "created_at": "2026-09-13T14:40:57.129757+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v1 — extraction cases matched",
+      "value": "2/10",
+      "source": "data/generated/phase10-cloud-evaluation/report.json",
+      "measures": "Authored Japanese single-rule spot checks against separate ground truth (gpt-oss:120b-cloud). Breakdown: ambiguity 2/2, numeric_variant 0/1, paraphrase 0/3, replay 0/3, untrusted_instruction 0/1.",
+      "does_not_prove": "Ten authored cases only. Not representative Japanese document accuracy and not an SME-reviewed benchmark.",
+      "created_at": "2026-09-13T15:06:31.824111+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v1 — schema and citation valid",
+      "value": "2/10",
+      "source": "data/generated/phase10-cloud-evaluation/report.json",
+      "measures": "Outputs that survived strict JSON, schema and exact-line citation validation before truth comparison.",
+      "does_not_prove": "A valid citation proves the quote exists, not that the interpretation is semantically correct.",
+      "created_at": "2026-09-13T15:06:31.824111+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v1 — median extraction latency",
+      "value": "4991 ms",
+      "source": "data/generated/phase10-cloud-evaluation/report.json",
+      "measures": "Host-measured wall-clock time per case on the machine that produced this artifact.",
+      "does_not_prove": "Includes cold model loading and host validation. Not a throughput or cost measurement.",
+      "created_at": "2026-09-13T15:06:31.824111+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v1 — retrieval top-1",
+      "value": "9/9",
+      "source": "data/generated/phase10-cloud-evaluation/report.json",
+      "measures": "Hybrid lexical+vector ranking put the expected workflow first. MRR@3 1.000.",
+      "does_not_prove": "Only three approved test records are indexed, so this measures ranking on a tiny corpus, not embedding quality.",
+      "created_at": "2026-09-13T15:06:31.824111+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v1 — age-66 ALLOW witness found",
+      "value": "True",
+      "source": "data/generated/phase10-cloud-evaluation/report.json",
+      "measures": "One fixed witness: the retrieved age-66 input is recomputed as ALLOW against the new 18..70 policy.",
+      "does_not_prove": "A single witness plus grounding checks. The host oracle computes the expected outcome, so this is not model reasoning accuracy.",
+      "created_at": "2026-09-13T15:06:31.824111+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v1 — evaluated proposals auto-approved",
+      "value": "False",
+      "source": "data/generated/phase10-cloud-evaluation/report.json",
+      "measures": "The evaluator never approves, promotes or attaches anything it generated.",
+      "does_not_prove": "Nothing. This is a guardrail check, not a performance measurement.",
+      "created_at": "2026-09-13T15:06:31.824111+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v2 — extraction cases matched",
+      "value": "4/10",
+      "source": "data/generated/phase10-cloud-prompt-v2/report.json",
+      "measures": "Authored Japanese single-rule spot checks against separate ground truth (gpt-oss:120b-cloud). Breakdown: ambiguity 1/2, numeric_variant 0/1, paraphrase 1/3, replay 1/3, untrusted_instruction 1/1.",
+      "does_not_prove": "Ten authored cases only. Not representative Japanese document accuracy and not an SME-reviewed benchmark.",
+      "created_at": "2026-09-13T15:08:23.185271+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v2 — schema and citation valid",
+      "value": "5/10",
+      "source": "data/generated/phase10-cloud-prompt-v2/report.json",
+      "measures": "Outputs that survived strict JSON, schema and exact-line citation validation before truth comparison.",
+      "does_not_prove": "A valid citation proves the quote exists, not that the interpretation is semantically correct.",
+      "created_at": "2026-09-13T15:08:23.185271+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v2 — median extraction latency",
+      "value": "4678 ms",
+      "source": "data/generated/phase10-cloud-prompt-v2/report.json",
+      "measures": "Host-measured wall-clock time per case on the machine that produced this artifact.",
+      "does_not_prove": "Includes cold model loading and host validation. Not a throughput or cost measurement.",
+      "created_at": "2026-09-13T15:08:23.185271+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v2 — retrieval top-1",
+      "value": "9/9",
+      "source": "data/generated/phase10-cloud-prompt-v2/report.json",
+      "measures": "Hybrid lexical+vector ranking put the expected workflow first. MRR@3 1.000.",
+      "does_not_prove": "Only three approved test records are indexed, so this measures ranking on a tiny corpus, not embedding quality.",
+      "created_at": "2026-09-13T15:08:23.185271+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v2 — age-66 ALLOW witness found",
+      "value": "True",
+      "source": "data/generated/phase10-cloud-prompt-v2/report.json",
+      "measures": "One fixed witness: the retrieved age-66 input is recomputed as ALLOW against the new 18..70 policy.",
+      "does_not_prove": "A single witness plus grounding checks. The host oracle computes the expected outcome, so this is not model reasoning accuracy.",
+      "created_at": "2026-09-13T15:08:23.185271+00:00"
+    },
+    {
+      "name": "Live cloud model, prompt v2 — evaluated proposals auto-approved",
+      "value": "False",
+      "source": "data/generated/phase10-cloud-prompt-v2/report.json",
+      "measures": "The evaluator never approves, promotes or attaches anything it generated.",
+      "does_not_prove": "Nothing. This is a guardrail check, not a performance measurement.",
+      "created_at": "2026-09-13T15:08:23.185271+00:00"
+    },
+    {
+      "name": "Automated test suite",
+      "value": "275 passing",
+      "source": "tests/",
+      "measures": "Unit, integration and evaluation tests on the machine producing this summary (ran 275 tests in 43.383s).",
+      "does_not_prove": "Test count is not a quality metric; it does not measure insurance-domain correctness.",
+      "created_at": ""
+    }
+  ],
+  "scope": "Every value is copied verbatim from an artifact in this repository; this script computes no new measurement.",
+  "unmeasured": [
+    "real reviewer acceptance",
+    "manual effort savings",
+    "production accuracy",
+    "token usage and monetary cost",
+    "independent SME-reviewed labels"
+  ],
+  "caveats": [
+    "The mock replay and the live model numbers are not comparable: mock extraction matches only exact fixtures.",
+    "Prompt v2 was written after inspecting prompt v1 failures, so it is not independent held-out validation.",
+    "Latency figures describe one machine and one run, including cold model loading."
+  ]
+}

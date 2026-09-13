@@ -1,13 +1,30 @@
-.PHONY: run test seed import-demo
+.PHONY: demo check test seed reset import-demo quality-gate benchmarks ai-doctor
 
-run:
-	python -m factory.server
+PY = py -3 -B
+
+demo:
+	$(PY) scripts/run_demo.py --seed
+
+check:
+	$(PY) scripts/run_demo.py --check
 
 test:
-	python -B -m unittest discover -s tests -v
+	$(PY) -m unittest discover -s tests -v
 
 seed:
-	python -B scripts/seed_demo.py
+	$(PY) scripts/seed_demo.py
+
+reset:
+	$(PY) scripts/reset_demo.py
 
 import-demo:
-	python -B scripts/run_import_demo.py
+	$(PY) scripts/run_import_demo.py
+
+quality-gate:
+	$(PY) scripts/evaluate_quality_gate.py
+
+benchmarks:
+	$(PY) scripts/collect_benchmarks.py
+
+ai-doctor:
+	$(PY) scripts/ai_doctor.py

@@ -13,6 +13,7 @@ from factory.services.coverage_service import CoverageService
 from factory.services.quality_gate_service import QualityGateService,canonical_report
 from factory.services.mutation_service import MutationService
 from factory.repositories.knowledge_repository import KnowledgeRepository,RetrievalBatchRepository
+from factory.observability import span
 from factory.exceptions import NotFoundError
 from ..schemas.requests import body_keys,actor,upload
 
@@ -39,6 +40,7 @@ class WorkspaceRoutes:
     def get(self,path,query):
         app=self.app
         if path=="/api/v1/ai-status":return app.ai_status()
+        if path=="/api/v1/diagnostics":return app.diagnostics()
         if path=="/api/v1/workflows":
             with app.db.read() as c:
                 ids=[r[0] for r in c.execute("SELECT workflow_id FROM wf_heads ORDER BY rowid DESC LIMIT 100")]
@@ -69,17 +71,21 @@ class WorkspaceRoutes:
             if len(parts)==4:
                 w=app.workflow.get(wid)
                 coverage=None
-                if w.tests:coverage=metrics(CoverageService().measure(w.new_table,w.new_rules,w.tests,as_of=w.new_as_of))
+                if w.tests:
+                    with span("coverage_measure",component="service",workflow_id=wid,count=len(w.tests)):
+                        coverage=metrics(CoverageService().measure(w.new_table,w.new_rules,w.tests,as_of=w.new_as_of))
                 return dict(workflow=w.to_dict(),summary=workflow_summary(w),coverage=coverage)
             if len(parts)==5 and parts[4] in ("quality-gate","quality-gate-report"):
-                report=QualityGateService(app.db).evaluate(wid)
+                with span("quality_gate_evaluate",component="service",workflow_id=wid):
+                    report=QualityGateService(app.db).evaluate(wid)
                 if parts[4]=="quality-gate-report":
                     return Download(canonical_report(report).encode("utf-8"),"application/json","quality-gate-"+wid+".json")
                 return report
             if len(parts)==5 and parts[4]=="history":return app.workflow.events(wid)
             if len(parts)==5 and parts[4]=="mutation":
                 w=app.workflow.get(wid)
-                report=MutationService().analyze(w.new_table,w.new_rules,w.tests,as_of=w.new_as_of,previous_rules=w.old_rules)
+                with span("mutation_analyze",component="service",workflow_id=wid,count=len(w.tests)):
+                    report=MutationService().analyze(w.new_table,w.new_rules,w.tests,as_of=w.new_as_of,previous_rules=w.old_rules)
                 return dict(report=report.to_dict(),score=report.score)
             if len(parts)==6 and parts[4]=="runs":
                 run=app.workflow.run(wid,parts[5])
@@ -170,27 +176,28 @@ class WorkspaceRoutes:
                 "revise-rules":("table","rules","as_of","reason"),"execute":("sut",),"evidence":()}
             require(action in extras,"Unknown workflow action")
             body_keys(body,common+extras[action]);who=actor(body);revision=body["revision"]
-            if action=="analyze":w=app.workflow.analyze(wid,revision,actor=who)
-            elif action=="start-review":w=app.workflow.start_review(wid,revision,actor=who)
-            elif action=="review":
-                w=app.review.review_many(wid,revision,tests=body["tests"],decision=ApprovalDecision(body["decision"]),reviewer=who,reason=body["reason"])
-            elif action=="finalize":w=app.review.finalize(wid,revision,reviewer=who,reason=body["reason"])
-            elif action=="reopen-review":w=app.workflow.reopen_review(wid,revision,actor=who,reason=body["reason"])
-            elif action=="recover":w=app.workflow.recover_interrupted_run(wid,revision,actor=who,reason=body["reason"])
-            elif action=="edit-test":
-                w=app.workflow.edit_test(wid,revision,test_id=body["test_id"],test_revision=body["test_revision"],
-                    inputs=tuple(TestInput.from_dict(x) for x in body["inputs"]),expected=Action.from_dict(body["expected"]),
-                    title=body["title"],actor=who,reason=body["reason"])
-            elif action=="revise-rules":
-                w=app.workflow.revise_rules(wid,revision,table=DecisionTable.from_dict(body["table"]),rules=tuple(Rule.from_dict(x) for x in body["rules"]),
-                    as_of=date.fromisoformat(body["as_of"]) if body["as_of"] else None,actor=who,reason=body["reason"])
-            elif action=="execute":
-                run=app.workflow.execute(wid,revision,app.adapter(body["sut"]),actor=who)
-                return dict(workflow=workflow_summary(app.workflow.get(wid)),run=run.to_dict())
-            else:
-                evidence=app.evidence.create(wid,revision,actor=who)
-                return dict(workflow=workflow_summary(app.workflow.get(wid)),evidence_id=evidence.evidence_id,evidence_hash=evidence.fingerprint)
-            return workflow_summary(w)
+            with span("workflow_"+action.replace("-","_"),component="service",workflow_id=wid,revision=revision):
+                if action=="analyze":w=app.workflow.analyze(wid,revision,actor=who)
+                elif action=="start-review":w=app.workflow.start_review(wid,revision,actor=who)
+                elif action=="review":
+                    w=app.review.review_many(wid,revision,tests=body["tests"],decision=ApprovalDecision(body["decision"]),reviewer=who,reason=body["reason"])
+                elif action=="finalize":w=app.review.finalize(wid,revision,reviewer=who,reason=body["reason"])
+                elif action=="reopen-review":w=app.workflow.reopen_review(wid,revision,actor=who,reason=body["reason"])
+                elif action=="recover":w=app.workflow.recover_interrupted_run(wid,revision,actor=who,reason=body["reason"])
+                elif action=="edit-test":
+                    w=app.workflow.edit_test(wid,revision,test_id=body["test_id"],test_revision=body["test_revision"],
+                        inputs=tuple(TestInput.from_dict(x) for x in body["inputs"]),expected=Action.from_dict(body["expected"]),
+                        title=body["title"],actor=who,reason=body["reason"])
+                elif action=="revise-rules":
+                    w=app.workflow.revise_rules(wid,revision,table=DecisionTable.from_dict(body["table"]),rules=tuple(Rule.from_dict(x) for x in body["rules"]),
+                        as_of=date.fromisoformat(body["as_of"]) if body["as_of"] else None,actor=who,reason=body["reason"])
+                elif action=="execute":
+                    run=app.workflow.execute(wid,revision,app.adapter(body["sut"]),actor=who)
+                    return dict(workflow=workflow_summary(app.workflow.get(wid)),run=run.to_dict())
+                else:
+                    evidence=app.evidence.create(wid,revision,actor=who)
+                    return dict(workflow=workflow_summary(app.workflow.get(wid)),evidence_id=evidence.evidence_id,evidence_hash=evidence.fingerprint)
+                return workflow_summary(w)
         raise NotFoundError("API route not found")
 
 

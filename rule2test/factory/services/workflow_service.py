@@ -5,6 +5,7 @@ from uuid import uuid4
 from factory.models import Metadata,WorkflowStatus,TestOrigin,content_hash
 from factory.models.workflow import Workflow,WorkflowAnalysis,ExecutionRun
 from factory.models.common import require,nonempty
+from factory.observability import logger,span
 from factory.exceptions import ConflictError,NotFoundError
 from factory.validators.rule_validator import validate_table
 from factory.services._support import unique_tests,references
@@ -139,7 +140,9 @@ class WorkflowService(WorkflowStore):
                 self.commit(c,current,replace(current,status=WorkflowStatus.EXECUTED,active_run_id=None,last_run_id=run.run_id,evidence_id=None),
                             actor,"execution_completed","Execution journal committed")
             return run
-        except Exception:
+        except Exception as exc:
+            logger.error("execution_interrupted",error_type=type(exc).__name__,error_kind=getattr(exc,"kind",None),
+                workflow_id=workflow_id,run_id=run.run_id,count=len(run.executions),outcome="error")
             with self.db.transaction() as c:
                 current=self.workflows.current(c,workflow_id)
                 if current.active_run_id==run.run_id:

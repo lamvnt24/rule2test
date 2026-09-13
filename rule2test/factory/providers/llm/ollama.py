@@ -3,11 +3,13 @@ import json
 from urllib.request import Request,build_opener,ProxyHandler,HTTPRedirectHandler
 from factory.exceptions import ConfigurationError,ProviderError
 from factory.models.extraction import MAX_RESPONSE_BYTES
+from factory.observability import metrics,span
 from factory.parsers.common import strict_json
+from factory.providers.failure import classify,failure
 from .prompt import document_message
 
 class NoRedirect(HTTPRedirectHandler):
-    def redirect_request(self,*args,**kwargs):raise ProviderError("Provider redirects are disabled")
+    def redirect_request(self,*args,**kwargs):raise failure("redirect_blocked","Provider redirects are disabled")
 
 class OllamaLLMProvider:
     name="ollama"
@@ -28,17 +30,21 @@ class OllamaLLMProvider:
         if not cloud:payload["format"]="json"
         body=json.dumps(payload,ensure_ascii=False).encode("utf-8")
         req=Request("http://127.0.0.1:11434/api/chat",data=body,headers={"Content-Type":"application/json"},method="POST")
-        try:
-            opener=build_opener(ProxyHandler({}),NoRedirect())
-            with opener.open(req,timeout=timeout_seconds) as response:
-                data=response.read(MAX_RESPONSE_BYTES+1)
-            if len(data)>MAX_RESPONSE_BYTES:raise ProviderError("Provider response exceeds 256 KiB")
-            payload=strict_json(data.decode("utf-8"))
-            if type(payload) is not dict or payload.get("done") is not True:raise ProviderError("Provider response is incomplete")
-            message=payload.get("message")
-            if type(message) is not dict or message.get("tool_calls"):raise ProviderError("Tool calls are unsupported")
-            content=message.get("content")
-            if type(content) is not str or not content.strip():raise ProviderError("Provider returned no JSON content")
-            return content
-        except ProviderError:raise
-        except Exception as exc:raise ProviderError("Ollama request failed; check the local server and configured model") from exc
+        with span("ollama_chat",component="provider",provider="ollama",model=self.model,bytes=len(body),timeout_seconds=timeout_seconds):
+            try:
+                opener=build_opener(ProxyHandler({}),NoRedirect())
+                with opener.open(req,timeout=timeout_seconds) as response:
+                    data=response.read(MAX_RESPONSE_BYTES+1)
+                if len(data)>MAX_RESPONSE_BYTES:raise failure("oversized_response","Provider response exceeds 256 KiB")
+                payload=strict_json(data.decode("utf-8"))
+                if type(payload) is not dict or payload.get("done") is not True:raise failure("schema_rejected","Provider response is incomplete")
+                message=payload.get("message")
+                if type(message) is not dict or message.get("tool_calls"):raise failure("capability_unsupported","Tool calls are unsupported")
+                content=message.get("content")
+                if type(content) is not str or not content.strip():raise failure("schema_rejected","Provider returned no JSON content")
+                metrics.increment("provider_calls_total",provider="ollama",operation="chat",outcome="ok")
+                return content
+            except Exception as exc:
+                error=classify(exc,"Ollama request failed; check the local server and configured model")
+                metrics.increment("provider_calls_total",provider="ollama",operation="chat",outcome="error",kind=error.kind)
+                raise error from exc

@@ -1,20 +1,33 @@
 """Unified local workspace for the typed pipeline; legacy demo remains at /legacy."""
-import argparse,json,logging,secrets
+import argparse,json,secrets,sqlite3,time
 from pathlib import Path
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit,parse_qs,quote
 from factory.legacy_server import Handler as LegacyHandler
 from factory.api.dependencies import Application,ROOT
 from factory.api.routes.workspace import WorkspaceRoutes,Download
+from factory.observability import logger,metrics,tracing
 from factory.parsers.common import strict_json,ImportFailure
 from factory.exceptions import NotFoundError,ConflictError,ConfigurationError,ProviderError,ValidationError
 
 MAX_REQUEST=16*1024*1024
 ASSETS={"/":("workspace.html","text/html; charset=utf-8"),
     "/workspace.js":("workspace.js","text/javascript; charset=utf-8"),"/workspace.css":("workspace.css","text/css; charset=utf-8")}
+# Log and metric labels use this vocabulary only, so a workflow, document or proposal identifier
+# in the request path can never become an unbounded metric dimension or reach a log line.
+ROUTE_WORDS={"api","v1","workflows","proposals","batches","indexes","samples","search","suggestions","extract",
+    "import","demo","session","ai-status","diagnostics","runs","evidence","sources","history","mutation",
+    "quality-gate","quality-gate-report","review","promote","attach","analyze","start-review","finalize",
+    "reopen-review","recover","edit-test","revise-rules","execute","legacy","workspace.js","workspace.css",
+    "health","analyze-legacy","run"}
+
+def route_label(path):
+    parts=[part if part in ROUTE_WORDS else ":id" for part in path.strip("/").split("/") if part]
+    return "/"+"/".join(parts) if parts else "/"
 
 class WorkspaceServer(ThreadingHTTPServer):
     daemon_threads=True
+    allow_reuse_address=False  # A second demo process must fail loudly instead of silently sharing the port.
     def __init__(self,address,app):
         if address[0] not in ("127.0.0.1","localhost"):raise ConfigurationError("Workspace must bind to loopback")
         self.app=app;self.csrf_token=secrets.token_urlsafe(32)
@@ -22,16 +35,22 @@ class WorkspaceServer(ThreadingHTTPServer):
 
 class Handler(LegacyHandler):
     def setup(self):
-        super().setup();self.connection.settimeout(20)
+        super().setup();self.connection.settimeout(20);self.last_status=0
 
     def log_message(self,format,*args):
-        logging.info("%s %s",self.command,urlsplit(self.path).path)
+        """Replaced by the structured request events below; the default stderr access line is suppressed."""
+
+    def send_response(self,code,message=None):
+        # Also covers stdlib send_error replies (400/414/501), which never reach send_bytes.
+        self.last_status=code;super().send_response(code,message)
 
     def send_bytes(self,data,media_type,status=200,filename=None,*,legacy=False):
         self.send_response(status)
         self.send_header("Content-Type",media_type);self.send_header("Content-Length",str(len(data)))
         self.send_header("Cache-Control","no-store");self.send_header("X-Content-Type-Options","nosniff")
         self.send_header("Referrer-Policy","no-referrer")
+        trace=logger.trace_id()
+        if trace:self.send_header("X-Trace-Id",trace)
         self.send_header("Content-Security-Policy","default-src 'self'; script-src 'self'"+(" 'unsafe-inline'" if legacy else "")+
             "; style-src 'self'"+(" 'unsafe-inline'" if legacy else "")+"; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'")
         if filename:self.send_header("Content-Disposition","attachment; filename=download; filename*=UTF-8''"+quote(filename,safe=""))
@@ -48,53 +67,81 @@ class Handler(LegacyHandler):
         return (not origin or origin in {"http://"+h for h in allowed}) and self.headers.get("Sec-Fetch-Site")!="cross-site"
 
     def dispatch_error(self,exc):
-        if isinstance(exc,ImportFailure):return self.reply(dict(error="Import validation failed",issues=[x.to_dict() for x in exc.issues]),400)
+        if self.last_status:
+            # A response was already written (legacy routes reply and then re-raise); never write a second body.
+            return logger.error("late_failure",error_type=type(exc).__name__,http_status=self.last_status,outcome="error")
+        if isinstance(exc,ImportFailure):
+            logger.warn("request_rejected",error_type="ImportFailure",http_status=400,count=len(exc.issues),outcome="error")
+            return self.reply(dict(error="Import validation failed",issues=[x.to_dict() for x in exc.issues]),400)
+        if isinstance(exc,ProviderError):
+            # The operator gets the classification and a remediation hint; the provider payload is never forwarded.
+            logger.error("provider_failed",error_type="ProviderError",error_kind=exc.kind,http_status=502,
+                remediation=exc.remediation,outcome="error")
+            metrics.increment("provider_failures_total",kind=exc.kind)
+            return self.reply(dict(exc.to_dict(),trace_id=logger.trace_id()),502)
         if isinstance(exc,NotFoundError):status=404
         elif isinstance(exc,ConflictError):status=409
-        elif isinstance(exc,ProviderError):status=502
         elif isinstance(exc,ConfigurationError):status=503
+        elif isinstance(exc,sqlite3.OperationalError):
+            logger.error("database_unavailable",error_type="OperationalError",http_status=503,outcome="error")
+            return self.reply(dict(error="Database is busy or locked. Close other Rule2Test processes and repeat the action; nothing was retried automatically.",
+                trace_id=logger.trace_id()),503)
         elif isinstance(exc,(ValueError,TypeError,KeyError)):status=400
         else:
-            logging.error("Request failed with %s",type(exc).__name__)
-            return self.reply(dict(error="Internal server error. No automatic retry was attempted."),500)
-        self.reply(dict(error=str(exc)),status)
+            logger.error("request_failed",error_type=type(exc).__name__,http_status=500,outcome="error")
+            return self.reply(dict(error="Internal server error. No automatic retry was attempted.",trace_id=logger.trace_id()),500)
+        logger.warn("request_rejected",error_type=type(exc).__name__,http_status=status,outcome="error")
+        self.reply(dict(error=str(exc),trace_id=logger.trace_id()),status)
 
-    def do_GET(self):
-        try:
-            if not self.origin_allowed():return self.reply(dict(error="Origin or Host denied"),403)
-            parsed=urlsplit(self.path);path=parsed.path
-            if path=="/api/v1/session":return self.reply(dict(csrf_token=self.server.csrf_token,providers=self.server.app.providers(),api_version=1))
-            if path.startswith("/api/v1/"):
-                result=WorkspaceRoutes(self.server.app).get(path,parse_qs(parsed.query))
-                if isinstance(result,Download):return self.send_bytes(result.data,result.media_type,filename=result.filename)
-                return self.reply(result)
-            if path in ASSETS:
-                filename,media_type=ASSETS[path]
-                return self.send_bytes((ROOT/"web"/filename).read_bytes(),media_type)
-            if path=="/legacy":return self.send_bytes((ROOT/"web"/"index.html").read_bytes(),"text/html; charset=utf-8",legacy=True)
-            if path.startswith("/api/"):return super().do_GET()
-            return self.reply(dict(error="Not found"),404)
-        except (BrokenPipeError,ConnectionResetError):pass
-        except Exception as exc:self.dispatch_error(exc)
+    def _serve(self,method,handler):
+        label=route_label(urlsplit(getattr(self,"path","") or "").path)
+        self.last_status=0;started=time.perf_counter()
+        with tracing.trace("http_request",component="transport",method=method,route=label):
+            try:handler()
+            except (BrokenPipeError,ConnectionResetError):pass
+            except Exception as exc:self.dispatch_error(exc)
+            elapsed=(time.perf_counter()-started)*1000;status=str(self.last_status)
+            metrics.increment("http_responses_total",method=method,route=label,status=status)
+            metrics.observe("http_request_duration_ms",elapsed,method=method,route=label,status=status)
+            logger.event("http_request","warn" if self.last_status>=400 else "info",method=method,route=label,
+                http_status=self.last_status,duration_ms=round(elapsed,3),
+                outcome="error" if self.last_status>=400 else "ok")
 
-    def do_POST(self):
-        try:
-            if not self.origin_allowed():return self.reply(dict(error="Origin or Host denied"),403)
-            path=urlsplit(self.path).path
-            if not path.startswith("/api/v1/"):return super().do_POST()
-            token=self.headers.get("X-CSRF-Token","")
-            if not secrets.compare_digest(token,self.server.csrf_token):return self.reply(dict(error="Missing or invalid session token; reload the workspace"),403)
-            if self.headers.get("Content-Type","").split(";")[0].strip()!="application/json":return self.reply(dict(error="Expected application/json"),415)
-            if self.headers.get("Transfer-Encoding"):return self.reply(dict(error="Transfer encoding is unsupported"),400)
-            length=int(self.headers.get("Content-Length","0"))
-            if not 0<length<=MAX_REQUEST:return self.reply(dict(error="Request exceeds the 16 MiB limit or is empty"),413)
-            data=self.rfile.read(length)
-            if len(data)!=length:return self.reply(dict(error="Incomplete request body"),400)
-            body=strict_json(data.decode("utf-8"))
-            result=WorkspaceRoutes(self.server.app).post(path,body)
+    def do_GET(self):self._serve("GET",self._get)
+    def do_POST(self):self._serve("POST",self._post)
+
+    def _get(self):
+        if not self.origin_allowed():return self.reply(dict(error="Origin or Host denied"),403)
+        parsed=urlsplit(self.path);path=parsed.path
+        if path=="/api/v1/session":return self.reply(dict(csrf_token=self.server.csrf_token,providers=self.server.app.providers(),api_version=1))
+        if path.startswith("/api/v1/"):
+            result=WorkspaceRoutes(self.server.app).get(path,parse_qs(parsed.query))
+            if isinstance(result,Download):return self.send_bytes(result.data,result.media_type,filename=result.filename)
             return self.reply(result)
-        except (BrokenPipeError,ConnectionResetError):pass
-        except Exception as exc:self.dispatch_error(exc)
+        if path in ASSETS:
+            filename,media_type=ASSETS[path]
+            return self.send_bytes((ROOT/"web"/filename).read_bytes(),media_type)
+        if path=="/legacy":return self.send_bytes((ROOT/"web"/"index.html").read_bytes(),"text/html; charset=utf-8",legacy=True)
+        if path.startswith("/api/"):return LegacyHandler.do_GET(self)
+        return self.reply(dict(error="Not found"),404)
+
+    def _post(self):
+        if not self.origin_allowed():return self.reply(dict(error="Origin or Host denied"),403)
+        path=urlsplit(self.path).path
+        if not path.startswith("/api/v1/"):
+            if int(self.headers.get("Content-Length","0") or 0)>MAX_REQUEST:
+                return self.reply(dict(error="Request exceeds the 16 MiB limit"),413)
+            return LegacyHandler.do_POST(self)
+        token=self.headers.get("X-CSRF-Token","")
+        if not secrets.compare_digest(token,self.server.csrf_token):return self.reply(dict(error="Missing or invalid session token; reload the workspace"),403)
+        if self.headers.get("Content-Type","").split(";")[0].strip()!="application/json":return self.reply(dict(error="Expected application/json"),415)
+        if self.headers.get("Transfer-Encoding"):return self.reply(dict(error="Transfer encoding is unsupported"),400)
+        length=int(self.headers.get("Content-Length","0"))
+        if not 0<length<=MAX_REQUEST:return self.reply(dict(error="Request exceeds the 16 MiB limit or is empty"),413)
+        data=self.rfile.read(length)
+        if len(data)!=length:return self.reply(dict(error="Incomplete request body"),400)
+        body=strict_json(data.decode("utf-8"))
+        return self.reply(WorkspaceRoutes(self.server.app).post(path,body))
 
     def do_OPTIONS(self):self.reply(dict(error="Cross-origin requests are not enabled"),403)
 
@@ -104,9 +151,16 @@ def main(argv=None):
     parser.add_argument("--port",type=int,default=8000)
     args=parser.parse_args(argv)
     if not 1<=args.port<=65535:parser.error("Port must be 1..65535")
+    diagnostics=logger.configure()
     app=Application(args.db)
-    with WorkspaceServer(("127.0.0.1",args.port),app) as server:
+    try:server=WorkspaceServer(("127.0.0.1",args.port),app)
+    except OSError as exc:
+        raise ConfigurationError(f"Port {args.port} is already in use; stop the other process or pass --port") from exc
+    with server:
+        logger.info("workspace_started",port=args.port,schema_version=1,
+            level_configured=diagnostics["level"],destination=diagnostics["destination"])
         print(f"Rule2Test workspace: http://127.0.0.1:{args.port} | database: {app.db.path}",flush=True)
+        print(f"Diagnostics: http://127.0.0.1:{args.port}/api/v1/diagnostics | logs: {diagnostics['destination']} at level {diagnostics['level']}",flush=True)
         try:server.serve_forever()
         except KeyboardInterrupt:pass
 if __name__=="__main__":main()

@@ -3,8 +3,9 @@ import json
 from decimal import Decimal
 from urllib.request import Request,build_opener,ProxyHandler
 from factory.models.common import require,nonempty
+from factory.observability import metrics,span
 from factory.parsers.common import strict_json
-from factory.exceptions import ProviderError
+from factory.providers.failure import classify,failure
 from factory.providers.vector.base import normalized
 from factory.providers.llm.ollama import NoRedirect
 
@@ -21,23 +22,29 @@ class OllamaEmbeddingProvider:
     def embed(self,texts):
         require(len(texts)<=500 and all(type(t) is str and len(t.encode("utf-8"))<=65536 for t in texts),"Embedding text exceeds 64 KiB or 500 rows")
         output=[]
-        for start in range(0,len(texts),16):
-            batch=texts[start:start+16]
-            payload=dict(model=self.model,input=batch,truncate=False,dimensions=self.dimensions)
-            if self.device=="cpu":payload["options"]={"num_gpu":0}
-            body=json.dumps(payload,ensure_ascii=False).encode("utf-8")
-            request=Request("http://127.0.0.1:11434/api/embed",data=body,headers={"Content-Type":"application/json"},method="POST")
-            try:
-                with build_opener(ProxyHandler({}),NoRedirect()).open(request,timeout=self.timeout_seconds) as response:
-                    raw=response.read(4*1024*1024+1)
-                require(len(raw)<=4*1024*1024,"Embedding response exceeds 4 MiB")
-                result=strict_json(raw.decode("utf-8"))
-                require(type(result) is dict and result.get("model")==self.model,"Embedding response model differs from configured model; use its exact tag")
-                vectors=result.get("embeddings")
-                require(type(vectors) is list and len(vectors)==len(batch),"Embedding row count mismatch")
-                for vector in vectors:
-                    require(type(vector) is list and all(type(x) in (int,float,Decimal) for x in vector),"Invalid embedding numbers")
-                    output.append(normalized(tuple(float(x) for x in vector),self.dimensions))
-            except Exception as exc:raise ProviderError("Local embedding request failed; check model, revision, dimensions and server") from exc
+        with span("ollama_embed",component="provider",provider="ollama",model=self.model,count=len(texts),dimensions=self.dimensions):
+            for start in range(0,len(texts),16):
+                batch=texts[start:start+16]
+                payload=dict(model=self.model,input=batch,truncate=False,dimensions=self.dimensions)
+                if self.device=="cpu":payload["options"]={"num_gpu":0}
+                body=json.dumps(payload,ensure_ascii=False).encode("utf-8")
+                request=Request("http://127.0.0.1:11434/api/embed",data=body,headers={"Content-Type":"application/json"},method="POST")
+                try:
+                    with build_opener(ProxyHandler({}),NoRedirect()).open(request,timeout=self.timeout_seconds) as response:
+                        raw=response.read(4*1024*1024+1)
+                    if len(raw)>4*1024*1024:raise failure("oversized_response","Embedding response exceeds 4 MiB")
+                    result=strict_json(raw.decode("utf-8"))
+                    if type(result) is not dict:raise failure("schema_rejected","Embedding response is not a JSON object")
+                    if result.get("model")!=self.model:raise failure("model_mismatch","Embedding response model differs from configured model; use its exact tag")
+                    vectors=result.get("embeddings")
+                    if type(vectors) is not list or len(vectors)!=len(batch):raise failure("schema_rejected","Embedding row count mismatch")
+                    for vector in vectors:
+                        if type(vector) is not list or not all(type(x) in (int,float,Decimal) for x in vector):
+                            raise failure("schema_rejected","Invalid embedding numbers")
+                        output.append(normalized(tuple(float(x) for x in vector),self.dimensions))
+                except Exception as exc:
+                    error=classify(exc,"Local embedding request failed; check model, revision, dimensions and server")
+                    metrics.increment("provider_calls_total",provider="ollama",operation="embed",outcome="error",kind=error.kind)
+                    raise error from exc
+            metrics.increment("provider_calls_total",provider="ollama",operation="embed",outcome="ok")
         return tuple(output)
-

@@ -2,7 +2,9 @@
 import json, urllib.request, urllib.error
 from urllib.parse import urlsplit
 from factory.providers.sut.base import SUTAdapter
+from factory.providers.failure import classify, failure
 from factory.models import Action
+from factory.observability import metrics, span
 from factory.exceptions import ConfigurationError, ProviderError, ValidationError
 
 class _NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -23,23 +25,28 @@ class HttpSUTAdapter(SUTAdapter):
     @property
     def name(self): return "http-sut-v1"
     def execute(self,inputs,*,timeout_seconds):
-        if not 0<timeout_seconds<=300: raise ProviderError("Invalid SUT timeout")
+        if not 0<timeout_seconds<=300: raise failure("invalid_request","Invalid SUT timeout")
         payload=json.dumps({"inputs":[item.to_dict() for item in inputs]},ensure_ascii=False).encode("utf-8")
         request=urllib.request.Request(self.endpoint,data=payload,headers={"Content-Type":"application/json","Accept":"application/json"},method="POST")
-        try:
-            with self.opener.open(request,timeout=timeout_seconds) as response:
-                if response.status!=200: raise ProviderError("SUT returned unexpected status")
-                if response.headers.get_content_type()!="application/json": raise ProviderError("SUT must return application/json")
-                data=response.read(self.max_response_bytes+1)
-            if len(data)>self.max_response_bytes: raise ProviderError("SUT response exceeds size limit")
-            action=Action.from_json(data.decode("utf-8"))
-            if action.formula is not None: raise ProviderError("SUT must return concrete actual, not a formula")
-            return action
-        except urllib.error.HTTPError as exc:
-            code=exc.code
-            exc.close()
-            raise ProviderError("SUT HTTP status "+str(code)) from None
-        except (urllib.error.URLError,TimeoutError,OSError) as exc:
-            raise ProviderError("SUT connection or timeout error") from None
-        except (ValidationError,UnicodeError) as exc:
-            raise ProviderError("SUT response violates Action schema") from None
+        with span("http_sut_execute",component="sut",provider="http-sut-v1",count=len(inputs),timeout_seconds=timeout_seconds):
+            try:
+                with self.opener.open(request,timeout=timeout_seconds) as response:
+                    if response.status!=200: raise failure("http_status","SUT returned unexpected status")
+                    if response.headers.get_content_type()!="application/json": raise failure("schema_rejected","SUT must return application/json")
+                    data=response.read(self.max_response_bytes+1)
+                if len(data)>self.max_response_bytes: raise failure("oversized_response","SUT response exceeds size limit")
+                action=Action.from_json(data.decode("utf-8"))
+                if action.formula is not None: raise failure("schema_rejected","SUT must return concrete actual, not a formula")
+                metrics.increment("provider_calls_total",provider="http-sut",operation="execute",outcome="ok")
+                return action
+            except urllib.error.HTTPError as exc:
+                code=exc.code
+                exc.close()
+                error=failure("http_status","SUT HTTP status "+str(code))
+                metrics.increment("provider_calls_total",provider="http-sut",operation="execute",outcome="error",kind=error.kind)
+                raise error from None
+            except Exception as exc:
+                error=classify(exc,"SUT connection or timeout error" if isinstance(exc,(urllib.error.URLError,TimeoutError,OSError))
+                    else "SUT response violates Action schema")
+                metrics.increment("provider_calls_total",provider="http-sut",operation="execute",outcome="error",kind=error.kind)
+                raise error from None

@@ -10,6 +10,8 @@ from factory.parsers.common import document,strict_json
 from factory.exceptions import ConflictError,NotFoundError
 from factory.repositories.extraction_repository import ProposalRepository,ExtractionReviewRepository,PromotionRepository
 from factory.validators.extraction_validator import validate_response,compile_proposal
+from factory.observability import metrics,span
+from factory.providers.failure import classify
 from factory.providers.llm.prompt import SYSTEM_PROMPT,PROMPT_VERSION,document_message
 from .workflow_service import WorkflowService
 
@@ -28,10 +30,14 @@ class ExtractionService:
         require(type(tests) is list and len(tests)<=1000,"Existing tests must be an array of at most 1000 rows")
         started=time.monotonic();raw="";status="provider_error";issues=("Provider request failed; check provider configuration.",)
         try:
-            raw=self.provider.extract(request,system_prompt=SYSTEM_PROMPT,timeout_seconds=timeout_seconds)
-        except Exception:
-            # No provider exception body is persisted: it may contain credentials or transport details.
-            raw=""
+            with span("extraction_propose",component="service",provider=self.provider.name,simulated=self.provider.simulated):
+                raw=self.provider.extract(request,system_prompt=SYSTEM_PROMPT,timeout_seconds=timeout_seconds)
+        except Exception as exc:
+            # Only the classification and a static remediation hint survive: a provider exception body
+            # may contain credentials or transport details and is never persisted.
+            error=classify(exc,"Provider request failed")
+            raw="";issues=("Provider request failed ("+error.kind+"). "+error.remediation,)
+            metrics.increment("extraction_failures_total",kind=error.kind)
         else:
             status="invalid_output";issues=("Output failed JSON/schema/citation validation.",)
             try:

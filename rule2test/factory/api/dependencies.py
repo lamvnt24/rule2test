@@ -1,5 +1,5 @@
-"""Application-scoped SQLite services and server-owned provider configuration."""
-import os
+"""Application-scoped SQLite services, server-owned provider configuration and local diagnostics."""
+import os,platform,sqlite3,sys
 from decimal import Decimal
 from pathlib import Path
 from factory.repositories.connection import Database
@@ -18,9 +18,18 @@ from factory.providers.sut.mock import MockSUTAdapter
 from factory.engines.insurance_engine import InsuranceEngine
 from factory.parsers._builder import decimal
 from factory.exceptions import ConfigurationError
+from factory.observability import logger as diagnostics_log,metrics
 from .schemas.requests import body_keys
 
 ROOT=Path(__file__).resolve().parents[2]
+DEFAULT_AI_TIMEOUT_SECONDS=60
+# Reported by /api/v1/diagnostics. Secrets are listed only as set/unset and never by value.
+SETTINGS=("RULE2TEST_EXTRACTION_PROVIDER","RULE2TEST_EXTRACTION_MODEL","RULE2TEST_EXTRACTION_DIGEST",
+    "RULE2TEST_SUGGESTION_PROVIDER","RULE2TEST_SUGGESTION_MODEL","RULE2TEST_SUGGESTION_DIGEST",
+    "RULE2TEST_EMBEDDING_PROVIDER","RULE2TEST_EMBEDDING_MODEL","RULE2TEST_EMBEDDING_REVISION",
+    "RULE2TEST_EMBEDDING_DIMENSIONS","RULE2TEST_EMBEDDING_DEVICE","RULE2TEST_VECTOR_BACKEND",
+    "RULE2TEST_AI_TIMEOUT_SECONDS","RULE2TEST_LOG_LEVEL","RULE2TEST_LOG_FILE")
+SECRETS=("OPENAI_API_KEY","OLLAMA_MODEL","OPENAI_MODEL")
 
 class Application:
     def __init__(self,db_path):
@@ -63,7 +72,7 @@ class Application:
     @staticmethod
     def ai_timeout():
         try:
-            timeout=int(os.environ.get("RULE2TEST_AI_TIMEOUT_SECONDS","30"))
+            timeout=int(os.environ.get("RULE2TEST_AI_TIMEOUT_SECONDS",str(DEFAULT_AI_TIMEOUT_SECONDS)))
             if not 1<=timeout<=120:raise ValueError()
             return timeout
         except ValueError as exc:raise ConfigurationError("AI timeout must be 1..120 seconds") from exc
@@ -94,3 +103,33 @@ class Application:
                 inventory=inventory(),note="Metadata inspection only. No inference, downloads or automatic provider switch.")
         return dict(configured=configured,models=models,readiness=result)
 
+    @staticmethod
+    def optional_dependencies():
+        available={}
+        for name,extra in (("openpyxl","excel"),("defusedxml","excel"),("faiss","retrieval"),("playwright","browser")):
+            try:
+                __import__(name);available[name]=dict(installed=True,extra=extra)
+            except Exception:available[name]=dict(installed=False,extra=extra)
+        return available
+
+    @staticmethod
+    def effective_configuration():
+        """Every setting the process actually uses, with secrets reported as set/unset only."""
+        declared={name:os.environ.get(name,"") for name in SETTINGS}
+        return dict(settings={k:(v if v else "(default)") for k,v in declared.items()},
+            secrets={name:("set" if os.environ.get(name,"").strip() else "unset") for name in SECRETS},
+            defaults=dict(ai_timeout_seconds=DEFAULT_AI_TIMEOUT_SECONDS,vector_backend="python",providers="mock"),
+            runtime=dict(python=platform.python_version(),sqlite=sqlite3.sqlite_version,platform=sys.platform),
+            note="Process environment only. The .env.example template is never loaded automatically.")
+
+    def diagnostics(self):
+        with self.db.read() as connection:
+            versions=sorted(row[0] for row in connection.execute("SELECT version FROM wf_schema_migrations"))
+            workflows=connection.execute("SELECT count(*) FROM wf_heads").fetchone()[0]
+        return dict(schema_version=1,providers=self.providers(),configuration=self.effective_configuration(),
+            optional_dependencies=self.optional_dependencies(),logging=diagnostics_log.configuration(),
+            database=dict(path=self.db.path.name,migrations=versions,workflows=workflows,
+                writable=os.access(self.db.path.parent,os.W_OK)),
+            metrics=metrics.snapshot(),
+            scope="Local demo diagnostics for this process only.",
+            limitation="Counters reset on restart, are never persisted or exported, and never contain document text, prompts, reviewer names or session tokens.")

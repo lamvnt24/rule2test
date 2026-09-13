@@ -11,8 +11,14 @@ function notice(message, error=false) { $("notice").hidden=false; $("notice").cl
 function actor() { const value=$("actor").value.trim(); if(!value) throw Error("Enter your reviewer identity in the header first."); return value; }
 async function api(path, body) {
   const response=await fetch("/api/v1"+path, body===undefined?{}:{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-Token":state.token},body:JSON.stringify(body)});
-  const data=await response.json();
-  if(!response.ok) throw Error((response.status===409?"Revision or state conflict. Refresh and inspect before retrying.\n":"")+(data.error||response.statusText)+(data.issues?"\n"+pretty(data.issues):""));
+  const trace=response.headers.get("X-Trace-Id")||"";
+  let data;
+  try { data=await response.json(); }
+  catch { throw Error("The server returned a non-JSON response (HTTP "+response.status+"). Inspect the server console."+(trace?" Trace "+trace+".":"")); }
+  if(!response.ok) throw Error((response.status===409?"Revision or state conflict. Refresh and inspect before retrying.\n":"")+(data.error||response.statusText)
+    +(data.kind?"\nProvider failure: "+data.kind+(data.remediation?" \u2014 "+data.remediation:"")+"\nNo retry and no fallback to mock were attempted.":"")
+    +(data.issues?"\n"+pretty(data.issues):"")
+    +((data.trace_id||trace)?"\nTrace "+(data.trace_id||trace):""));
   return data;
 }
 function page(name) {
@@ -115,6 +121,25 @@ async function perform(name) {
     const url=URL.createObjectURL(blob),link=document.createElement("a");
     link.href=url;link.download="quality-gate-"+state.gate.workflow_id+".json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
     return "The displayed gate snapshot was downloaded. Its report_hash uses canonical JSON.";
+  }
+  if(name==="diagnostics"){
+    const d=await api("/diagnostics");
+    const table=(body,cells)=>'<div class="table-scroll"><table><thead><tr>'+cells.map(c=>"<th>"+esc(c)+"</th>").join("")+"</tr></thead><tbody>"+body+"</tbody></table></div>";
+    const labels=o=>Object.entries(o||{}).map(([k,v])=>k+"="+v).join(" ")||"\u2014";
+    const counters=d.metrics.counters.map(c=>"<tr><td>"+esc(c.name)+"</td><td>"+esc(labels(c.labels))+"</td><td>"+c.value+"</td></tr>").join("")||'<tr><td colspan="3">No counters recorded yet.</td></tr>';
+    const durations=d.metrics.durations.map(x=>"<tr><td>"+esc(x.name)+"</td><td>"+esc(labels(x.labels))+"</td><td>"+x.count+"</td><td>"+x.mean_ms.toFixed(1)+" ms</td><td>"+x.max_ms.toFixed(1)+" ms</td><td>"+(x.p95_ms_upper_bound===null?"&gt; 30000":"\u2264 "+x.p95_ms_upper_bound)+" ms</td></tr>").join("")||'<tr><td colspan="6">No timings recorded yet.</td></tr>';
+    const deps=Object.entries(d.optional_dependencies).map(([k,v])=>k+": "+(v.installed?"installed":"absent")+" ("+v.extra+")").join(" \u00b7 ");
+    $("diagnostics-detail").innerHTML='<div class="metrics">'
+      +metric("Logging",d.logging.level,"to "+d.logging.destination+" \u00b7 "+d.logging.allowlisted_fields+" allowlisted fields")
+      +metric("Metric series",d.metrics.series+" / "+d.metrics.max_series,d.metrics.dropped_series+" dropped by the cardinality cap")
+      +metric("Database",d.database.migrations.join(", "),d.database.path+" \u00b7 "+d.database.workflows+" workflows \u00b7 "+(d.database.writable?"writable":"read-only"))
+      +metric("Runtime","Python "+d.configuration.runtime.python,"SQLite "+d.configuration.runtime.sqlite+" \u00b7 "+d.configuration.runtime.platform)
+      +'</div><p class="hint">'+esc(deps)+'</p>'
+      +"<h3>Counters</h3>"+table(counters,["Counter","Labels","Value"])
+      +"<h3>Durations</h3>"+table(durations,["Operation","Labels","Count","Mean","Max","p95 bucket"])
+      +details("Effective configuration (secrets shown as set/unset only)",d.configuration)
+      +'<p class="hint">'+esc(d.limitation)+"</p>";
+    return "Diagnostics loaded. Durations are host wall-clock times, not a quality measurement.";
   }
   if(name==="ai-status"){
     const status=await api("/ai-status");

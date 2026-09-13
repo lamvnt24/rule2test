@@ -1,7 +1,8 @@
 """SQLite migration and transaction boundary. Uses wf_ tables beside the legacy demo."""
-import sqlite3
+import sqlite3,time
 from pathlib import Path
 from contextlib import contextmanager
+from factory.observability import metrics
 from factory.exceptions import ConflictError,ConfigurationError
 
 _MIGRATION_1=(
@@ -29,28 +30,36 @@ class Database:
 
     def _connect(self):
         c=sqlite3.connect(self.path,timeout=10,isolation_level=None)
-        c.execute("PRAGMA foreign_keys=ON")
+        c.execute("PRAGMA foreign_keys=ON");c.execute("PRAGMA busy_timeout=10000")
         c.row_factory=sqlite3.Row
         return c
 
     @contextmanager
     def transaction(self):
-        c=self._connect()
+        c=self._connect();started=time.perf_counter();outcome="ok"
         try:
             c.execute("BEGIN IMMEDIATE")
             yield c
             c.commit()
         except sqlite3.IntegrityError as exc:
-            c.rollback();raise ConflictError("SQLite integrity conflict") from exc
+            outcome="conflict";c.rollback();raise ConflictError("SQLite integrity conflict") from exc
         except Exception:
-            c.rollback();raise
-        finally:c.close()
+            outcome="error";c.rollback();raise
+        finally:
+            c.close()
+            metrics.increment("db_transactions_total",outcome=outcome)
+            metrics.observe("db_transaction_duration_ms",(time.perf_counter()-started)*1000,outcome=outcome)
 
     @contextmanager
     def read(self):
-        c=self._connect()
+        c=self._connect();started=time.perf_counter();outcome="ok"
         try:
             c.execute("BEGIN")
             yield c
             c.commit()
-        finally:c.close()
+        except Exception:
+            outcome="error";raise
+        finally:
+            c.close()
+            metrics.increment("db_reads_total",outcome=outcome)
+            metrics.observe("db_read_duration_ms",(time.perf_counter()-started)*1000,outcome=outcome)

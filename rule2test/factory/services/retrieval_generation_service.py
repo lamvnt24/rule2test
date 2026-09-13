@@ -11,6 +11,8 @@ from factory.repositories.document_repository import DocumentRepository
 from factory.engines.oracle_engine import OracleEngine
 from factory.validators.test_validator import input_map
 from factory.exceptions import ConflictError,ProviderError
+from factory.observability import span
+from factory.providers.failure import classify
 from .knowledge_service import KnowledgeService,SCOPE
 from .workflow_service import WorkflowService
 from .gap_service import GapService
@@ -31,8 +33,12 @@ class RetrievalGenerationService:
         hits=self.knowledge.search(index_id,query,fields=fields,rule_ids=tuple(r.rule_id for r in w.new_rules),exclude_workflow=w.workflow_id,top_k=5)
         index=self.knowledge.get(index_id)
         require(self.provider is not None,"Suggestion provider is required")
-        try:raw=self.provider.suggest(w,hits,timeout_seconds=timeout_seconds) if hits else '{"candidates":[]}'
-        except Exception as exc:raise ProviderError("Test suggestion provider failed; no candidates were saved") from exc
+        try:
+            with span("suggestion_propose",component="service",provider=self.provider.name):
+                raw=self.provider.suggest(w,hits,timeout_seconds=timeout_seconds) if hits else '{"candidates":[]}'
+        except Exception as exc:
+            # classify preserves an already-classified adapter failure instead of flattening it again.
+            raise classify(exc,"Test suggestion provider failed; no candidates were saved") from exc
         require(type(raw) is str and len(raw.encode("utf-8"))<=262144,"Suggestion response exceeds 256 KiB")
         result=strict_json(raw)
         require(type(result) is dict and set(result)=={"candidates"},"Unexpected suggestion output fields")

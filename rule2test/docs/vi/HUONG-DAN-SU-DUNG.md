@@ -79,6 +79,13 @@ Cột trái có 6 mục:
 
 Thanh thông báo ở giữa màn hình cho biết việc vừa rồi thành công hay lỗi. **Đọc nó** — nó luôn nói phải làm gì tiếp.
 
+Ngay dưới đó là **thanh tiến trình 5 bước**. Bước đang làm được tô đậm, và bên cạnh là **một nút duy nhất**
+cho việc tiếp theo. Cứ bấm nút đó là đi đúng luồng — trừ bước 3 là phần bạn phải tự quyết định.
+
+```
+1 Rule versions → 2 Analysis → 3 Your review → 4 Execution → 5 Evidence & gate
+```
+
 ---
 
 ## 3. Làm trọn một vòng — 5 phút
@@ -94,17 +101,19 @@ Góc trên bên phải, ô **Reviewer identity**.
 *Bạn sẽ thấy:* thông báo "Draft created", màn hình nhảy sang **04 Test workspace**, trạng thái **draft**.
 
 ### Bước 3 — Phân tích thay đổi
-Bấm **Analyze & generate**.
+Bấm **Analyze & open review** — nút màu đậm trên thanh tiến trình ở đầu trang.
 
-*Bạn sẽ thấy:* **14 test đề xuất**, trạng thái đổi thành **analyzed**.
+*Bạn sẽ thấy:* **14 test đề xuất**, và ba bảng đọc được ngay, không phải JSON:
 
-Mở phần **Rule delta, impact, gaps & baseline coverage** để xem tool đã tìm ra gì: quy tắc nào đổi, test nào bị
-ảnh hưởng, vùng nào chưa ai phủ.
+| Bảng | Cho biết |
+|---|---|
+| **What changed in the rules** | Quy tắc nào đổi, trước và sau: `If Age ≥ 18 and Age ≤ 60 → ALLOW` thành `… ≤ 65 → ALLOW` |
+| **Existing tests this affects** | Test cũ nào đổi kết quả mong đợi: `EXISTING-61` từ `DENY` thành `ALLOW` |
+| **Cases nobody covers yet** | Tình huống chưa ai phủ, kèm **đầu vào để phủ nó**: `Age = 66` |
 
-### Bước 4 — Mở phiên duyệt
-Bấm **Open test review**. Trạng thái đổi thành **in_review**.
+Muốn xem dữ liệu gốc thì mở mục **Raw JSON** gập lại ở cuối mỗi khối — nó vẫn nguyên vẹn cho kiểm toán.
 
-### Bước 5 — Duyệt test  ← **đây là phần của bạn**
+### Bước 4 — Duyệt test  ← **đây là phần của bạn**
 1. Xem qua bảng test: cột **Inputs** là đầu vào, cột **Expected** là kết quả tool tính ra.
 2. Tick chọn test bạn đồng ý (hoặc tick **Select all displayed tests for review**).
 3. Gõ lý do vào ô **Test review reason**. Bắt buộc.
@@ -113,27 +122,30 @@ Bấm **Open test review**. Trạng thái đổi thành **in_review**.
 
 *Bạn sẽ thấy:* "14 explicit review decisions saved", rồi "Review finalized".
 
+Cột **Inputs** và **Expected** hiển thị bằng câu chữ: `Age = 18` và `ALLOW`, không phải JSON.
+
 > Có thể **Reject selected** (loại bỏ) hoặc **Request changes** (yêu cầu sửa). Test bị loại sẽ không được chạy.
 > Còn test nào chưa quyết định thì **không finalize được**.
 
-### Bước 6 — Chạy test
-**06 Run & evidence** → để **Injected fault** = **None** → bấm **Execute approved tests**.
+### Bước 5 — Chạy test
+Bấm **Run the approved tests** trên thanh tiến trình (hoặc vào **06 Run & evidence** nếu muốn đổi cấu hình
+hệ thống được test trước).
 
-*Bạn sẽ thấy:* **14 pass, 0 fail**. Mỗi dòng có **Expected** cạnh **Actual**.
+*Bạn sẽ thấy:* **14 pass, 0 fail**. Mỗi dòng có **Expected** cạnh **Actual**, dạng `ALLOW` chứ không phải JSON.
 
-### Bước 7 — Tạo bằng chứng và chấm điểm
-1. Bấm **Create evidence pack** → thông báo kèm mã băm SHA-256.
-2. Bấm **Evaluate current revision** → kết luận **GO**.
-3. Muốn lấy file: **Download verified evidence JSON**.
+### Bước 6 — Tạo bằng chứng và chấm điểm
+Bấm **Create evidence & evaluate** — một nút làm cả hai việc: đóng gói bằng chứng rồi chấm cổng chất lượng.
 
-### Bước 8 — Thử nghiệm bơm lỗi  ← **phần thuyết phục nhất**
+*Bạn sẽ thấy:* mã băm SHA-256 và kết luận **GO**. Muốn lấy file: **Download verified evidence JSON**.
+
+### Bước 7 — Thử nghiệm bơm lỗi  ← **phần thuyết phục nhất**
 
 Giờ giả lập lập trình viên code sai lệch đúng một đơn vị ở ngưỡng:
 
 1. Ô **Reason** (mục Workflow controls) gõ lý do → bấm **Reopen review**.
 2. Sang **04 Test workspace** → chọn lại tất cả → gõ lý do → **Approve selected** → **Finalize review**.
 3. Về **06 Run & evidence** → đổi **Injected fault** thành **Boundary** → **Execute approved tests**.
-4. **Create evidence pack** → **Evaluate current revision**.
+4. Bấm **Create evidence & evaluate**.
 
 *Bạn sẽ thấy:* **13 pass, 1 fail**, kết luận **NO-GO**, và test hỏng chỉ đúng một con tuổi cụ thể.
 

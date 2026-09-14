@@ -5,6 +5,121 @@ const pretty = value => JSON.stringify(value, null, 2);
 const code = value => "<pre>" + esc(pretty(value)) + "</pre>";
 const badge = value => '<span class="badge ' + esc(value) + '">' + esc(value) + "</span>";
 const details = (title, value) => "<details><summary>" + esc(title) + "</summary>" + code(value) + "</details>";
+
+// ---- Human-readable rendering ------------------------------------------------------------
+// The API returns typed domain contracts. Showing them raw makes a reviewer read JSON to do
+// their job. Everything below turns a contract into a sentence; the raw object stays available
+// under a "Raw JSON" disclosure because it is the audit artefact.
+const FIELD_NAMES={age:"Age",claim_amount:"Claim amount"};
+const OPERATORS={eq:"=",ne:"≠",lt:"<",le:"≤",gt:">",ge:"≥",is_null:"is empty",is_missing:"is missing"};
+const OUTCOMES={allow:"ALLOW",deny:"DENY",review:"REVIEW",invalid:"INVALID",payout:"PAYOUT"};
+const CHANGES={added:"Added",removed:"Removed",modified:"Changed"};
+const fieldName = field => FIELD_NAMES[field] || String(field);
+const grouped = text => {
+  const [whole, fraction] = String(text).split(".");
+  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (fraction ? "." + fraction : "");
+};
+function fmtValue(value) {
+  if(!value || value.kind === undefined) return "—";
+  switch(value.kind) {
+    case "integer": return String(value.data);
+    case "money": return grouped(value.data?.$decimal ?? value.data) + (value.currency ? " " + value.currency : "");
+    case "date": return String(value.data?.$date ?? value.data);
+    case "boolean": return value.data ? "yes" : "no";
+    case "text": return String(value.data);
+    case "null": return "empty";
+    case "missing": return "missing";
+    default: return String(value.data ?? value.kind);
+  }
+}
+function fmtInputs(inputs) {
+  if(!inputs || !inputs.length) return "—";
+  return inputs.map(input => fieldName(input.field) + " = " + fmtValue(input.value)).join(", ");
+}
+function fmtAction(action) {
+  if(!action) return "—";
+  const outcome = OUTCOMES[action.outcome] || String(action.outcome).toUpperCase();
+  if(action.formula) return outcome + " = " + fieldName(action.formula.field) + " − " + fmtValue(action.formula.deductible) + ", minimum 0";
+  if(action.amount) return outcome + " " + fmtValue(action.amount);
+  return outcome;
+}
+function fmtCondition(condition) {
+  const operator = OPERATORS[condition.operator] || condition.operator;
+  if(operator === "is empty" || operator === "is missing") return fieldName(condition.field) + " " + operator;
+  return fieldName(condition.field) + " " + operator + " " + fmtValue(condition.value);
+}
+function fmtRule(rule) {
+  if(!rule) return "—";
+  const when = (rule.conditions || []).map(fmtCondition).join(" and ") || "any input";
+  return "If " + when + " → " + fmtAction(rule.action);
+}
+const humanKey = key => String(key).replace(/_/g," ").replace(/^./,c=>c.toUpperCase());
+function fmtObserved(value) {
+  if(value === null || value === undefined) return "—";
+  if(Array.isArray(value)) return value.length ? value.join(", ") : "none";
+  if(typeof value !== "object") return String(value);
+  return Object.entries(value).map(([key, item]) =>
+    key.replace(/_/g, " ") + ": " + (item === null ? "—" : typeof item === "object" ? JSON.stringify(item) : item)).join(" · ");
+}
+function ruleCard(rule) {
+  const quote = (rule.sources || []).map(source => source.quote).find(Boolean);
+  return '<article class="plain"><h4>' + esc(rule.title) + ' <small>' + esc(rule.rule_id) + " · v" + rule.version + '</small></h4>'
+    + '<p class="rule-line">' + esc(fmtRule(rule)) + "</p>"
+    + (quote ? '<p class="quote">“' + esc(quote) + '”</p>' : "")
+    + details("Raw JSON", rule) + "</article>";
+}
+function table(headers, rows, empty) {
+  if(!rows) return '<p class="hint">' + esc(empty) + "</p>";
+  return '<div class="table-scroll"><table><thead><tr>' + headers.map(h => "<th>" + esc(h) + "</th>").join("")
+    + "</tr></thead><tbody>" + rows + "</tbody></table></div>";
+}
+function fmtAnalysis(analysis) {
+  const deltas = (analysis.delta?.deltas || []).map(delta =>
+    "<tr><td>" + esc(CHANGES[delta.kind] || delta.kind) + "</td><td>" + esc((delta.after || delta.before || {}).title || "")
+    + "</td><td>" + esc(fmtRule(delta.before)) + "</td><td>" + esc(fmtRule(delta.after)) + "</td></tr>").join("");
+  const impacted = (analysis.impact || []).filter(row => row.status !== "unchanged");
+  const impact = impacted.map(row =>
+    "<tr><td>" + esc(row.test_id) + "</td><td>" + badge(row.status) + "</td><td>" + esc(fmtAction(row.old_expected))
+    + "</td><td>" + esc(fmtAction(row.new_expected)) + "</td></tr>").join("");
+  const missing = new Set(analysis.gaps?.missing_ids || []);
+  const gaps = (analysis.gaps?.obligations || []).filter(o => missing.has(o.obligation_id)).map(o =>
+    "<tr><td>" + esc(o.category) + "</td><td>" + esc(o.label) + "</td><td>" + esc(fmtInputs(o.inputs)) + "</td></tr>").join("");
+  const unresolved = (analysis.gaps?.unresolved_ids || []).length;
+  return "<h3>What changed in the rules</h3>"
+    + table(["Change", "Rule", "Before", "After"], deltas, "No rule changed.")
+    + "<h3>Existing tests this affects</h3>"
+    + table(["Test", "Status", "Expected before", "Expected now"], impact,
+        "No existing test changes its expected result.")
+    + "<h3>Cases nobody covers yet</h3>"
+    + table(["Category", "Obligation", "Input that would cover it"], gaps, "Every obligation is already covered.")
+    + (unresolved ? '<p class="hint">' + unresolved + " obligation(s) could not be resolved by the bounded search; the gate treats them as unresolved.</p>" : "")
+    + details("Raw JSON", analysis);
+}
+// ---- Guided flow -------------------------------------------------------------------------
+const STEPS = ["1 Rule versions", "2 Analysis", "3 Your review", "4 Execution", "5 Evidence & gate"];
+const STEP_AT = {draft:0, analyzed:1, in_review:2, approved:3, executing:3, interrupted:3, executed:4, evidenced:4};
+const NEXT_STEP = {
+  draft: {action:"analyze-review", label:"Analyze & open review"},
+  analyzed: {action:"start-review", label:"Continue to test review"},
+  in_review: {hint:"Your turn: tick the tests you accept, write a reason, press Approve selected, then Finalize review."},
+  approved: {action:"execute", label:"Run the approved tests"},
+  executing: {hint:"A run is in progress. If it stopped, use Recover interrupted run."},
+  interrupted: {hint:"The run was interrupted. Use Recover interrupted run, then review again."},
+  executed: {action:"evidence-gate", label:"Create evidence & evaluate"},
+  evidenced: {hint:"Finished. Download the evidence pack, or reopen review to run again."},
+};
+function renderFlow() {
+  const workflow = state.current && state.current.workflow;
+  if(!workflow) { $("flow").innerHTML = ""; return; }
+  const at = STEP_AT[workflow.status] ?? 0;
+  const strip = STEPS.map((label, index) =>
+    '<span class="step' + (index < at ? " done" : index === at ? " now" : "") + '">' + esc(label) + "</span>").join("");
+  const next = NEXT_STEP[workflow.status] || {};
+  const button = next.action ? '<button data-action="' + next.action + '" class="primary">' + esc(next.label) + "</button>" : "";
+  const hint = next.hint ? '<span class="flow-hint">' + esc(next.hint) + "</span>" : "";
+  $("flow").innerHTML = '<div class="steps">' + strip + "</div>" + button + hint;
+}
+
 const state = {token:"", workflows:[], current:null, proposal:null, batch:null, busy:false, page:"overview"};
 const titles = {overview:"Overview",intake:"Document intake",extraction:"AI rule review",tests:"Test workspace",knowledge:"Knowledge & reuse",evidence:"Run & evidence"};
 function notice(message, error=false) { $("notice").hidden=false; $("notice").className=error?"error":""; $("notice").textContent=message; }
@@ -50,10 +165,6 @@ async function lists() {
   $("knowledge-sources").innerHTML=workflows.filter(w=>w.approved>0).map(w=>'<label class="check"><input type="checkbox" name="knowledge-source" value="'+esc(w.workflow_id)+'">'+esc(w.title)+" · "+esc(w.workflow_id.slice(0,8))+"</label>").join("")||'<p class="hint">Approve source tests in a workflow before building an index.</p>';
 }
 function w() {if(!state.current)throw Error("Select a workflow first.");return state.current.workflow;}
-function actionText(action) {
-  if(!action)return "—";
-  return pretty(action);
-}
 function renderWorkflow() {
   const current=state.current;
   if(!current){
@@ -61,20 +172,22 @@ function renderWorkflow() {
     $("test-summary").innerHTML='<div class="card empty">Select or create a workflow to begin.</div>';
     $("rule-detail").innerHTML="";$("test-rows").innerHTML="";$("downloads").innerHTML="";
     $("test-count").textContent="0 tests";$("select-all").checked=false;
+    renderFlow();
     return;
   }
   const wf=current.workflow;
   $("workflow-select").value=wf.workflow_id;
   $("context-state").textContent=wf.status+" · revision "+wf.revision;
   $("test-summary").innerHTML='<div class="section-heading"><h2>'+esc(current.summary.title)+'</h2>'+badge(wf.status)+"</div>"+coverage(current.coverage);
-  $("rule-detail").innerHTML='<div class="rule-columns"><div><h3>PREVIOUS RULE VERSION</h3>'+wf.old_rules.map(r=>details(r.title,r)).join("")+'</div><div><h3>CURRENT RULE VERSION</h3>'+wf.new_rules.map(r=>details(r.title,r)).join("")+"</div></div>"+(wf.analysis?details("Rule delta, impact, gaps & baseline coverage",wf.analysis):'<p class="hint">Analyze the rule change to identify affected tests, missing obligations and boundary candidates.</p>');
+  $("rule-detail").innerHTML='<div class="rule-columns"><div><h3>PREVIOUS RULE VERSION</h3>'+wf.old_rules.map(ruleCard).join("")+'</div><div><h3>CURRENT RULE VERSION</h3>'+wf.new_rules.map(ruleCard).join("")+"</div></div>"+(wf.analysis?fmtAnalysis(wf.analysis):'<p class="hint">Analyze the rule change to identify affected tests, missing obligations and boundary candidates.</p>');
   const decisions=Object.fromEntries(wf.approvals.map(a=>[a.subject_id,a.decision]));
   $("test-count").textContent=wf.tests.length+" tests · "+current.summary.pending+" pending";
-  $("test-rows").innerHTML=wf.tests.map((t,i)=>'<tr><td><input type="checkbox" name="test-selection" value="'+i+'" aria-label="Select '+esc(t.title)+'"></td><td>'+esc(t.title)+'<small>'+esc(t.test_id)+" · r"+t.revision+" · "+esc(t.kind)+'</small></td><td><code>'+esc(pretty(t.inputs))+'</code></td><td><code>'+esc(actionText(t.expected))+'</code></td><td>'+badge(decisions[t.test_id]||"pending")+'</td><td><button data-inspect-test="'+i+'">Inspect / edit</button></td></tr>').join("")||'<tr><td colspan="6">No generated tests yet.</td></tr>';
+  $("test-rows").innerHTML=wf.tests.map((t,i)=>'<tr><td><input type="checkbox" name="test-selection" value="'+i+'" aria-label="Select '+esc(t.title)+'"></td><td>'+esc(t.title)+'<small>'+esc(t.test_id)+" · r"+t.revision+" · "+esc(t.kind)+'</small></td><td>'+esc(fmtInputs(t.inputs))+'</td><td>'+esc(fmtAction(t.expected))+'</td><td>'+badge(decisions[t.test_id]||"pending")+'</td><td><button data-inspect-test="'+i+'">Inspect / edit</button></td></tr>').join("")||'<tr><td colspan="6">No generated tests yet.</td></tr>';
   $("select-all").checked=false;
   $("downloads").innerHTML=(wf.evidence_id?'<a class="source-link" href="/api/v1/workflows/'+encodeURIComponent(wf.workflow_id)+'/evidence/'+encodeURIComponent(wf.evidence_id)+'" download>Download verified evidence JSON ↗</a>':'<p class="hint">Create an evidence pack after execution.</p>')+(wf.documents||[]).map(d=>'<a class="source-link" href="/api/v1/workflows/'+encodeURIComponent(wf.workflow_id)+'/sources/'+encodeURIComponent(d.document_hash)+'" download>'+esc(d.document_id)+'<small> · SHA-256 '+esc(d.document_hash)+'</small></a>').join("");
   const enabled={analyze:["draft"],"start-review":["analyzed"],finalize:["in_review"],execute:["approved"],evidence:["executed"],"reopen-review":["approved","executed","evidenced"],recover:["executing","interrupted"],"approve-tests":["in_review","approved"],"reject-tests":["in_review","approved"],"request-changes":["in_review","approved"]};
   for(const [a,statuses]of Object.entries(enabled))document.querySelectorAll('[data-action="'+a+'"]').forEach(b=>b.disabled=!statuses.includes(wf.status));
+  renderFlow();
 }
 async function selectWorkflow(id) {
   $("gate-detail").innerHTML='<p class="hint">Evaluate the current revision to inspect quality checks.</p>';
@@ -83,7 +196,7 @@ async function selectWorkflow(id) {
   $("run-detail").innerHTML='<p class="empty">No execution run in this workflow.</p>';
   if(state.current?.workflow.last_run_id){
     const wf=w(),run=await api("/workflows/"+encodeURIComponent(wf.workflow_id)+"/runs/"+encodeURIComponent(wf.last_run_id));
-    $("run-detail").innerHTML='<h3>Run '+esc(run.run_id.slice(0,8))+" · "+esc(run.status)+'</h3><p>Executed from workflow revision '+run.workflow_revision+'. Coverage below uses this archived revision, including exercised failing tests.</p>'+coverage(run.coverage)+'<div class="table-scroll"><table><thead><tr><th>Test</th><th>Result</th><th>Expected</th><th>Actual</th></tr></thead><tbody>'+run.executions.map(e=>'<tr><td>'+esc(e.test_id)+'</td><td>'+badge(e.status)+'</td><td><code>'+esc(actionText(e.expected))+'</code></td><td><code>'+esc(e.error||actionText(e.actual))+'</code></td></tr>').join("")+"</tbody></table></div>"+details("Full execution journal",run);
+    $("run-detail").innerHTML='<h3>Run '+esc(run.run_id.slice(0,8))+" · "+esc(run.status)+'</h3><p>Executed from workflow revision '+run.workflow_revision+'. Coverage below uses this archived revision, including exercised failing tests.</p>'+coverage(run.coverage)+'<div class="table-scroll"><table><thead><tr><th>Test</th><th>Result</th><th>Expected</th><th>Actual</th></tr></thead><tbody>'+run.executions.map(e=>'<tr><td>'+esc(e.test_id)+'</td><td>'+badge(e.status)+'</td><td>'+esc(fmtAction(e.expected))+'</td><td>'+esc(e.error||fmtAction(e.actual))+'</td></tr>').join("")+"</tbody></table></div>"+details("Full execution journal",run);
   }
 }
 async function refresh(id) {await lists(); await selectWorkflow(id||state.current?.workflow.workflow_id||$("workflow-select").value);}
@@ -111,7 +224,7 @@ async function perform(name) {
     const id=w().workflow_id;
     const report=await api("/workflows/"+encodeURIComponent(id)+"/quality-gate");
     if(report.workflow_revision!==w().revision)throw Error("Workflow changed. Refresh before evaluating the gate again.");
-    $("gate-detail").innerHTML='<div class="status-line">'+badge(report.verdict==="GO"?"pass":"fail")+'<strong>'+esc(report.verdict)+'</strong><span>'+esc(report.policy_version)+' · revision '+report.workflow_revision+'</span></div><p>'+esc(report.reason)+'</p><div class="table-scroll"><table><thead><tr><th>Check</th><th>Status</th><th>Observed</th><th>Requirement</th></tr></thead><tbody>'+report.checks.map(c=>'<tr><td>'+esc(c.key)+'</td><td>'+badge(c.status.toLowerCase())+'</td><td><code>'+esc(pretty(c.actual))+'</code></td><td>'+esc(c.requirement)+'</td></tr>').join("")+'</tbody></table></div>'+details("Unmeasured metrics",report.unmeasured)+details("Snapshot hashes and full report",report)+'<button data-action="download-gate">Download this gate report</button>';
+    $("gate-detail").innerHTML='<div class="status-line">'+badge(report.verdict==="GO"?"pass":"fail")+'<strong>'+esc(report.verdict)+'</strong><span>'+esc(report.policy_version)+' · revision '+report.workflow_revision+'</span></div><p>'+esc(report.reason)+'</p><div class="table-scroll"><table><thead><tr><th>Check</th><th>Status</th><th>Observed</th><th>Requirement</th></tr></thead><tbody>'+report.checks.map(c=>'<tr><td>'+esc(humanKey(c.key))+'</td><td>'+badge(c.status.toLowerCase())+'</td><td>'+esc(fmtObserved(c.actual))+'</td><td>'+esc(c.requirement)+'</td></tr>').join("")+'</tbody></table></div>'+details("Unmeasured metrics",report.unmeasured)+details("Snapshot hashes and full report",report)+'<button data-action="download-gate">Download this gate report</button>';
     state.gate=report;
     return report.verdict+": "+report.reason;
   }
@@ -145,6 +258,14 @@ async function perform(name) {
     const status=await api("/ai-status");
     dialog("AI configuration & local model inventory",'<p>No inference or downloads were triggered. Use ai_doctor.py --probe for an explicit capability check.</p>'+code(status));
     return "AI configuration inspected. Model quality requires a separate evaluation.";
+  }
+  if(name==="analyze-review"){
+    await command("analyze");await command("start-review");page("tests");
+    return "Analysis complete and review opened. Tick the tests you accept, then approve them.";
+  }
+  if(name==="evidence-gate"){
+    const evidence=await command("evidence");
+    return "Evidence archived (SHA-256 "+evidence.evidence_hash.slice(0,12)+"\u2026). "+await perform("quality-gate");
   }
   if(name==="refresh"){await refresh();return "Workspace refreshed.";}
   if(name==="demo"){
@@ -232,7 +353,7 @@ document.addEventListener("click",event=>{
   if(button.dataset.open){guarded(async()=>{await selectWorkflow(button.dataset.open);page("tests");});return;}
   if(button.dataset.inspectTest!==undefined){
     const t=w().tests[Number(button.dataset.inspectTest)];
-    dialog("Inspect / edit test",details("Full provenance and rule references",t)+'<input id="edit-test-id" type="hidden" value="'+esc(t.test_id)+'"><label>Title<input id="edit-title" value="'+esc(t.title)+'"></label><label>Typed inputs JSON<textarea id="edit-inputs" rows="7">'+esc(pretty(t.inputs))+'</textarea></label><label>Expected action JSON<textarea id="edit-expected" rows="5">'+esc(pretty(t.expected))+'</textarea></label><label>Edit reason<input id="edit-reason"></label><button data-action="save-test" class="primary">Save test revision</button>');return;
+    dialog("Inspect / edit test",'<p class="rule-line">'+esc(fmtInputs(t.inputs))+" → "+esc(fmtAction(t.expected))+'</p><p class="hint">'+esc(t.rationale||"")+'</p>'+details("Full provenance and rule references",t)+'<input id="edit-test-id" type="hidden" value="'+esc(t.test_id)+'"><label>Title<input id="edit-title" value="'+esc(t.title)+'"></label><label>Typed inputs JSON<textarea id="edit-inputs" rows="7">'+esc(pretty(t.inputs))+'</textarea></label><label>Expected action JSON<textarea id="edit-expected" rows="5">'+esc(pretty(t.expected))+'</textarea></label><label>Edit reason<input id="edit-reason"></label><button data-action="save-test" class="primary">Save test revision</button>');return;
   }
   if(button.dataset.action)guarded(()=>perform(button.dataset.action));
 });

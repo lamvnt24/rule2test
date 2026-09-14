@@ -118,7 +118,11 @@ class LinkTests(unittest.TestCase):
         for test in w.tests:
             w=self.review.review(w.workflow_id,w.revision,test_id=test.test_id,test_revision=test.revision,decision=ApprovalDecision.APPROVED,reviewer="QA",reason="Checked against the memo")
         w=self.review.finalize(w.workflow_id,w.revision,reviewer="QA",reason="All proposals inspected")
-        run=self.workflow.execute(w.workflow_id,w.revision,MockSUTAdapter(InsuranceEngine(**{k:v for k,v in suggest_sut(w).items() if k!="note"})),actor="QA")
+        from decimal import Decimal
+        settings={k:v for k,v in suggest_sut(w).items() if k!="note"}
+        # UI suggestions are JSON-safe strings; the engine constructor requires Decimal.
+        for key in ('claim_threshold','deductible'):settings[key]=Decimal(settings[key])
+        run=self.workflow.execute(w.workflow_id,w.revision,MockSUTAdapter(InsuranceEngine(**settings)),actor="QA")
         self.assertTrue(all(e.status is ExecutionStatus.PASS for e in run.executions))
         w=self.workflow.get(w.workflow_id);evidence=EvidenceService(self.db).create(w.workflow_id,w.revision,actor="QA")
         tc002=next(t for t in evidence.tests if t.test_id=="TC002")
@@ -230,4 +234,55 @@ class SuiteAPITests(unittest.TestCase):
         self.post("/suites",dict(filename="cases.csv",content_base64=csv,sheet="CSV",mapping={"expected":"F","test_data":"E"},actor="QA",bogus=1),expected=400)
         self.assertEqual(self.get("/suites"),[]);self.get("/suites/missing",expected=404)
 
-if __name__=="__main__":unittest.main()
+
+
+# Additional regression coverage for the independent-intake UI.
+import tempfile,unittest
+from pathlib import Path
+from factory.models import content_hash
+from factory.models.extraction import ExtractionRequest,SourceText
+from factory.repositories.connection import Database
+from factory.providers.llm.patterns import PatternRuleProvider
+from factory.services.extraction_service import ExtractionService
+from factory.services.suite_service import SuiteService
+from factory.services.link_service import LinkService
+from factory.services.change_proposal_service import build
+from factory.parsers.testcase_samples import csv_bytes,RULE_SENTENCES
+from factory.exceptions import ConflictError
+
+class AdditionalSuiteWorkflowTests(unittest.TestCase):
+    def setUp(self):
+        temp=tempfile.TemporaryDirectory();self.addCleanup(temp.cleanup)
+        self.db=Database(Path(temp.name)/'test.db')
+
+    def link(self,baseline=True):
+        service=SuiteService(self.db); data=csv_bytes('eligibility')
+        sheet=service.inspect(data,'cases.csv')['sheets'][0]
+        suite=service.create(data,'cases.csv','CSV',sheet['suggested'],actor='QA',resolutions=[dict(row_number=6,skip=True)])
+        pair=RULE_SENTENCES['eligibility']
+        sources=tuple(SourceText(document_id=label+'.txt',label=label,text=text) for label,text in zip(('v1','v2'),pair) if baseline or label=='v2')
+        extraction=ExtractionService(self.db,PatternRuleProvider())
+        proposal=extraction.propose(ExtractionRequest(sources=sources),actor='BA')
+        self.assertEqual(proposal.status,'pending_review',proposal.issues)
+        with self.assertRaises(ConflictError):LinkService(self.db).link(suite.suite_id,proposal.proposal_id,content_hash(proposal),actor='QA')
+        extraction.review(proposal.proposal_id,content_hash(proposal),decision='approved',reviewer='QA',reason='Checked source')
+        workflow,link=LinkService(self.db).link(suite.suite_id,proposal.proposal_id,content_hash(proposal),actor='QA')
+        self.assertEqual(service.source(suite.suite_id)[1],data)
+        return workflow,build(workflow,link=link,suite=suite,baseline_known=baseline)
+
+    def test_change_explains_before_after_and_excludes_ambiguous_row(self):
+        workflow,report=self.link()
+        rows={r['test_id']:r for r in report['rows']}
+        self.assertEqual(rows['TC001']['kind'],'keep')
+        self.assertEqual((rows['TC002']['before_text'],rows['TC002']['after_text']),('DENY','ALLOW'))
+        self.assertEqual(rows['TC002']['source']['cell'],'E3')
+        self.assertEqual(report['excluded'][0]['row_id'],'TC005')
+        self.assertFalse(workflow.approvals)
+        self.assertTrue(any('Age = 66' in r['inputs_text'] for r in report['rows']))
+
+    def test_new_rule_only_does_not_claim_historical_change(self):
+        _,report=self.link(False)
+        self.assertFalse(report['baseline_known']);self.assertFalse(report['changed'])
+        self.assertFalse(report['changes'])
+        row=next(r for r in report['rows'] if r['test_id']=='TC002')
+        self.assertNotIn('The rule changed',row['reason'])

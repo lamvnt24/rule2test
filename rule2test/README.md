@@ -1,3 +1,9 @@
+# Cập nhật: testcase và luật là hai đầu vào độc lập
+
+Luồng giao diện hiện hành: **Test cases → Rules → Compare & review → Run & evidence**. File testcase XLSX/CSV không chứa luật hoặc rule_ids. Nhập luật bằng văn bản; chọn Pattern hoặc AI provider; xác nhận trước khi so sánh.
+
+[Xem hướng dẫn và API đầy đủ](docs/vi/LUONG-TESTCASE-DOC-LAP.md). Template workbook V1/V2 và các ví dụ phase cũ bên dưới dành cho **Overview → Advanced** hoặc CLI; không phải yêu cầu của import testcase thuần.
+
 # Rule2Test — Insurance Rule2Test Evidence Factory
 
 A runnable Python 3.11+ hackathon project that turns insurance rule changes into reviewed regression tests and traceable execution evidence. The core, JSON import and web workspace use the standard library. Excel import and FAISS are optional.

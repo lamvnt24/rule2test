@@ -1,0 +1,32 @@
+"""Shared real-browser setup for a standalone suite and independently entered rules."""
+from playwright.sync_api import expect
+
+def prepare_comparison(page,shot=None,*,baseline=True,max_age=65):
+    def capture(title,caption):
+        if shot:shot(title,caption)
+    page.locator('nav [data-page="intake"]').click()
+    page.locator('#page-intake summary').first.click()
+    page.get_by_role('button',name='Load demo example',exact=True).click()
+    expect(page.locator('#notice')).to_contain_text('File inspected')
+    page.get_by_role('button',name='Preview interpretation',exact=True).click()
+    expect(page.locator('#notice')).to_contain_text('Preview ready')
+    capture('Test cases','Standalone test-case file: original cells, interpretation and explicit handling of an unclear row. No rules are included.')
+    page.locator('[data-suite-skip="6"]').click()
+    page.get_by_role('button',name='Save test suite',exact=True).click()
+    expect(page.locator('#notice')).to_contain_text('Test suite saved')
+    page.locator('nav [data-page="extraction"]').click()
+    page.locator('#source-v1').fill('Khách hàng từ 18 đến 60 tuổi được tham gia bảo hiểm.' if baseline else '')
+    page.locator('#source-v2').fill(f'Khách hàng từ 18 đến {max_age} tuổi được tham gia bảo hiểm.')
+    page.locator('#rule-engine').select_option('pattern')
+    page.get_by_role('button',name='Interpret rules',exact=True).click()
+    expect(page.locator('#notice')).to_contain_text('pending_review')
+    capture('Rules','Rule sentences are entered independently. This offline demonstration uses the pattern reader, not a live AI model.')
+    page.locator('#proposal-reason').fill('Checked the conditions, defaults and source quotations')
+    page.get_by_role('button',name='Confirm rules',exact=True).click()
+    expect(page.locator('#notice')).to_contain_text('Rule review decision recorded')
+    page.locator('nav [data-page="tests"]').click()
+    page.locator('#compare-rules').select_option(index=1)
+    page.get_by_role('button',name='Compare',exact=True).click()
+    expect(page.locator('#notice')).to_contain_text('Comparison ready')
+    expect(page.locator('#test-rows')).to_contain_text('DENY → ALLOW')
+    capture('Comparison','TC001 stays unchanged; TC002 changes DENY to ALLOW; new boundary tests are proposed. The skipped row remains visible under Not linked.')

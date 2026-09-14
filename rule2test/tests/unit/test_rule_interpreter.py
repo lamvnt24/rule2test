@@ -84,4 +84,24 @@ class ProviderTests(unittest.TestCase):
         self.assertEqual(configured_provider({"RULE2TEST_EXTRACTION_PROVIDER":"pattern"}).name,"pattern")
         self.assertEqual(configured_provider({}).name,"mock")
 
-if __name__=="__main__":unittest.main()
+
+
+# Additional regression coverage for the independent-intake UI.
+import unittest
+from factory.services.rule_interpreter import interpret
+from factory.parsers.testcase_samples import RULE_SENTENCES
+
+class AdditionalRuleInterpreterTests(unittest.TestCase):
+    def test_demo_sentences_and_custom_age(self):
+        for pair in RULE_SENTENCES.values():
+            for text in pair:
+                with self.subTest(text=text):
+                    finding,questions=interpret(text)
+                    self.assertIsNotNone(finding); self.assertFalse(questions)
+        finding,questions=interpret('Khách hàng từ 21 đến 72 tuổi được tham gia bảo hiểm.')
+        self.assertFalse(questions)
+        self.assertEqual([c.value for c in finding.conditions],[21,72])
+
+    def test_unsupported_rule_requests_clarification(self):
+        finding,questions=interpret('Premium depends on occupation and risk score.')
+        self.assertIsNone(finding); self.assertTrue(questions)

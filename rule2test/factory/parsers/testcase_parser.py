@@ -74,7 +74,7 @@ def read_grid(data,name):
         try:dialect=csv.Sniffer().sniff(sample,delimiters=",;\t")
         except csv.Error:dialect=csv.excel
         rows=[[cell_text(value) for value in row] for row in csv.reader(io.StringIO(text),dialect)]
-        rows=[row for row in rows if any(row)]
+        # Preserve empty records: source cell coordinates must match the original file.
         if len(rows)>MAX_ROWS+1 or any(len(row)>64 for row in rows):raise ImportFailure((ImportIssue(name,"Sheet exceeds 5000 data rows or 64 columns",sheet="CSV"),))
         return [("CSV",rows)]
     from .excel_parser import open_workbook
@@ -98,7 +98,7 @@ def inspect(data,name):
     doc=document(data,name,MEDIA[Path(name).suffix.lower()])
     result=[]
     for title,grid in sheets:
-        if not grid:continue
+        if not grid or not any(any(row) for row in grid):continue
         header_row=detect_header_row(grid)
         width=max(len(row) for row in grid)
         headers=[(column_letter(i),grid[header_row-1][i-1] if i-1<len(grid[header_row-1]) else "") for i in range(1,width+1)]

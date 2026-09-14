@@ -93,21 +93,8 @@ def capture(directory,*,width,height):
                 page.locator("#actor").fill(REVIEWER)
                 shot("Overview","An insurer changes one rule. Today nobody can prove which regression tests that invalidated. We turn a rule change into reviewed tests and an audit trail.")
 
-                page.get_by_role("button",name="Start a workflow").click()
-                shot("Intake","Two versions of one rule go in. The source bytes are archived and hashed, so every later claim points back to a document you can download.")
-
-                page.get_by_role("button",name="Create synthetic workflow",exact=True).click()
-                expect(page.locator("#notice")).to_contain_text("Draft created")
-                shot("Draft created","The eligibility scenario: maximum eligible age moves from 60 to 65. The workflow starts as a draft at revision 1.")
-
-                page.get_by_role("button",name="Analyze & generate",exact=True).click()
-                expect(page.locator("#notice")).to_contain_text("Analysis complete")
-                shot("Analysis","The engine computes the rule delta, finds the tests the change touches, and lists the boundary obligations nobody covers.",
-                     "Baseline boundary coverage on this scenario was 16.67% before generation; see docs/BENCHMARKS.md.")
-
-                page.get_by_role("button",name="Open test review",exact=True).click()
-                expect(page.locator("#notice")).to_contain_text("Test review opened")
-                shot("Candidates","Generated candidates carry typed inputs, an expected outcome from our oracle, and the rule they came from. Every one starts as pending.")
+                from scripts.suite_browser_flow import prepare_comparison
+                prepare_comparison(page,shot)
 
                 page.locator("#select-all").check()
                 page.locator("#review-reason").fill(REASON)
@@ -169,6 +156,7 @@ def main(argv=None):
     parser.add_argument("--width",type=int,default=1440)
     parser.add_argument("--height",type=int,default=1050)
     args=parser.parse_args(argv)
+    args.output=args.output.resolve()
     try:
         import playwright  # noqa: F401
     except ImportError:

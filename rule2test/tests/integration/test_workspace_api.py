@@ -81,6 +81,32 @@ class WorkspaceAPITests(unittest.TestCase):
         w=self.command(w,"reopen-review",reason="Gate must become stale")
         self.assertEqual(self.get(path+"/quality-gate")["verdict"],"NO-GO")
 
+    def test_standalone_suite_and_new_rule_only_through_evidence(self):
+        from factory.parsers.testcase_samples import csv_bytes
+        data=csv_bytes('eligibility')
+        upload=dict(filename='cases.csv',content_base64=base64.b64encode(data).decode())
+        sheet=self.post('/suites/inspect',upload)['sheets'][0]
+        body=dict(upload,sheet='CSV',mapping=sheet['suggested'])
+        preview=self.post('/suites/preview',body)
+        self.assertEqual(preview['summary']['needs_confirmation'],1)
+        suite=self.post('/suites',dict(body,actor='QA',resolutions=[dict(row_number=6,skip=True)]))['suite']
+        p=self.post('/extract',dict(engine='pattern',actor='BA',sources=[dict(document_id='new.txt',label='v2',text='Khách hàng từ 18 đến 65 tuổi được tham gia bảo hiểm.')]))
+        self.post('/suites/'+suite['suite_id']+'/link',dict(proposal_id=p['proposal_id'],proposal_hash=p['proposal_hash'],actor='QA'),expected=409)
+        self.post('/proposals/'+p['proposal_id']+'/review',dict(proposal_hash=p['proposal_hash'],decision='approved',reason='Checked text',actor='QA'))
+        w=self.post('/suites/'+suite['suite_id']+'/link',dict(proposal_id=p['proposal_id'],proposal_hash=p['proposal_hash'],actor='QA'))['workflow']
+        report=self.get('/workflows/'+w['workflow_id'])
+        self.assertFalse(report['proposal']['baseline_known'])
+        self.assertFalse(report['proposal']['changed'])
+        tests=report['workflow']['tests']
+        w=self.command(w,'review',tests=[dict(test_id=t['test_id'],revision=t['revision']) for t in tests],decision='approved',reason='Checked each proposed test')
+        w=self.command(w,'finalize',reason='Complete review')
+        run=self.command(w,'execute',sut=SUT)
+        self.assertTrue(all(e['status']=='pass' for e in run['run']['executions']))
+        w=self.command(run['workflow'],'evidence')['workflow']
+        self.assertEqual(w['status'],'evidenced')
+        archived,_=self.get('/suites/'+suite['suite_id']+'/source')
+        self.assertEqual(archived,data)
+
     def test_ai_status_is_metadata_only_and_does_not_create_workflows(self):
         with patch("factory.services.ai_readiness_service.inventory",return_value=dict(available=False,models=[])):
             status=self.get("/ai-status")

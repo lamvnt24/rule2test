@@ -54,5 +54,6 @@ class SuiteRoutes:
             body_keys(body,("proposal_id","proposal_hash","actor"));who=actor(body)
             with span("suite_link",component="service",suite_id=parts[3]):
                 w,link=LinkService(app.db).link(parts[3],body["proposal_id"],body["proposal_hash"],actor=who)
-            return dict(workflow=workflow_summary(w),link=link.to_dict())
+            suite=SuiteService(app.db).get(parts[3])
+            return dict(workflow=workflow_summary(w,link,suite),link=link.to_dict())
         raise NotFoundError("API route not found")

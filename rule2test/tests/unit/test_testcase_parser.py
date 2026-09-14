@@ -70,4 +70,34 @@ class ExampleTests(unittest.TestCase):
         self.assertEqual(len(examples),6);self.assertEqual({e["engine"] for e in examples},{"pattern","provider"})
         self.assertTrue(all(e["current"] and e["new"] and e["current"]!=e["new"] for e in examples))
 
-if __name__=="__main__":unittest.main()
+
+
+# Additional regression coverage for the independent-intake UI.
+import unittest
+from factory.parsers.testcase_parser import inspect,extract_rows
+from factory.parsers.testcase_samples import csv_bytes,xlsx_bytes
+
+class AdditionalTestcaseParserTests(unittest.TestCase):
+    def test_csv_has_no_rules_and_preserves_cells(self):
+        data=csv_bytes('eligibility'); info=inspect(data,'tests.csv')['sheets'][0]
+        rows,_=extract_rows(data,'tests.csv','CSV',info['suggested'])
+        self.assertEqual(len(rows),5)
+        self.assertEqual(rows[1]['cells']['test_data']['cell'],'E3')
+        self.assertEqual(rows[1]['cells']['expected']['text'],'Bị từ chối')
+
+    def test_mapping_must_not_reuse_column(self):
+        with self.assertRaises(ValueError):
+            extract_rows(csv_bytes('eligibility'),'tests.csv','CSV',{'test_data':'E','expected':'E'})
+
+    def test_blank_csv_row_does_not_shift_source_location(self):
+        data=b'Test Data,Expected Result\nAge: 60,Accepted\n\nAge: 61,Denied\n'
+        rows,_=extract_rows(data,'tests.csv','CSV',{'test_data':'A','expected':'B'})
+        self.assertEqual(rows[-1]['cells']['test_data']['cell'],'A4')
+
+    def test_xlsx_matches_csv(self):
+        try: import openpyxl
+        except ImportError: self.skipTest('openpyxl not installed')
+        info=inspect(xlsx_bytes('eligibility'),'tests.xlsx')['sheets'][0]
+        rows,_=extract_rows(xlsx_bytes('eligibility'),'tests.xlsx',info['name'],info['suggested'])
+        self.assertEqual(len(rows),5)
+        self.assertEqual(rows[-1]['cells']['test_id']['cell'],'A6')

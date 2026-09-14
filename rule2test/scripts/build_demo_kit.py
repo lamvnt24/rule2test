@@ -139,13 +139,12 @@ Synthetic data throughout.
 {start}
 2. Type any reviewer name in the header. It is self-declared; there is no authentication.
    Vietnamese readers: `docs/vi/HUONG-DAN-SU-DUNG.md` walks through everything below in detail.
-3. **Document intake → Eligibility · age 60 → 65 → Create synthetic workflow.**
-4. **Analyze & generate.** You should get **{coverage[HEADLINE]['tests']} candidate tests**.
-5. **Open test review**, select all, write a reason, **Approve selected**, then **Finalize review**.
-6. **Run & evidence → Execute approved tests** with fault *None*: **{headline['passed']} pass, {headline['failed']} fail**.
-7. **Create evidence pack**, then **Evaluate current revision**: **{headline['verdict']}**.
-8. **Reopen review** with a reason, re-approve, re-finalize, set fault to **Boundary**, execute again and
-   evaluate again: **{faulted['passed']} pass, {faulted['failed']} fail**, gate **{faulted['verdict']}**.
+3. **Test cases → Load demo example → Preview interpretation**. Skip the unclear row, then **Save test suite**.
+4. **Rules**: enter current/new rules, choose Pattern for the offline demo, **Interpret rules**, inspect and **Confirm rules**.
+5. **Compare & review**: select the saved suite and confirmed rules, **Compare**. Inspect before/after and Not linked.
+6. Select tests, write a reason, **Approve selected → Finalize review → Run & evidence → Execute approved tests**.
+7. **Create evidence pack → Evaluate current revision**. Inspect measured counts; suite sizes depend on the input.
+8. **Reopen review**, review/finalize again, select **Boundary**, execute, create a NEW evidence pack, then evaluate the gate.
 
 Step 8 is the point of the whole demo. Full minute-by-minute scripts, speaker notes and a recovery path for
 every step that can fail are in `docs/COMPETITION_DEMO.md`.
@@ -162,7 +161,7 @@ every step that can fail are in `docs/COMPETITION_DEMO.md`.
 | `docs/slides/final-round2.pdf` | Round 2 final-submission deck for Track 2, in Vietnamese — hand this to the organisers |
 | `docs/slides/final-round2.html` | The same deck as a live page, for presenting |
 | `docs/slides/index.html` | General pitch deck; open it from disk, arrow keys to navigate |
-| `data/import/` | Versioned JSON and XLSX documents to import through **Document intake** |
+| `data/import/` | Versioned JSON and XLSX documents to import through **Overview → Advanced** |
 | `data/ai-extraction/` | Japanese rule-document pairs for **AI rule review**, with separate truth files |
 | `data/ai-profiles/` | Offline mock profile and a template for pinning a real local model |
 | `backup/` | Screenshot replay of the whole demo, for when the live run cannot happen |

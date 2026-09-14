@@ -1,3 +1,9 @@
+# Cập nhật: testcase và luật là hai đầu vào độc lập
+
+Luồng giao diện hiện hành: **Test cases → Rules → Compare & review → Run & evidence**. File testcase XLSX/CSV không chứa luật hoặc rule_ids. Nhập luật bằng văn bản; chọn Pattern hoặc AI provider; xác nhận trước khi so sánh.
+
+[Xem hướng dẫn và API đầy đủ](vi/LUONG-TESTCASE-DOC-LAP.md). Template workbook V1/V2 và các ví dụ phase cũ bên dưới dành cho **Overview → Advanced** hoặc CLI; không phải yêu cầu của import testcase thuần.
+
 # REST API
 
 Transport: factory/server.py, Python standard-library HTTP. Routing: factory/api/routes/workspace.py. Application dependencies: factory/api/dependencies.py. Services retain business validation and SQLite transactions. FastAPI is not required.

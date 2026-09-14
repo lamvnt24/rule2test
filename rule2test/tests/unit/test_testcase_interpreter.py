@@ -90,4 +90,29 @@ class RowTests(unittest.TestCase):
         inputs,expected,status,notes,questions=interpret({"title":"Khách hàng lớn tuổi","test_data":"Khách hàng cao tuổi","expected":"Tùy trường hợp"})
         self.assertEqual(status,"needs_confirmation");self.assertEqual(inputs,());self.assertIsNone(expected);self.assertEqual(len(questions),2)
 
-if __name__=="__main__":unittest.main()
+
+
+# Additional regression coverage for the independent-intake UI.
+import unittest
+from factory.services.testcase_interpreter import interpret
+from factory.services.suite_service import apply_resolutions, interpreted_rows
+from factory.parsers.testcase_samples import csv_bytes
+from factory.parsers.testcase_parser import inspect
+
+class AdditionalTestcaseInterpreterTests(unittest.TestCase):
+    def test_vietnamese_age_and_expected(self):
+        inputs, expected, status, _, questions = interpret({'test_data':'Tuổi: 61','expected':'Bị từ chối'})
+        self.assertEqual((inputs[0].value.data, expected.outcome.value, status),(61,'deny','ready'))
+        self.assertFalse(questions)
+
+    def test_ambiguous_row_requires_confirmation(self):
+        _, _, status, _, questions = interpret({'test_data':'Khách hàng cao tuổi','expected':'Tùy trường hợp'})
+        self.assertEqual(status,'needs_confirmation'); self.assertTrue(questions)
+
+    def test_human_resolution_preserves_source(self):
+        data=csv_bytes('eligibility'); sheet=inspect(data,'tests.csv')['sheets'][0]
+        rows,_=interpreted_rows(data,'tests.csv','CSV',sheet['suggested'])
+        result=apply_resolutions(rows,[dict(row_number=6,inputs=[dict(field='age',value='70')],expected=dict(outcome='deny'))])
+        self.assertEqual(result[-1].status,'ready')
+        self.assertEqual(result[-1].cells,rows[-1].cells)
+        self.assertEqual(result[-1].inputs[0].value.data,70)

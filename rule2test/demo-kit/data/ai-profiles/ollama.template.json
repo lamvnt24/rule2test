@@ -1,0 +1,13 @@
+{
+  "mode": "ollama",
+  "extraction_model": "REPLACE_WITH_AN_INSTALLED_CHAT_TAG",
+  "extraction_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "suggestion_model": "REPLACE_WITH_AN_INSTALLED_CHAT_TAG",
+  "suggestion_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "embedding_model": "REPLACE_WITH_AN_INSTALLED_EMBEDDING_TAG",
+  "embedding_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "embedding_dimensions": 768,
+  "embedding_device": "cpu",
+  "timeout_seconds": 60,
+  "schema_version": 1
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "created_at": "2020-01-01T00:00:00+00:00",
+  "created_by": "Synthetic Rule2Test fixture",
+  "policies": [
+    {
+      "label": "v1",
+      "table_id": "DT-claim_review",
+      "version": 1,
+      "hit_policy": "unique",
+      "default_outcome": "allow",
+      "default_amount": null,
+      "default_deductible": null,
+      "currency": null,
+      "as_of": null
+    },
+    {
+      "label": "v2",
+      "table_id": "DT-claim_review",
+      "version": 2,
+      "hit_policy": "unique",
+      "default_outcome": "allow",
+      "default_amount": null,
+      "default_deductible": null,
+      "currency": null,
+      "as_of": null
+    }
+  ],
+  "rules_v1": [
+    {
+      "rule_id": "R-claim_review",
+      "version": 1,
+      "title": "Claim Review",
+      "field": "claim_amount",
+      "operator": "gt",
+      "value_type": "money",
+      "value": "100000000",
+      "currency": "VND",
+      "outcome": "review",
+      "payout_amount": null,
+      "deductible": null,
+      "effective_from": null,
+      "effective_to": null,
+      "quote": "Claims exceeding 100000000 VND require review; otherwise allowed."
+    }
+  ],
+  "rules_v2": [
+    {
+      "rule_id": "R-claim_review",
+      "version": 2,
+      "title": "Claim Review",
+      "field": "claim_amount",
+      "operator": "gt",
+      "value_type": "money",
+      "value": "150000000",
+      "currency": "VND",
+      "outcome": "review",
+      "payout_amount": null,
+      "deductible": null,
+      "effective_from": null,
+      "effective_to": null,
+      "quote": "Claims exceeding 150000000 VND require review; otherwise allowed."
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "EXISTING-100000000",
+      "revision": 1,
+      "title": "Existing claim_amount = 100000000",
+      "inputs_json": [
+        {
+          "field": "claim_amount",
+          "kind": "money",
+          "value": "100000000",
+          "currency": "VND"
+        }
+      ],
+      "expected_outcome": "allow",
+      "expected_amount": null,
+      "currency": null,
+      "rule_ids": "R-claim_review",
+      "kind": "boundary",
+      "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+    },
+    {
+      "test_id": "EXISTING-100000001",
+      "revision": 1,
+      "title": "Existing claim_amount = 100000001",
+      "inputs_json": [
+        {
+          "field": "claim_amount",
+          "kind": "money",
+          "value": "100000001",
+          "currency": "VND"
+        }
+      ],
+      "expected_outcome": "review",
+      "expected_amount": null,
+      "currency": null,
+      "rule_ids": "R-claim_review",
+      "kind": "boundary",
+      "rationale": "Synthetic baseline expected value specified against V1. Review the V2 proposal separately."
+    }
+  ]
+}

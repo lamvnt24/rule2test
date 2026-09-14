@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "kit": "rule2test-demo-kit",
+  "files": [
+    {
+      "path": "app/rule2test.exe",
+      "bytes": 12307621,
+      "sha256": "49606cae60a669ac8da8cc8e5613d68c4ff68baf3ebbf28cdb5c787a49ec0f90"
+    },
+    {
+      "path": "backup/01-overview.png",
+      "bytes": 112107,
+      "sha256": "328ff500dd984ed546c58114d0652bab4342c1b31f2980c860ba644e557aec97"
+    },
+    {
+      "path": "backup/02-intake.png",
+      "bytes": 78519,
+      "sha256": "25f490f43a526bc4cdec058cbbe76d0dc3c3b6ec3fc71c430f21898f9e4ceb05"
+    },
+    {
+      "path": "backup/03-draft-created.png",
+      "bytes": 96746,
+      "sha256": "1e4dbf5978d58e24e4c340e4054dc1cf2875beb9ec6d04081c78c82e4ebdb8ee"
+    },
+    {
+      "path": "backup/04-analysis.png",
+      "bytes": 191018,
+      "sha256": "808c67318875df16da434e3c4dab095707d4df60b4953fdb8bcb6503ed735b18"
+    },
+    {
+      "path": "backup/05-candidates.png",
+      "bytes": 192238,
+      "sha256": "4b539a9edc83690e76c2cf34c8754ce6a668f3d04461e4ac91cc484c9c125d55"
+    },
+    {
+      "path": "backup/06-human-review.png",
+      "bytes": 196106,
+      "sha256": "8aad135dd771133cdb589a560f8e5bd367038b2c6ef83994bff5bb3a78115447"
+    },
+    {
+      "path": "backup/07-clean-run.png",
+      "bytes": 149038,
+      "sha256": "924006dbe4859272a93eb68664f99b36e5d2f85481cdcdd62f1c63e2562e62ee"
+    },
+    {
+      "path": "backup/08-evidence.png",
+      "bytes": 152158,
+      "sha256": "690ff950efd9fc195083fc27b87674296672a8c216838a0b0b436874cd7caaf4"
+    },
+    {
+      "path": "backup/09-gate-go.png",
+      "bytes": 196909,
+      "sha256": "844ba817e2e66423d0db08a6e13d8aa1b973632594346e48075421516db50e03"
+    },
+    {
+      "path": "backup/10-injected-bug.png",
+      "bytes": 150067,
+      "sha256": "a8c8f8d9ab3423066dede305287ed4bace123ac364b2368bdc667535eb62341c"
+    },
+    {
+      "path": "backup/11-gate-no-go.png",
+      "bytes": 198353,
+      "sha256": "051bb568aff66805dd72dd62d5806dd28d33ed7011084278b8b17c56ecec84cd"
+    },
+    {
+      "path": "backup/12-diagnostics.png",
+      "bytes": 116514,
+      "sha256": "14250004fe5883ea98ee229250e0db3531d1000d87a02dd9c0923adebaabc286"
+    },
+    {
+      "path": "backup/demo-run.log",
+      "bytes": 19581,
+      "sha256": "b6b8d0d11ccdd8a8ff85e5d4e5eb2e4d3154c9aaf30faecf284dd02cc7273ad6"
+    },
+    {
+      "path": "backup/replay.html",
+      "bytes": 2445549,
+      "sha256": "80fd23653f6b561b027eadb38185183c451350a75c3b93e22c23371326071954"
+    },
+    {
+      "path": "data/ai-extraction/ambiguous/existing_tests.json",
+      "bytes": 4,
+      "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f"
+    },
+    {
+      "path": "data/ai-extraction/ambiguous/ground_truth.json",
+      "bytes": 34,
+      "sha256": "7146a632ee4dfd1d9e00d38fb26971f42575f0125ef5b041ded31f43e1bed899"
+    },
+    {
+      "path": "data/ai-extraction/ambiguous/rules_v1.txt",
+      "bytes": 241,
+      "sha256": "fca385546cb733d94eb2c2ea45db0fef93ad267aa291904484088452cd18ced2"
+    },
+    {
+      "path": "data/ai-extraction/ambiguous/rules_v2.txt",
+      "bytes": 109,
+      "sha256": "d67153006c14204b3bf6d311c5e7a21f23988e0883d2cb59e135b99d6fa32f50"
+    },
+    {
+      "path": "data/ai-extraction/claim_review/existing_tests.json",
+      "bytes": 1094,
+      "sha256": "6abd02ed06396bfe1b0945583bdd7bae6130aa0678f24db089aab2a72ae2a622"
+    },
+    {
+      "path": "data/ai-extraction/claim_review/ground_truth.json",
+      "bytes": 283,
+      "sha256": "223dbd2e57c11d303bd5d387598c454fcbaea14f3e6990c7a2074f952a42bb88"
+    },
+    {
+      "path": "data/ai-extraction/claim_review/rules_v1.txt",
+      "bytes": 232,
+      "sha256": "0f729a653864eb5afc318ee52f47dc04d87795ed8bf59074485059367d48b04c"
+    },
+    {
+      "path": "data/ai-extraction/claim_review/rules_v2.txt",
+      "bytes": 232,
+      "sha256": "9ea98616e3697ab31f6ef9c2939311fdd7f308c5387fc1338fff9158fce14de5"
+    },
+    {
+      "path": "data/ai-extraction/deductible/existing_tests.json",
+      "bytes": 1079,
+      "sha256": "d14ed0df467216ede409ffd9518025d5fff0ada800b8ba5bf63a3a38f101d7c4"
+    },
+    {
+      "path": "data/ai-extraction/deductible/ground_truth.json",
+      "bytes": 280,
+      "sha256": "20885b740b0431f64c46549b2726bc94664ec2e64ff116dc0e5cbc051b704ff1"
+    },
+    {
+      "path": "data/ai-extraction/deductible/rules_v1.txt",
+      "bytes": 279,
+      "sha256": "17e58c07485105f4752925d8301fde285aba281b36514c74ffacc1cc3b4c3259"
+    },
+    {
+      "path": "data/ai-extraction/deductible/rules_v2.txt",
+      "bytes": 280,
+      "sha256": "7a828f70106b45f5d75b60aab6d80681df035c5b7285ccf7279a58bd3b1268a1"
+    },
+    {
+      "path": "data/ai-extraction/eligibility/existing_tests.json",
+      "bytes": 1513,
+      "sha256": "ca9e74e94caac352b805a879e8dfd0cff1972aaee0a7b483862f2817e1d1c834"
+    },
+    {
+      "path": "data/ai-extraction/eligibility/ground_truth.json",
+      "bytes": 283,
+      "sha256": "af38b84a6364c86001ebe4d12d7b006c84c1ea1512beb5121fe7c92c4e70dcfb"
+    },
+    {
+      "path": "data/ai-extraction/eligibility/rules_v1.txt",
+      "bytes": 241,
+      "sha256": "fca385546cb733d94eb2c2ea45db0fef93ad267aa291904484088452cd18ced2"
+    },
+    {
+      "path": "data/ai-extraction/eligibility/rules_v2.txt",
+      "bytes": 241,
+      "sha256": "568d1c6bcafe29b851f0b2164a91bdc7f6941c711ed8479f20140b2dc5dfc3a5"
+    },
+    {
+      "path": "data/ai-profiles/mock.json",
+      "bytes": 22,
+      "sha256": "979cbb92732974356c0353eea9a520cd85ecd61eb5531a0ec082aa5e833db1f3"
+    },
+    {
+      "path": "data/ai-profiles/ollama.template.json",
+      "bytes": 600,
+      "sha256": "bdc4220ccea17d7c09e571b6b368ab7f3ddcc391b7ea15b9fd18017295af9cb5"
+    },
+    {
+      "path": "data/ai-profiles/README.md",
+      "bytes": 584,
+      "sha256": "8bd0a06a419b30d1354581a0a2cd6faedcf92193e5e8252258117643b4d8b860"
+    },
+    {
+      "path": "data/import/claim_review.json",
+      "bytes": 2766,
+      "sha256": "48da23678bda9d814c3c48c13d3bdc87cd92fb749662185c84369da814c51307"
+    },
+    {
+      "path": "data/import/claim_review.xlsx",
+      "bytes": 10178,
+      "sha256": "66a2e8f83156009848d30abcdacdf8079cffa67f07487e287ea11ba9f845b28b"
+    },
+    {
+      "path": "data/import/deductible.json",
+      "bytes": 2707,
+      "sha256": "e0cfd6a6c1ce931e09dd2dbec093763210eedbd679f99217b5a01ccb7b93b6bd"
+    },
+    {
+      "path": "data/import/deductible.xlsx",
+      "bytes": 10154,
+      "sha256": "2dbbe2ea21e62800ab6e849fee81d15f8f2b40adfd5abe3c6cf841cbbdf44a91"
+    },
+    {
+      "path": "data/import/eligibility.json",
+      "bytes": 4026,
+      "sha256": "04978619b5b088d60f282f90efb966f19de6d1ad9b62e84b51357e717c9067e8"
+    },
+    {
+      "path": "data/import/eligibility.xlsx",
+      "bytes": 10347,
+      "sha256": "a860663afe317658001c948ada012218104a7af3018f16e6c9c7a5413819d80e"
+    },
+    {
+      "path": "docs/BENCHMARKS.md",
+      "bytes": 8180,
+      "sha256": "c567c337221f188f5af0b7a73d7c800bc01e36c60e8f9ec3f7d95e7c5ba4af3e"
+    },
+    {
+      "path": "docs/COMPETITION_DEMO.md",
+      "bytes": 8662,
+      "sha256": "9c351700265b675397a17d591b3d914e76fcac7ffc84eaea2a7d2f8fc491ba4c"
+    },
+    {
+      "path": "docs/DIAGRAMS.md",
+      "bytes": 5337,
+      "sha256": "d96500e11c82dc4ba9f02d7a3a6f73e03f6dc6627c3e32387d1efde75b66bfc3"
+    },
+    {
+      "path": "docs/IMPORT_FORMAT.md",
+      "bytes": 11944,
+      "sha256": "9b4cb309d0f6b187c3392d7d773eb8eeefc2edc83d70381bf779bb6005840950"
+    },
+    {
+      "path": "docs/LIVE_AI.md",
+      "bytes": 11672,
+      "sha256": "d2d079af3a96ee7632b4841488850d28e208604dc547712017ad6adff004d42e"
+    },
+    {
+      "path": "docs/OBSERVABILITY.md",
+      "bytes": 8172,
+      "sha256": "9a6833bb4a874edc923fa69f4e04caba510286ed51e4d95db0fe211b8fbce8a6"
+    },
+    {
+      "path": "docs/PACKAGING.md",
+      "bytes": 4281,
+      "sha256": "40fa28718454034ce1625a5c31b97fa6e11dd16fd69fa5f1ded9c2a2c36581aa"
+    },
+    {
+      "path": "docs/QUALITY_GATE.md",
+      "bytes": 6179,
+      "sha256": "65245bdc779695c78c1a1e838454bc844c58fae42086302686203c4d594e403e"
+    },
+    {
+      "path": "docs/slides/final-round2.html",
+      "bytes": 20207,
+      "sha256": "a35d0c45dd5bf21edf7145a75e00252f1501c4ba1f23599dc1f67d25d8985cd4"
+    },
+    {
+      "path": "docs/slides/final-round2.pdf",
+      "bytes": 113664,
+      "sha256": "a2e233fcc40d9f90c6b43d62227cadd403013596d789fd2570813445ba4dbb32"
+    },
+    {
+      "path": "docs/slides/index.html",
+      "bytes": 1351721,
+      "sha256": "278b280cf66186e2c2f40580e2d544b078799d18449781e3edef7e63576086cd"
+    },
+    {
+      "path": "docs/slides/index.pdf",
+      "bytes": 841513,
+      "sha256": "a16966c75632367a0387a7417a81871080f7321d1bac960d9aefb4553194545e"
+    },
+    {
+      "path": "docs/vi/HUONG-DAN-SU-DUNG.md",
+      "bytes": 18190,
+      "sha256": "4198df5de1a7467082d9d667987c207d666b4db870a1c3d1a796bad41a67689f"
+    },
+    {
+      "path": "docs/vi/TONG-QUAN-VA-ROADMAP.md",
+      "bytes": 12119,
+      "sha256": "bb3e916bc456e93c2f3a0bfe952e4965f890ede422103ecdc165c8e6429c53f1"
+    },
+    {
+      "path": "docs/WORKSPACE.md",
+      "bytes": 7201,
+      "sha256": "d7f63fd72513d733edbfcd926ee7f2c5a8822cae954522b5f4841713033ab41f"
+    },
+    {
+      "path": "expectations.json",
+      "bytes": 3676,
+      "sha256": "2a151552854c4f19802dd9076967ee0b7a09f8342195ad4ab09f105d895478dd"
+    },
+    {
+      "path": "EXPECTED-RESULTS.md",
+      "bytes": 2245,
+      "sha256": "4e255db84b7137c68cded046fc7a138bf133caada249c1e5e4c29416154d069f"
+    },
+    {
+      "path": "README.md",
+      "bytes": 4578,
+      "sha256": "e4e287cfd9dc5be90756b9588c21ca8681a30ee955cf121744a6a1dc733dfa52"
+    }
+  ],
+  "total_bytes": 19089874,
+  "note": "SHA-256 detects corruption in transit. It is an integrity check, not a signature."
+}

@@ -139,7 +139,7 @@ Files under factory/models are importable package modules, not standalone entry 
 - SHA-256 is an integrity check, not a digital signature or protection from an administrator rewriting both data and hashes.
 - The workspace exposes the independent mock SUT. The HTTP SUT adapter remains available through Python.
 
-Tiếng Việt: [tổng quan và lộ trình](docs/vi/TONG-QUAN-VA-ROADMAP.md), [hướng dẫn sử dụng](docs/vi/HUONG-DAN-SU-DUNG.md).
+Tiếng Việt: [tổng quan và lộ trình](docs/vi/TONG-QUAN-VA-ROADMAP.md), [hướng dẫn sử dụng](docs/vi/HUONG-DAN-SU-DUNG.md), [slide chung kết Track 2](docs/slides/final-round2.html) (`py -3 -B scripts/build_final_deck.py`).
 
 See [packaging](docs/PACKAGING.md), [benchmarks](docs/BENCHMARKS.md), [diagrams](docs/DIAGRAMS.md), [observability](docs/OBSERVABILITY.md), [competition demo](docs/COMPETITION_DEMO.md), [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [project structure](docs/STRUCTURE.md), [domain models](docs/DOMAIN_MODELS.md), [engines](docs/ENGINES.md), [analysis](docs/ANALYSIS_SERVICES.md), [workflows](docs/WORKFLOWS.md), [AI extraction](docs/AI_EXTRACTION.md) and [pitch](docs/PITCH.md).
 

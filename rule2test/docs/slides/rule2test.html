@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><title>Rule2Test | Track 2</title>
+<style>
+@page{size:338mm 190mm;margin:0}
+*{box-sizing:border-box}body{margin:0;background:#dae3df;color:#163c38;font-family:'Segoe UI',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+section{width:338mm;height:190mm;padding:44px 62px 45px;background:#f6f7f2;position:relative;overflow:hidden;break-after:page;page-break-after:always;margin:0 auto}
+section:last-child{break-after:auto;page-break-after:auto}
+.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #bccbc3;padding-bottom:14px;margin-bottom:26px;font-size:14px;font-weight:600;letter-spacing:.08em}.brand{font-size:22px;letter-spacing:-.03em}.track{color:#607870}
+.label{font-size:14px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#4e776d;margin:0 0 12px}
+h1,h2{font-size:43px;line-height:1.16;letter-spacing:-.035em;margin:0 0 16px;font-weight:650;max-width:1050px}
+p{font-size:21px;line-height:1.48;margin:0 0 16px}.sub{color:#526e66;max-width:1020px;font-size:21px}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(3,1fr);margin:25px 0}.two{grid-template-columns:1fr 1fr}.card{background:#fff;border:1px solid #cfdbd4;border-radius:13px;padding:22px}.card h3{font-size:23px;margin:0 0 12px;letter-spacing:-.02em}.card p{font-size:19px;color:#526e66;margin:0}.num{color:#779d83;font-size:14px;font-weight:700;display:block;margin-bottom:14px}
+.band{padding:19px 24px;background:#173f38;color:#fff;border-radius:12px;margin-top:23px;font-size:22px;line-height:1.4}.band strong{color:#d8eea9}.foot{position:absolute;bottom:23px;left:62px;right:62px;display:flex;justify-content:space-between;font-size:12px;color:#657e74;border-top:1px solid #ccd8d0;padding-top:10px}
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:26px 0}.step{padding:18px 16px;border-radius:12px;background:#e5eee7;min-height:110px}.step b{display:block;font-size:20px;margin-bottom:10px}.step span{font-size:16px;line-height:1.4;color:#526e66}.step:last-child{background:#d9e9b9}
+.small{font-size:16px;line-height:1.5;color:#536e64}.chip{display:inline-block;background:#f6e6c6;color:#75521c;border-radius:6px;padding:7px 12px;font-size:15px;font-weight:600;margin-bottom:14px}
+.metrics{margin:17px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.metric{border:1px solid #bfcec5;border-radius:12px;background:white;padding:19px 22px}.metric strong{display:block;font-size:43px;letter-spacing:-.04em;line-height:1.2}.metric b{display:block;font-size:19px;margin:6px 0}.metric span{font-size:15px;color:#657b70}
+table{border-collapse:collapse;width:100%;font-size:18px;margin-top:18px}td,th{text-align:left;padding:11px 16px;border-bottom:1px solid #cbd8cf;vertical-align:top;line-height:1.35}th{font-size:14px;text-transform:uppercase;letter-spacing:.06em;background:#e6eee7;color:#547064}td:first-child{font-weight:600;width:25%}
+ul{padding-left:22px;margin:0}li{font-size:19px;line-height:1.35;margin:0 0 10px}.scope{font-size:17px;color:#647d72;margin-top:18px}.reuse{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:18px}.reuse p{font-size:18px;margin:0}.reuse b{display:block;font-size:19px;margin-bottom:6px}
+@media screen{section{margin-bottom:24px;box-shadow:0 8px 25px #163c3820}}
+@media print{body{background:#f6f7f2}section{margin:0;box-shadow:none}}
+</style></head><body>
+
+<section>
+<div class="top"><span class="brand">Rule2Test</span><span class="track">TRACK 2 · PRODUCTIVITY &amp; REUSABILITY</span></div>
+<p class="label">01 · Problem &amp; Context</p>
+<h1>Luật bảo hiểm đổi.<br>Test nào cần sửa?</h1>
+<p class="sub">BA và QA phải đọc luật mới, rà lại testcase và tổng hợp bằng chứng.<br>Làm thủ công dễ bỏ sót ca biên và mất dấu lý do thay đổi.</p>
+<div class="grid">
+<div class="card"><span class="num">ĐẦU VÀO RỜI RẠC</span><h3>Luật và testcase</h3><p>Luật viết bằng văn bản; bộ testcase lưu riêng trong Excel.</p></div>
+<div class="card"><span class="num">CÔNG VIỆC LẶP LẠI</span><h3>Rà soát từng test</h3><p>Xác định test bị ảnh hưởng, sửa expected và bổ sung ca còn thiếu.</p></div>
+<div class="card"><span class="num">KHÓ KIỂM CHỨNG</span><h3>Thiếu đường truy vết</h3><p>Cần nối kết quả chạy với luật nguồn, testcase và quyết định duyệt.</p></div>
+</div>
+<div class="band">Ví dụ minh họa: tuổi tối đa <strong>60 → 65</strong>.<br>Test tuổi 61 cần đổi expected; biên 65 và 66 cần được kiểm tra.</div>
+<div class="foot"><span>Insurance Rule2Test Evidence Factory</span><span>01 / 05</span></div>
+</section>
+
+<section>
+<div class="top"><span class="brand">Rule2Test</span><span class="track">TRACK 2</span></div>
+<p class="label">02 · Solution Overview &amp; AI Approach</p>
+<h2>Từ hai đầu vào độc lập<br>đến bộ test có bằng chứng</h2>
+<div class="flow">
+<div class="step"><b>Nhập dữ liệu</b><span>Excel/CSV testcase<br>+ văn bản luật cũ/mới</span></div>
+<div class="step"><b>Hiểu luật</b><span>AI trích xuất điều kiện<br>và dẫn nguồn</span></div>
+<div class="step"><b>So sánh</b><span>Giữ · sửa · bổ sung<br>ca biên và expected</span></div>
+<div class="step"><b>Con người duyệt</b><span>Xác nhận luật<br>và từng testcase</span></div>
+<div class="step"><b>Chạy &amp; lưu</b><span>Expected / Actual<br>→ evidence → gate</span></div>
+</div>
+<div class="grid two">
+<div class="card"><h3>AI đề xuất cách hiểu luật</h3><p>Provider Ollama trả dữ liệu có cấu trúc và trích dẫn. Đầu ra phải qua kiểm tra schema, nguồn và người duyệt.</p></div>
+<div class="card"><h3>Engine kiểm tra hành vi</h3><p>Phân tích ảnh hưởng, sinh ca biên và tính expected bằng logic xác định; giữ nguyên testcase và văn bản gốc.</p></div>
+</div>
+<p class="small">Hiện tại: đọc testcase và liên kết theo trường bằng pattern; không phải AI mapping tổng quát. Chế độ Pattern offline được ghi rõ, không gọi là AI live.</p>
+<div class="foot"><span>Luật không rõ → yêu cầu xác nhận; không tự phê duyệt</span><span>02 / 05</span></div>
+</section>
+
+<section>
+<div class="top"><span class="brand">Rule2Test</span><span class="track">TRACK 2</span></div>
+<p class="label">03 · Business Case — Productivity Impact &amp; Reusability</p>
+<h2>ROI theo công sức tiết kiệm<br>và khả năng dùng lại</h2>
+<span class="chip">GIẢ ĐỊNH MINH HỌA · CHƯA ĐO TRÊN PILOT</span>
+<p class="small">Một nhóm xử lý 100 thay đổi/năm; công sức mỗi thay đổi từ 6 giờ còn 4 giờ<br>(đã tính phần duyệt). Quy đổi 1 FTE = 1.600 giờ làm việc/năm.</p>
+<div class="metrics">
+<div class="metric"><strong>200 giờ/năm</strong><b>Công sức có thể tiết kiệm</b><span>100 × (6 − 4)</span></div>
+<div class="metric"><strong>+50%</strong><b>Năng suất tiềm năng</b><span>Cùng công sức: 6 ÷ 4 − 1</span></div>
+<div class="metric"><strong>≈ 0,13 FTE/năm</strong><b>Năng lực được giải phóng</b><span>200 ÷ 1.600; không phải giảm nhân sự</span></div>
+</div>
+<div class="reuse">
+<div><b>Productivity Impact</b><p>Giảm công rà test và lập evidence. Pilot đo thời gian trước/sau trên cùng phạm vi, gồm cả sửa đề xuất AI.</p></div>
+<div><b>Reusability</b><p>Dùng lại pipeline import–review–evidence cho BU/dự án khác; thay schema luật, mapping và adapter SUT theo nghiệp vụ.</p></div>
+</div>
+<div class="foot"><span>Đây là phép tính có điều kiện, không phải kết quả thực tế hoặc ROI tài chính ròng</span><span>03 / 05</span></div>
+</section>
+
+<section>
+<div class="top"><span class="brand">Rule2Test</span><span class="track">TRACK 2</span></div>
+<p class="label">04 · Differentiation / Innovation</p>
+<h2>Đề xuất sửa test đi kèm<br>lý do và bằng chứng nguồn</h2>
+<table><thead><tr><th>Điểm khác biệt</th><th>Cách Rule2Test thực hiện</th><th>Giá trị cho người duyệt</th></tr></thead><tbody>
+<tr><td>Tách luật và testcase</td><td>Import file testcase thuần; nhập luật độc lập.</td><td>Dùng bộ test đang có, không phải nhét luật vào Excel.</td></tr>
+<tr><td>So sánh trước → sau</td><td>Expected cũ/mới, lý do, câu luật và ô testcase nguồn.</td><td>Biết cần đổi chỗ nào và vì sao.</td></tr>
+<tr><td>AI + engine + người duyệt</td><td>AI đọc luật; engine tính expected; người xác nhận.</td><td>Kiểm tra được đề xuất trước khi thực thi.</td></tr>
+<tr><td>Evidence gắn phiên bản</td><td>Lưu luật, test, duyệt và kết quả chạy; báo rõ test chưa liên kết.</td><td>Tra lại được quyết định và phạm vi đã kiểm tra.</td></tr>
+</tbody></table>
+<div class="band">Cài lỗi tại biên → có testcase chỉ ra <strong>Expected khác Actual</strong>.</div>
+<div class="foot"><span>Giá trị nằm ở đề xuất có thể kiểm tra và truy vết</span><span>04 / 05</span></div>
+</section>
+
+<section>
+<div class="top"><span class="brand">Rule2Test</span><span class="track">TRACK 2</span></div>
+<p class="label">05 · Feasibility &amp; Next Steps</p>
+<h2>Prototype chạy được.<br>Bước tiếp theo là pilot có đo lường.</h2>
+<div class="grid two">
+<div class="card"><h3>Đã thực hiện</h3><ul>
+<li>Import testcase riêng, nhập và xác nhận luật.</li>
+<li>So sánh, duyệt test, chạy mock SUT và tải evidence.</li>
+<li>Đã kiểm tra luồng trình duyệt: chạy đúng và phát hiện lỗi biên.</li>
+</ul></div>
+<div class="card"><h3>Tiếp theo</h3><ul>
+<li>Pilot với BA/QA: dữ liệu mẫu đã duyệt và expected đối chứng.</li>
+<li>Đo công sức, chất lượng đề xuất và chi phí vận hành để thay giả định ROI.</li>
+<li>Mở rộng schema luật, nối SUT thật, thử tái sử dụng ở dự án khác.</li>
+</ul></div>
+</div>
+<p class="scope"><strong>Phạm vi hiện tại:</strong> tuổi, ngưỡng số tiền và khấu trừ. Chưa kiểm chứng mọi luật bảo hiểm hoặc hiệu quả trong production.</p>
+<p class="small"><strong>Live demo:</strong> Import → Nhập luật → Compare → Duyệt → Run → Evidence.</p>
+<div class="foot"><span>Bằng chứng nội bộ: status.md · kiểm thử browser · replay của prototype</span><span>05 / 05</span></div>
+</section>
+</body></html>

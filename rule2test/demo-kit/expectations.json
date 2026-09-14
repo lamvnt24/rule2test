@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "scope": "Produced by executing the real services while assembling this kit; nothing is estimated.",
+  "analyze": {
+    "eligibility": {
+      "tests": 14,
+      "designed": {
+        "rule": 100.0,
+        "branch": 100.0,
+        "boundary": 100.0,
+        "exception": 100.0
+      }
+    },
+    "claim_review": {
+      "tests": 11,
+      "designed": {
+        "rule": 100.0,
+        "branch": 100.0,
+        "boundary": 100.0,
+        "exception": 100.0
+      }
+    },
+    "deductible": {
+      "tests": 13,
+      "designed": {
+        "rule": 100.0,
+        "branch": 50.0,
+        "boundary": 100.0,
+        "exception": 100.0
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "profile": "eligibility",
+      "fault": "none",
+      "tests": 14,
+      "passed": 14,
+      "failed": 0,
+      "errored": 0,
+      "verdict": "GO",
+      "blocking_checks": [],
+      "failing_inputs": []
+    },
+    {
+      "profile": "eligibility",
+      "fault": "boundary",
+      "tests": 14,
+      "passed": 13,
+      "failed": 1,
+      "errored": 0,
+      "verdict": "NO-GO",
+      "blocking_checks": [
+        "execution_results"
+      ],
+      "failing_inputs": [
+        "GEN-12ea1ab958bd311ae81f"
+      ]
+    },
+    {
+      "profile": "claim_review",
+      "fault": "none",
+      "tests": 11,
+      "passed": 11,
+      "failed": 0,
+      "errored": 0,
+      "verdict": "GO",
+      "blocking_checks": [],
+      "failing_inputs": []
+    },
+    {
+      "profile": "claim_review",
+      "fault": "boundary",
+      "tests": 11,
+      "passed": 10,
+      "failed": 1,
+      "errored": 0,
+      "verdict": "NO-GO",
+      "blocking_checks": [
+        "execution_results"
+      ],
+      "failing_inputs": [
+        "GEN-a453e2470ec4a99f6896"
+      ]
+    },
+    {
+      "profile": "deductible",
+      "fault": "none",
+      "tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "errored": 0,
+      "verdict": "NO-GO",
+      "blocking_checks": [
+        "branch_coverage",
+        "resolved_obligations"
+      ],
+      "failing_inputs": []
+    },
+    {
+      "profile": "deductible",
+      "fault": "deductible_off_by_one",
+      "tests": 13,
+      "passed": 12,
+      "failed": 1,
+      "errored": 0,
+      "verdict": "NO-GO",
+      "blocking_checks": [
+        "execution_results",
+        "branch_coverage",
+        "resolved_obligations"
+      ],
+      "failing_inputs": [
+        "GEN-2b25c54876e041f4b8b7"
+      ]
+    }
+  ],
+  "extraction": [
+    {
+      "sample": "ambiguous",
+      "status": "needs_clarification",
+      "expected_status": "needs_clarification",
+      "issues": [
+        "Mock only replays the three exact synthetic source pairs; review or configure a real provider."
+      ],
+      "simulated": true,
+      "provider": "mock"
+    },
+    {
+      "sample": "claim_review",
+      "status": "pending_review",
+      "expected_status": "pending_review",
+      "issues": [],
+      "simulated": true,
+      "provider": "mock"
+    },
+    {
+      "sample": "deductible",
+      "status": "pending_review",
+      "expected_status": "pending_review",
+      "issues": [],
+      "simulated": true,
+      "provider": "mock"
+    },
+    {
+      "sample": "eligibility",
+      "status": "pending_review",
+      "expected_status": "pending_review",
+      "issues": [],
+      "simulated": true,
+      "provider": "mock"
+    }
+  ],
+  "unmeasured": [
+    "real reviewer acceptance",
+    "manual effort savings",
+    "production accuracy",
+    "token usage and monetary cost"
+  ]
+}

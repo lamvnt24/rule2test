@@ -1,0 +1,17 @@
+{
+  "status": "pending_review",
+  "field": "claim_amount",
+  "old_values": [
+    "0"
+  ],
+  "new_values": [
+    "0"
+  ],
+  "operators": [
+    "ge"
+  ],
+  "outcome": "payout",
+  "default": "invalid",
+  "old_deductible": "5000000",
+  "new_deductible": "10000000"
+}

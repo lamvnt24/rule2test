@@ -1,0 +1,210 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rule2Test — Round 2 Final Submission (Track 2)</title><style>
+:root{--bg:#0b1020;--panel:#151b2e;--fg:#eef2f8;--muted:#93a0b8;--line:#2a3350;
+      --measured:#3fb950;--assumed:#d29922;--derived:#58a6ff;--accent:#7c8cff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);
+  font:16px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+#deck{height:100%;display:flex;flex-direction:column}
+#bar{height:3px;background:var(--line);flex:none}#bar i{display:block;height:100%;background:var(--accent);transition:width .2s}
+section{flex:1;display:none;padding:clamp(18px,3.4vw,48px);overflow:auto}
+section.on{display:block}
+.kicker{color:var(--accent);letter-spacing:.13em;text-transform:uppercase;font-size:11.5px;
+  font-weight:700;margin:0 0 10px}
+h1{font-size:clamp(30px,5vw,56px);line-height:1.06;margin:0 0 16px;letter-spacing:-.02em}
+h2{font-size:clamp(22px,3.2vw,38px);line-height:1.13;margin:0 0 16px;letter-spacing:-.01em}
+h3{font-size:clamp(15px,1.7vw,19px);margin:20px 0 8px}
+p{font-size:clamp(14px,1.55vw,19px);max-width:66ch;margin:0 0 12px}
+.lead{color:var(--muted)}
+ul{font-size:clamp(14px,1.55vw,19px);max-width:70ch;padding-left:20px;margin:0}li{margin:8px 0}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:18px 0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.stat b{display:block;font-size:clamp(22px,3.1vw,38px);line-height:1.08;margin-bottom:5px}
+.stat span{color:var(--muted);font-size:12.5px;display:block}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.08em;padding:2px 7px;
+     border-radius:4px;margin-bottom:7px;text-transform:uppercase}
+.t-measured{background:rgba(63,185,80,.16);color:var(--measured);border:1px solid rgba(63,185,80,.4)}
+.t-assumed{background:rgba(210,153,34,.16);color:var(--assumed);border:1px solid rgba(210,153,34,.4)}
+.t-derived{background:rgba(88,166,255,.16);color:var(--derived);border:1px solid rgba(88,166,255,.4)}
+table{border-collapse:collapse;width:100%;font-size:clamp(12.5px,1.35vw,16.5px);margin:8px 0}
+th,td{border-bottom:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.formula{background:var(--panel);border-left:3px solid var(--derived);border-radius:0 8px 8px 0;
+  padding:11px 15px;margin:12px 0;font-size:clamp(13px,1.4vw,17px);max-width:74ch}
+.note{color:var(--muted);font-size:clamp(11.5px,1.2vw,13.5px);margin-top:14px;border-top:1px solid var(--line);
+  padding-top:10px;max-width:82ch}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.card h4{margin:0 0 8px;font-size:15px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:10px 0 0}
+footer{flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:8px 16px;border-top:1px solid var(--line);color:var(--muted);font-size:11.5px}
+footer button{font:inherit;background:var(--panel);color:var(--fg);border:1px solid var(--line);
+  border-radius:6px;padding:4px 10px;cursor:pointer}
+footer button:hover{border-color:var(--accent)}
+/* Print and PDF export: one 16:9 page per slide, 338mm x 190mm (13.33in x 7.5in). */
+@page{size:338mm 190mm;margin:0}
+@media print{
+  html,body{height:auto;background:var(--bg)}
+  #deck{display:block;height:auto}
+  #bar,footer{display:none}
+  section{display:block!important;width:338mm;height:190mm;overflow:hidden;
+          padding:12mm 15mm;break-after:page;page-break-after:always;
+          background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  section:last-child{break-after:auto;page-break-after:auto}
+  .note{margin-top:12px;padding-top:9px}
+}
+</style></head><body><div id="deck"><div id="bar"><i id="fill"></i></div><section><p class="kicker">Round 2 · Final submission · Track 2</p>
+<h1>Rule2Test</h1>
+<p class="lead">Mỗi thay đổi quy tắc bảo hiểm trở thành test hồi quy đã được người duyệt,
+và bằng chứng thực thi kiểm chứng lại được.</p>
+<div class="grid"><div class="stat"><span class="tag t-measured">Đo được</span><b>16.67% → 100.0%</b><span>độ phủ biên thiết kế, trước → sau</span></div>
+<div class="stat"><span class="tag t-measured">Đo được</span><b>6/6</b><span>kịch bản cổng chất lượng đúng kết luận</span></div>
+<div class="stat"><span class="tag t-measured">Đo được</span><b>294 passing</b><span>test tự động</span></div></div>
+<div class="legend"><span class="tag t-measured">Đo được</span> số đo thật &nbsp;·&nbsp; <span class="tag t-assumed">Giả định</span> giả định, có căn cứ &nbsp;·&nbsp; <span class="tag t-derived">Tính ra</span> tính ra</div>
+<p class="note">Số gắn nhãn "Đo được" sao chép từ artifact trong repo, do chính hệ thống chạy ra.
+Dữ liệu là dữ liệu mô phỏng, không phải đo lường môi trường thật.</p></section><section><p class="kicker">1 · Problem &amp; Context</p>
+<h2>Một quy tắc thay đổi. Không ai chứng minh được nó làm hỏng gì.</h2>
+<p>Công ty bảo hiểm sửa điều kiện tham gia: <strong>tuổi tối đa từ 60 lên 65</strong>.</p>
+<ul>
+<li>Bộ test cũ <strong>vẫn xanh</strong> — chưa ai viết test cho vùng biên vừa dịch (61–65).</li>
+<li>Không ai trả lời được thay đổi này <strong>làm mất hiệu lực test nào</strong>, và <strong>ai</strong> đã duyệt test mới.</li>
+<li>Kết quả test <strong>không truy ngược</strong> được về điều khoản đã sinh ra nó.</li>
+<li>Người duyệt phải tin bản tóm tắt của AI cho tài liệu họ <strong>không kiểm lại được từng dòng</strong>.</li>
+</ul>
+<p class="lead" style="margin-top:16px">Vấn đề không phải sinh test tự động.
+Vấn đề là <strong>truy vết</strong> và <strong>thẩm quyền phê duyệt</strong>.</p></section><section><p class="kicker">2 · Solution Overview</p>
+<h2>Năm chặng, một chuỗi truy vết liên tục</h2>
+<table><tr><th>Chặng</th><th>Việc xảy ra</th><th>Ai quyết định</th></tr>
+<tr><td>Tiếp nhận</td><td>Hai phiên bản quy tắc; lưu nguyên bytes gốc kèm mã băm</td><td>Máy</td></tr>
+<tr><td>Phân tích</td><td>Delta quy tắc, ảnh hưởng, tìm lỗ hổng, sinh test đề xuất</td><td>Máy</td></tr>
+<tr><td><strong>Duyệt</strong></td><td>Phê duyệt tường minh từng test, gắn với revision</td><td><strong>Con người</strong></td></tr>
+<tr><td>Thực thi</td><td>Chỉ chạy test đã duyệt, đối chiếu hệ thống độc lập</td><td>Máy</td></tr>
+<tr><td>Chứng minh</td><td>Gói bằng chứng + cổng chất lượng GO / NO-GO</td><td>Máy</td></tr></table>
+<p class="note">Mỗi chặng gắn một số revision. Gửi revision cũ thì hệ thống từ chối chứ không ghi đè âm thầm.
+Mở lại phiên duyệt sẽ xoá phê duyệt cũ và làm mất hiệu lực kết luận GO trước đó.</p></section><section><p class="kicker">2 · AI Approach</p>
+<h2>AI đề xuất. Engine quyết định. Con người phê duyệt.</h2>
+<div class="two">
+<div class="card"><h4>AI được làm</h4><ul>
+<li>Đọc tài liệu văn xuôi, rút ra quy tắc có cấu trúc</li>
+<li>Đề xuất <em>đầu vào</em> test từ kho đã duyệt</li></ul></div>
+<div class="card"><h4>AI không bao giờ được làm</h4><ul>
+<li>Tính kết quả <strong>mong đợi</strong> — oracle kiểu tĩnh làm</li>
+<li>Quyết định PASS / FAIL</li>
+<li>Tự phê duyệt đề xuất của chính nó</li></ul></div></div>
+<h3>Bốn rào chắn kỹ thuật</h3>
+<ul>
+<li><strong>Trích dẫn đúng nguyên văn.</strong> Quy tắc AI rút ra phải kèm đúng dòng gốc; sai một ký tự là bị loại.</li>
+<li><strong>Không tự thử lại, không âm thầm quay về mock.</strong> Lỗi provider phân loại thành 11 loại kèm hướng khắc phục.</li>
+<li><strong>Ghim mã digest của model.</strong> Sai model là dừng ngay lúc khởi động.</li>
+<li><strong>Hệ thống được test không nhận kết quả mong đợi hay bản quy tắc.</strong></li>
+</ul></section><section><p class="kicker">3 · Business Case · Track 2</p>
+<h2>Bảy giả định của mô hình ROI</h2>
+<p>Dự án <strong>chưa đo</strong> thời gian tiết kiệm thực tế, nên không con số ROI nào ở đây được trình bày
+như số đo. Thay vào đó là mô hình công khai, phạm vi một team QA bảo hiểm 8 người.</p>
+<table><tr><th>Đầu vào</th><th>Giá trị</th><th>Căn cứ</th></tr><tr><td>Quy mô team</td><td class='num'>8 người</td><td>Đơn vị nhỏ nhất có thể kiểm chứng.</td></tr><tr><td>Số lần đổi quy tắc</td><td class='num'>36 lần/năm</td><td>≈3 lần/tháng: tham số sản phẩm, quy định pháp lý, quy tắc chiến dịch.</td></tr><tr><td>Công sức hiện tại</td><td class='num'>16 giờ/lần</td><td>2 người-ngày: đọc tài liệu ~5h, rà test và thiết kế case ~7h, hồ sơ truy vết ~4h.</td></tr><tr><td>Công sức khi có công cụ</td><td class='num'>6 giờ/lần</td><td>Phần còn lại là DUYỆT — không tự động hoá, không tính là tiết kiệm.</td></tr><tr><td>Quy tắc DSL diễn đạt được</td><td class='num'>0,50 tỷ lệ</td><td>Quy tắc ngoài phạm vi bị TỪ CHỐI chứ không đoán, nên chỉ tính một nửa.</td></tr><tr><td>Chi phí đầy đủ một giờ QA</td><td class='num'>300.000 VND/giờ</td><td>≈45 triệu/tháng ÷ ~147 giờ làm việc.</td></tr><tr><td>Giờ làm việc hữu ích</td><td class='num'>1.760 giờ/người/năm</td><td>220 ngày × 8 giờ.</td></tr></table>
+<p class="note">Hệ số phủ DSL là giả định thận trọng nhất: hệ thống <strong>từ chối</strong> quy tắc nó không
+diễn đạt được thay vì đoán, nên chỉ một nửa số lần đổi quy tắc được tính vào ROI.</p></section><section><p class="kicker">3 · Business Case · Track 2</p>
+<h2>Giờ tiết kiệm và giá trị quy đổi</h2>
+<div class="formula">
+Giờ tiết kiệm/năm = số lần đổi × hệ số phủ DSL × (giờ thủ công − giờ có công cụ)<br>
+= 36 × 0,50 × (16 − 6) = <strong>180 giờ/năm</strong>
+</div>
+<div class="grid">
+<div class="stat"><span class="tag t-derived">Tính ra</span><b>180 giờ</b><span>tiết kiệm mỗi năm, một team 8 người</span></div>
+<div class="stat"><span class="tag t-derived">Tính ra</span><b>31,2%</b><span>tăng năng suất trên việc hồi quy do đổi quy tắc</span></div>
+<div class="stat"><span class="tag t-derived">Tính ra</span><b>1,28%</b><span>trên tổng năng lực cả team — mẫu số rộng hơn</span></div>
+<div class="stat"><span class="tag t-derived">Tính ra</span><b>54 triệu VND</b><span>giá trị quy đổi mỗi năm</span></div>
+</div>
+<p>Nêu <strong>hai</strong> tỷ lệ năng suất vì công cụ chỉ tác động vào phần việc hồi quy do đổi quy tắc
+(576 giờ/năm), không phải toàn bộ công việc của team (14.080 giờ/năm).</p>
+<p class="note">Thời gian <strong>phê duyệt của con người không được tính là tiết kiệm</strong> — đó là thẩm quyền,
+không phải chi phí cần cắt.</p></section><section><p class="kicker">3 · Business Case · Track 2</p>
+<h2>Độ nhạy và khả năng nhân rộng</h2>
+<div class="two">
+<div><h3 style="margin-top:0">Nếu giả định đổi</h3>
+<table><tr><th>Kịch bản</th><th>Phủ DSL</th><th>Lần/năm</th><th>Giờ/năm</th><th>VND/năm</th></tr>
+<tr><td>Hiện tại</td><td class='num'>50%</td><td class='num'>36</td><td class='num'>180</td><td class='num'>54 triệu</td></tr><tr><td>Mở rộng DSL</td><td class='num'>80%</td><td class='num'>36</td><td class='num'>288</td><td class='num'>86 triệu</td></tr><tr><td>Đổi quy tắc nhiều hơn</td><td class='num'>50%</td><td class='num'>60</td><td class='num'>300</td><td class='num'>90 triệu</td></tr><tr><td>Cả hai</td><td class='num'>80%</td><td class='num'>60</td><td class='num'>480</td><td class='num'>144 triệu</td></tr></table></div>
+<div><h3 style="margin-top:0">Nếu nhân rộng</h3>
+<table><tr><th>Phạm vi</th><th>Số QA</th><th>Giờ/năm</th><th>VND/năm</th></tr><tr><td>1 team QA</td><td class='num'>8</td><td class='num'>180</td><td class='num'>54 triệu</td></tr><tr><td>1 Business Unit</td><td class='num'>40</td><td class='num'>900</td><td class='num'>270 triệu</td></tr><tr><td>Nhiều BU</td><td class='num'>160</td><td class='num'>3.600</td><td class='num'>1.080 triệu</td></tr></table></div>
+</div>
+<h3>Vì sao tái sử dụng được</h3>
+<ul>
+<li><strong>Engine không gắn nghiệp vụ cụ thể.</strong> Quy tắc là <em>dữ liệu</em>, không phải mã nguồn.</li>
+<li><strong>Kho tri thức dùng chung.</strong> Test đã duyệt tái sử dụng được; kết quả mong đợi luôn <em>tính lại</em>.</li>
+<li><strong>Không phụ thuộc hạ tầng.</strong> Triển khai cho đơn vị mới là chép một file.</li>
+</ul>
+<p class="note">Bảng nhân rộng là phép nhân tuyến tính, chưa trừ chi phí triển khai và đào tạo.</p></section><section><p class="kicker">4 · Differentiation / Innovation</p>
+<h2>Khác gì so với các cách làm hiện có</h2>
+<table><tr><th>Cách tiếp cận</th><th>Ai tính kết quả mong đợi</th><th>Truy vết về điều khoản</th><th>Chặn phát hành</th></tr>
+<tr><td>Viết test thủ công</td><td>Người</td><td>Không</td><td>Không</td></tr>
+<tr><td>Hỏi LLM sinh test</td><td><strong>AI</strong> — không kiểm chứng được</td><td>Không</td><td>Không</td></tr>
+<tr><td>Sinh test theo mô hình</td><td>Máy</td><td>Không gắn tài liệu</td><td>Không</td></tr>
+<tr><td><strong>Rule2Test</strong></td><td><strong>Oracle kiểu tĩnh</strong></td><td><strong>Trích dẫn đúng dòng + băm</strong></td><td><strong>Cổng GO/NO-GO</strong></td></tr></table>
+<h3>Ba điểm mới</h3>
+<ul>
+<li><strong>Trích dẫn nguyên văn là điều kiện bắt buộc.</strong> AI không chỉ được dòng gốc thì output bị loại.</li>
+<li><strong>Hai bên tính độc lập.</strong> Oracle tính mong đợi, hệ thống riêng tính thực tế, không chia sẻ mã.</li>
+<li><strong>Bằng chứng gắn revision.</strong> Sửa test là phê duyệt hết hiệu lực; mở lại phiên duyệt là GO mất hiệu lực.</li>
+</ul></section><section><p class="kicker">4 · Differentiation / Innovation</p>
+<h2>Bằng chứng cho từng khẳng định</h2>
+<table><tr><th>Khẳng định</th><th>Kiểm chứng bằng</th><th>Số đo</th></tr>
+<tr><td>Bắt được lỗi lệch ngưỡng</td><td>Bơm lỗi biên, chạy thật</td><td class="num">13/14 pass → NO-GO</td></tr>
+<tr><td>Tìm ra vùng biên chưa phủ</td><td>Độ phủ trước và sau khi sinh test</td><td class="num">16.67% → 100.0%</td></tr>
+<tr><td>Bộ test đủ mạnh</td><td>Mutation — cố tình làm sai quy tắc</td><td class="num">100.0%</td></tr>
+<tr><td>Cổng chất lượng đúng hợp đồng</td><td>6 kịch bản, gồm cả ca phải NO-GO</td><td class="num">6/6</td></tr>
+<tr><td>AI không tự duyệt</td><td>Test tự động khẳng định</td><td class="num">có test</td></tr>
+<tr><td>Không tự thử lại khi lỗi</td><td>Provider giả lập đếm số lần gọi</td><td class="num">gọi đúng 1 lần</td></tr>
+<tr><td>Log không rò dữ liệu</td><td>Danh sách trường cho phép + test</td><td class="num">có test</td></tr></table>
+<p class="note">Tất cả nằm trong 294 passing test tự động, chạy lại bằng một lệnh.
+Trích xuất bằng model thật hiện đạt 4/10; số của AI giả lập (5/10) chỉ là phát lại fixture
+và không dùng để chứng minh năng lực AI.</p></section><section><p class="kicker">5 · Feasibility &amp; Next Steps</p>
+<h2>Đã sẵn sàng tới đâu</h2>
+<div class="two">
+<div class="card"><h4>Đã có, chạy được</h4><ul>
+<li>Nguyên mẫu đóng gói một file .exe, không cần cài gì</li>
+<li>294 passing test tự động, chạy ổn định</li>
+<li>Log có cấu trúc, trace, metrics, phân loại lỗi provider</li>
+<li>Bộ tài liệu và dữ liệu demo mang đi được</li></ul></div>
+<div class="card"><h4>Chưa có — nói thẳng</h4><ul>
+<li>Chưa xác thực, chưa phân quyền; tên người duyệt tự khai</li>
+<li>Chưa có nhãn chuyên gia cho bộ đánh giá AI</li>
+<li>DSL còn nhỏ: 2 trường, 8 toán tử</li>
+<li>Băm là kiểm tra toàn vẹn, chưa phải chữ ký số</li></ul></div></div>
+<p class="note">GO là đánh giá hồi quy cục bộ cho một revision, không phải giấy phép phát hành.
+Độ phủ không phải tỷ lệ pass.</p></section><section><p class="kicker">5 · Feasibility &amp; Next Steps</p>
+<h2>Bốn bước tiếp theo</h2>
+<table><tr><th>Bước</th><th>Mục tiêu</th><th>Kết quả đo được</th></tr>
+<tr><td>1</td><td>Bộ đánh giá lớn, có nhãn chuyên gia, tách tập kiểm định giữ riêng</td>
+<td>Thay "4/10 trên 10 case tự soạn" bằng con số trên hàng trăm case có nhãn</td></tr>
+<tr><td>2</td><td>Nối hệ thống thật qua adapter HTTP sẵn có; chạy trong CI</td>
+<td>Số lần chặn được thay đổi rủi ro trước khi vào môi trường thật</td></tr>
+<tr><td>3</td><td>Xác thực, phân quyền, bằng chứng ký số, lưu trữ chỉ-ghi-thêm</td>
+<td>Bằng chứng đủ điều kiện dùng cho kiểm toán</td></tr>
+<tr><td>4</td><td>Mở rộng DSL</td>
+<td>Phủ DSL 50% → 80%: ROI một team từ 54 triệu lên 86 triệu VND/năm</td></tr>
+</table>
+<p>Bước 4 có đòn bẩy ROI cao nhất, và bảng độ nhạy đã lượng hoá đúng mức đòn bẩy đó.</p>
+<p class="note">Rào cản lớn nhất để triển khai thật không phải kỹ thuật lõi, mà là dữ liệu có nhãn chuyên gia
+và việc nối vào hệ thống thật — cả hai nằm ở bước 1 và 2.</p></section><footer><span>Rule2Test · Track 2 · dữ liệu mô phỏng</span><span><button id="prev">&larr;</button> <span id="count"></span> <button id="next">&rarr;</button></span></footer></div><script>
+const slides=[...document.querySelectorAll("section")];
+let i=Math.min(Math.max(parseInt(location.hash.slice(1))-1||0,0),slides.length-1);
+function show(){
+  slides.forEach((s,n)=>s.classList.toggle("on",n===i));
+  document.getElementById("count").textContent=(i+1)+" / "+slides.length;
+  document.getElementById("fill").style.width=((i+1)/slides.length*100)+"%";
+  history.replaceState(null,"","#"+(i+1));slides[i].scrollTop=0;
+}
+function go(d){i=Math.min(Math.max(i+d,0),slides.length-1);show();}
+document.getElementById("prev").onclick=()=>go(-1);
+document.getElementById("next").onclick=()=>go(1);
+addEventListener("keydown",e=>{
+  if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();go(1);}
+  if(["ArrowLeft","PageUp"].includes(e.key)){e.preventDefault();go(-1);}
+  if(e.key==="Home"){i=0;show();}
+  if(e.key==="End"){i=slides.length-1;show();}
+});
+addEventListener("hashchange",()=>{const t=parseInt(location.hash.slice(1));
+  if(t>=1&&t<=slides.length&&t-1!==i){i=t-1;show();}});
+show();
+</script></body></html>

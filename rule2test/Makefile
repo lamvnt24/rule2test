@@ -1,4 +1,4 @@
-.PHONY: demo check test seed reset import-demo quality-gate benchmarks ai-doctor exe
+.PHONY: demo check test seed reset import-demo quality-gate benchmarks ai-doctor exe kit
 
 PY = py -3 -B
 
@@ -31,3 +31,6 @@ ai-doctor:
 
 exe:
 	$(PY) -m PyInstaller packaging/rule2test.spec --noconfirm --clean
+
+kit:
+	$(PY) scripts/build_demo_kit.py --force

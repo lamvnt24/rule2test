@@ -6,3 +6,4 @@ data/*.db
 dist/
 build/
 *.manifest
+demo-kit/

@@ -17,6 +17,18 @@ directory, so workflows and evidence survive restarts and travel with the file.
 `rule2test.exe check` runs the preflight alone; `rule2test.exe doctor` inspects the local model inventory.
 Windows x64 only, unsigned. See [packaging guide](docs/PACKAGING.md).
 
+## Demo and test kit
+
+```powershell
+py -3 -B scripts/build_demo_kit.py --force
+```
+
+Builds `demo-kit/`: the portable executable, the timed demo script, benchmarks, diagrams, the pitch deck,
+import fixtures, the Japanese rule-document pairs with their separate truth files, AI profile templates, the
+offline screenshot replay, a SHA-256 manifest, and an `EXPECTED-RESULTS.md` whose every number is produced by
+executing the real services while the kit is assembled. Copy the folder to another Windows machine and run
+`app/rule2test.exe`. `make kit` rebuilds it; the folder is not tracked in git.
+
 ## Run the workspace
 
 Open PowerShell in the project directory:

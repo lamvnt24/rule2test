@@ -157,5 +157,8 @@ See [OBSERVABILITY.md](OBSERVABILITY.md).
 - factory/app.py: the packaged entry point (serve, check, doctor) with the shared preflight.
 - packaging/launcher.py and packaging/rule2test.spec: PyInstaller build inputs.
 - make exe produces dist/rule2test.exe, a single portable Windows console application.
+- scripts/build_demo_kit.py assembles demo-kit/: docs, import fixtures, Japanese source pairs, AI
+  profiles, the screenshot replay, the executable, a SHA-256 manifest and an expectations file whose
+  every number is produced by executing the real services while the kit is built. make kit rebuilds it.
 
 See [PACKAGING.md](PACKAGING.md).

@@ -54,6 +54,39 @@ class RetrievalWorkflowTests(unittest.TestCase):
         table=replace(self.source.new_table,version=3,rows=(replace(self.source.new_table.rows[0],rule=ref),))
         WorkflowService(self.db).revise_rules(self.source.workflow_id,self.source.revision,table=table,rules=(rule,),actor="BA",reason="New rule revision")
         self.assertFalse(self.knowledge.search(self.index.index_id,"age"))
+    def test_tied_scores_are_ranked_by_record_content_not_by_generated_identifier(self):
+        # Record identifiers derive from a per-run workflow UUID, so ranking on them made the
+        # reported rank of a tied record differ between runs over identical content, which in turn
+        # made the published retrieval figure irreproducible. An English query over the Japanese
+        # corpus scores every record alike, so the ordering is decided entirely by the tie-break.
+        def ordered(name):
+            database=Database(self.root/(name+".db"))
+            sources=[reviewed_source(database,profile) for profile in ("eligibility","claim_review","deductible")]
+            knowledge=KnowledgeService(database)
+            index=knowledge.build(tuple(s.workflow_id for s in sources),actor="Curator")
+            return knowledge.search(index.index_id,"When should a claim be reviewed manually?",kind="test",top_k=3)
+        orders=[]
+        for attempt in range(5):
+            hits=ordered("corpus-"+str(attempt))
+            self.assertEqual(len(hits),3)
+            self.assertEqual(len({round(h.score,9) for h in hits}),1,"expected a full tie to exercise the tie-break")
+            keys=[(-round(h.score,9),h.record.kind,h.record.text) for h in hits]
+            # Ranking a tie on a random identifier would order these independently of content.
+            self.assertEqual(keys,sorted(keys))
+            orders.append(keys)
+        self.assertEqual(len({tuple(order) for order in orders}),1)
+
+    def test_fields_within_keeps_only_records_the_target_policy_can_express(self):
+        # search(fields=...) keeps records covering every named field; fields_within is the
+        # opposite direction and is what candidate generation needs.
+        covering=self.knowledge.search(self.index.index_id,"age eligibility",fields=("age",),top_k=5)
+        self.assertTrue(covering)
+        self.assertEqual(self.knowledge.search(self.index.index_id,"age eligibility",fields_within=(),top_k=5),())
+        within=self.knowledge.search(self.index.index_id,"age eligibility",fields_within=("age",),top_k=5)
+        self.assertTrue(all(set(h.record.fields)<={"age"} for h in within))
+        with self.assertRaises(ValidationError):
+            self.knowledge.search(self.index.index_id,"age eligibility",fields_within=("premium",))
+
     def test_field_workflow_kind_and_exclusion_filters(self):
         self.assertFalse(self.knowledge.search(self.index.index_id,"age",fields=("claim_amount",)))
         self.assertFalse(self.knowledge.search(self.index.index_id,"age",workflow_ids=(self.target.workflow_id,)))

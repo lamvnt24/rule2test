@@ -1,5 +1,5 @@
 """Unified local workspace for the typed pipeline; legacy demo remains at /legacy."""
-import argparse,json,secrets,sqlite3,time
+import argparse,json,secrets,sqlite3,sys,time
 from pathlib import Path
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit,parse_qs,quote
@@ -32,6 +32,17 @@ class WorkspaceServer(ThreadingHTTPServer):
         if address[0] not in ("127.0.0.1","localhost"):raise ConfigurationError("Workspace must bind to loopback")
         self.app=app;self.csrf_token=secrets.token_urlsafe(32)
         super().__init__(address,Handler)
+
+    def handle_error(self,request,client_address):
+        """A browser that navigates away mid-response is ordinary, not an incident: record it as a
+        counter instead of printing a socket traceback over the demo console. Anything else is a
+        real defect and keeps the default traceback so it stays debuggable."""
+        exc=sys.exc_info()[1]
+        if isinstance(exc,ConnectionError):
+            metrics.increment("client_disconnects_total")
+            return logger.debug("client_disconnected",error_type=type(exc).__name__,outcome="error")
+        logger.error("connection_failed",error_type=type(exc).__name__,outcome="error")
+        super().handle_error(request,client_address)
 
 class Handler(LegacyHandler):
     def setup(self):
@@ -98,7 +109,10 @@ class Handler(LegacyHandler):
         self.last_status=0;started=time.perf_counter()
         with tracing.trace("http_request",component="transport",method=method,route=label):
             try:handler()
-            except (BrokenPipeError,ConnectionResetError):pass
+            # ConnectionError covers BrokenPipeError, ConnectionResetError and the
+            # ConnectionAbortedError (WinError 10053) Windows raises when a browser navigates
+            # away mid-response. Writing an error body to a dead socket would only raise again.
+            except ConnectionError:pass
             except Exception as exc:self.dispatch_error(exc)
             elapsed=(time.perf_counter()-started)*1000;status=str(self.last_status)
             metrics.increment("http_responses_total",method=method,route=label,status=status)

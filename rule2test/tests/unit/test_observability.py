@@ -139,7 +139,8 @@ class ProviderFailureTests(unittest.TestCase):
         self.assertEqual(payload["kind"],"timeout")
 
     def test_transport_exceptions_map_to_distinct_kinds(self):
-        cases=((urllib.error.HTTPError("http://x",404,"missing",{},None),"http_status"),
+        cases=((urllib.error.HTTPError("http://x",404,"missing",{},None),"model_mismatch"),
+               (urllib.error.HTTPError("http://x",500,"boom",{},None),"http_status"),
                (socket.timeout(),"timeout"),
                (urllib.error.URLError(ConnectionRefusedError()),"unreachable"),
                (urllib.error.URLError(socket.timeout()),"timeout"),

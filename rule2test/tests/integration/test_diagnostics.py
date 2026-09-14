@@ -1,5 +1,5 @@
 """Phase 11 over HTTP: diagnostics payload, trace correlation, classified provider failures and no hidden retry."""
-import json,tempfile,threading,unittest
+import json,socket,struct,tempfile,threading,time,unittest
 from pathlib import Path
 from unittest.mock import patch
 from urllib.request import Request,urlopen
@@ -72,6 +72,24 @@ class DiagnosticsAPITests(unittest.TestCase):
         labels={counter["labels"].get("route") for counter in body["metrics"]["counters"] if counter["name"]=="http_responses_total"}
         self.assertIn("/api/v1/workflows/:id",labels)
         self.assertEqual(body["metrics"]["dropped_series"],0)
+
+    def test_a_client_that_disappears_is_counted_not_crashed_on(self):
+        # A browser navigating away mid-response aborts the socket. On Windows that surfaces as
+        # ConnectionAbortedError/ConnectionResetError; it must never print a traceback, produce a
+        # 500, or take the server down.
+        for _ in range(5):
+            probe=socket.create_connection(("127.0.0.1",self.server.server_port))
+            probe.sendall(f"GET /api/v1/diagnostics HTTP/1.1\r\nHost: 127.0.0.1:{self.server.server_port}\r\n\r\n".encode())
+            probe.setsockopt(socket.SOL_SOCKET,socket.SO_LINGER,struct.pack("ii",1,0))
+            probe.close()
+        deadline=time.monotonic()+5
+        counter=lambda: {c["name"]:c["value"] for c in metrics.snapshot()["counters"]}.get("client_disconnects_total",0)
+        while counter()<1 and time.monotonic()<deadline:time.sleep(0.05)
+        self.assertGreaterEqual(counter(),1)
+        _,_,body=self.call("/api/v1/diagnostics")  # Server is still serving.
+        failures=[c for c in body["metrics"]["counters"]
+                  if c["name"]=="http_responses_total" and c["labels"].get("status")=="500"]
+        self.assertEqual(failures,[])
 
     def test_provider_failure_returns_502_with_a_classification_and_no_retry(self):
         with patch.object(Application,"knowledge",side_effect=failure("unreachable","Embedding service refused the connection")):

@@ -30,7 +30,9 @@ class RetrievalGenerationService:
         if w.revision!=revision or type(revision) is not int:raise ConflictError("Stale target workflow revision")
         if w.status not in (WorkflowStatus.ANALYZED,WorkflowStatus.IN_REVIEW):raise ConflictError("Analyze the target before retrieval proposals")
         fields=tuple(sorted({c.field for r in w.new_rules for c in r.conditions}))
-        hits=self.knowledge.search(index_id,query,fields=fields,rule_ids=tuple(r.rule_id for r in w.new_rules),exclude_workflow=w.workflow_id,top_k=5)
+        # Only records the target policy can express are useful here: a candidate whose inputs fall
+        # outside `fields` is rejected below, so retrieving one would discard the whole batch.
+        hits=self.knowledge.search(index_id,query,fields_within=fields,rule_ids=tuple(r.rule_id for r in w.new_rules),exclude_workflow=w.workflow_id,top_k=5)
         index=self.knowledge.get(index_id)
         require(self.provider is not None,"Suggestion provider is required")
         try:

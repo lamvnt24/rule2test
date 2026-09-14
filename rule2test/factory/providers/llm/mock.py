@@ -7,10 +7,18 @@ class MockLLMProvider:
     name="mock"
     model="synthetic-replay-v1"
     simulated=True
+    @staticmethod
+    def _lines(text):
+        # The prompt and the citation validator are both line-oriented via splitlines(), so the
+        # fixture match ignores the line terminator too. A CRLF checkout of the same fixture on
+        # Windows must replay identically; anything that is not a known fixture still does not.
+        return text.splitlines()
+
     def extract(self,request,*,system_prompt,timeout_seconds):
         sources={s.label:s for s in request.sources}
         profile=next((key for key,pair in SOURCE_PAIRS.items()
-            if sources["v1"].text==pair[0] and sources["v2"].text==pair[1]),None)
+            if self._lines(sources["v1"].text)==self._lines(pair[0])
+            and self._lines(sources["v2"].text)==self._lines(pair[1])),None)
         if profile is None:
             return json.dumps(dict(status="needs_clarification",
                 issues=["Mock only replays the three exact synthetic source pairs; review or configure a real provider."],

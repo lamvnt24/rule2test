@@ -26,7 +26,9 @@ def classify(exc,message):
         code=exc.code
         try:exc.close()
         except Exception:pass
-        return failure("http_status",message+" (HTTP "+str(code)+")")
+        # A local model gateway answers 404 when the tag is not installed, which is the most
+        # common live-demo failure. Point at the doctor instead of at the provider log.
+        return failure("model_mismatch" if code==404 else "http_status",message+" (HTTP "+str(code)+")")
     if isinstance(exc,(socket.timeout,TimeoutError)):return failure("timeout",message)
     if isinstance(exc,urllib.error.URLError):
         return failure("timeout" if isinstance(exc.reason,(socket.timeout,TimeoutError)) else "unreachable",message)

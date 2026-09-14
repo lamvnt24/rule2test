@@ -1,5 +1,6 @@
 import copy,json,unittest
 from dataclasses import replace
+from pathlib import Path
 from unittest.mock import patch
 from io import BytesIO
 from factory.models.extraction import SourceText,ExtractionRequest
@@ -34,6 +35,29 @@ class ExtractionValidationTests(unittest.TestCase):
         raw=MockLLMProvider().extract(req,system_prompt=SYSTEM_PROMPT,timeout_seconds=30)
         data,citations=validate_response(raw,req)
         self.assertEqual(data["status"],"needs_clarification");self.assertFalse(data["rules_v2"]);self.assertFalse(citations)
+    def test_crlf_checkout_of_a_fixture_still_replays(self):
+        # A Windows checkout with core.autocrlf=true delivers the shipped .txt fixtures as CRLF.
+        # The prompt and the citation validator are line-oriented, so replay must be too.
+        for profile in SOURCE_PAIRS:
+            with self.subTest(profile=profile):
+                req=request(profile)
+                crlf=replace(req,sources=tuple(replace(s,text=s.text.replace("\n","\r\n")) for s in req.sources))
+                self.assertNotEqual(crlf.sources[0].text,req.sources[0].text)
+                self.assertEqual(response(crlf)["status"],"ready")
+                data,citations=validate_response(json.dumps(response(crlf),ensure_ascii=False),crlf)
+                self.assertTrue(citations)
+                self.assertFalse(any("\r" in s.quote for s in citations.values()))
+
+    def test_disk_fixtures_stay_replayable_whatever_the_checkout(self):
+        # data/ai_samples is what scripts/evaluate_extraction.py reads. Comparing by lines keeps
+        # the check honest on both LF and CRLF working trees.
+        root=Path(__file__).resolve().parents[2]/"data"/"ai_samples"
+        for profile in SOURCE_PAIRS:
+            with self.subTest(profile=profile):
+                for index,label in enumerate(("v1","v2")):
+                    disk=(root/profile/("rules_"+label+".txt")).read_bytes().decode("utf-8")
+                    self.assertEqual(disk.splitlines(),SOURCE_PAIRS[profile][index].splitlines())
+
     def test_duplicate_keys_markdown_oversize_and_unknown_fields_rejected(self):
         req=request();data=response(req);data["approved"]=True
         for raw in ('{"status":"ready","status":"ready"}',"\x60\x60\x60json\n{}\n\x60\x60\x60","x"*262145,json.dumps(data)):

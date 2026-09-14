@@ -3,7 +3,7 @@ import base64,hashlib,json,tempfile,threading,unittest
 from pathlib import Path
 from urllib.request import Request,urlopen
 from urllib.error import HTTPError
-from unittest.mock import patch
+from unittest.mock import MagicMock,patch
 from factory.api.dependencies import Application
 from factory.server import WorkspaceServer
 from factory.parsers.templates import demo_payload,json_bytes
@@ -90,8 +90,12 @@ class WorkspaceAPITests(unittest.TestCase):
         draft=self.create();w=self.command(draft,"analyze")
         path="/workflows/"+w["workflow_id"]
         self.post(path+"/analyze",dict(revision=draft["revision"],actor="QA"),expected=409)
-        with patch.object(self.app,"adapter",wraps=self.app.adapter):
+        # Building the adapter is pure in-process construction; what must never happen for an
+        # unreviewed workflow is a call out to the system under test.
+        spy=MagicMock(wraps=self.app.adapter(SUT))
+        with patch.object(self.app,"adapter",return_value=spy):
             self.post(path+"/execute",dict(revision=w["revision"],actor="QA",sut=SUT),expected=409)
+        spy.execute.assert_not_called()
         self.assertEqual(self.detail(w)["status"],"analyzed")
     def test_bulk_review_rolls_back_if_any_test_revision_is_stale(self):
         w=self.command(self.command(self.create(),"analyze"),"start-review")

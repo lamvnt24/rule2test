@@ -30,7 +30,10 @@ class KnowledgeService:
             text=obj.title+" "+(" ".join(s.quote for s in obj.sources) if kind=="rule" else obj.rationale)
             text+=" "+" ".join(fields)+" "+" ".join(rule_ids)
             text+=" "+str([x.to_dict() for x in (obj.conditions if kind=="rule" else obj.inputs)])
-            require(len(text)<=100000,"Knowledge text exceeds 100000 characters")
+            # Bounded in bytes, not characters: the live embedding adapter rejects over 64 KiB of
+            # UTF-8, and Japanese text is three bytes per character. Refuse early and identically
+            # under mock and live providers instead of failing only once a real model is selected.
+            require(len(text.encode("utf-8"))<=65536,"Knowledge text exceeds 64 KiB of UTF-8")
             records.append(KnowledgeRecord(record_id=stable_id("KB-",[w.workflow_id,kind,content_hash(obj),proof_hash]),
                 workflow_id=w.workflow_id,kind=kind,table_hash=table_hash,proof_id=proof_id,proof_hash=proof_hash,
                 fields=fields,rule_ids=rule_ids,text=text,rule=obj if kind=="rule" else None,test=obj if kind=="test" else None))
@@ -79,16 +82,20 @@ class KnowledgeService:
             result.update(r.record_id for r in index.records if r.workflow_id==wid and current.get(r.record_id)==r)
         return result
 
-    def search(self,index_id,query,*,fields=(),rule_ids=(),kind=None,workflow_ids=(),exclude_workflow=None,top_k=5):
+    def search(self,index_id,query,*,fields=(),fields_within=None,rule_ids=(),kind=None,workflow_ids=(),exclude_workflow=None,top_k=5):
+        """fields keeps records covering every named field; fields_within keeps records a target
+        policy can actually express, which is the opposite direction and what generation needs."""
         nonempty(query,"query")
         require(len(query)<=2000 and type(top_k) is int and 1<=top_k<=20,"Query/top_k exceeds bounds")
         require(kind in (None,"rule","test"),"Unknown record kind")
         require(set(fields)<={"age","claim_amount"},"Unsupported field filter")
+        require(fields_within is None or set(fields_within)<={"age","claim_amount"},"Unsupported field scope")
         index=self.get(index_id)
         require(index.embedding_identity==self.embedding.identity and index.dimensions==self.embedding.dimensions and index.simulated==self.embedding.simulated,"Embedding identity mismatch; rebuild with the selected provider")
         with self.db.read() as c:live=self.live_ids(c,index)
         selected=[i for i,r in enumerate(index.records) if r.record_id in live and r.workflow_id!=exclude_workflow
             and (not fields or set(fields)<=set(r.fields)) and (kind is None or r.kind==kind)
+            and (fields_within is None or set(r.fields)<=set(fields_within))
             and (not workflow_ids or r.workflow_id in workflow_ids)]
         if not selected:return ()
         embedded=self.embedding.embed((query,))
@@ -105,4 +112,8 @@ class KnowledgeService:
             if not lexical and score<=0 and not exact:continue
             combined=0.45*lexical+0.35*max(0.0,score)+0.20*exact
             hits.append(RetrievalHit(record=record,score=float(combined),lexical_score=float(lexical),vector_score=float(score),rule_id_match=exact))
-        return tuple(sorted(hits,key=lambda h:(-h.score,h.record.record_id))[:top_k])
+        # Tied scores carry no ranking signal, so the order must at least be reproducible.
+        # record_id derives from a per-run workflow UUID, so using it alone made the reported
+        # rank of a tied record vary between otherwise identical runs. Order on record content
+        # first and keep record_id only as a final within-index tie-break.
+        return tuple(sorted(hits,key=lambda h:(-h.score,h.record.kind,h.record.text,h.record.record_id))[:top_k])

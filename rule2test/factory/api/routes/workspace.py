@@ -154,7 +154,7 @@ class WorkspaceRoutes:
         if path=="/api/v1/suggestions":
             body_keys(body,("workflow_id","revision","index_id","query","actor"),("timeout",))
             b=app.retrieval(provider=True).propose(body["workflow_id"],body["revision"],body["index_id"],body["query"],
-                actor=actor(body),timeout_seconds=body.get("timeout",30))
+                actor=actor(body),timeout_seconds=body.get("timeout",app.ai_timeout()))
             return dict(batch_id=b.batch_id,batch_hash=content_hash(b),candidates=len(b.candidates),simulated=b.simulated)
         parts=path.strip("/").split("/")
         if len(parts)==5 and parts[:3]==["api","v1","proposals"]:

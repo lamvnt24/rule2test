@@ -1,0 +1,19 @@
+# Default: let git normalize text in the repository, and let the platform decide the worktree.
+* text=auto
+
+# These fixtures are compared byte-for-byte against constants in the Python source and are
+# hashed as archived source documents, so their line endings must not depend on the platform.
+rule2test/data/ai_samples/**/*.txt text eol=lf
+rule2test/data/ai_samples/**/*.json text eol=lf
+rule2test/data/ai_eval/*.json text eol=lf
+rule2test/data/demo/*.json text eol=lf
+rule2test/data/ai_profiles/*.json text eol=lf
+
+# Generated artifacts whose bytes are compared or hashed.
+rule2test/data/generated/**/*.json text eol=lf
+rule2test/data/generated/**/*.log text eol=lf
+
+# Binary
+*.png binary
+*.xlsx binary
+*.db binary

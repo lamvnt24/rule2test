@@ -71,7 +71,11 @@ def analysis_rows():
         "A small fixed mutant set on one scenario; not a general fault-detection rate.")]
 
 def suite_rows(skip_tests):
-    if skip_tests:return []
+    # Never drop the row silently: an omitted measurement must read as omitted, not as absent.
+    if skip_tests:
+        return [entry("Automated test suite","not run in this collection","tests/",
+            "The collector was invoked with --skip-tests, so no suite result was recorded.",
+            "Nothing. Run scripts/collect_benchmarks.py without --skip-tests for the real figure.")]
     result=subprocess.run([sys.executable,"-B","-m","unittest","discover","-s","tests"],cwd=ROOT,capture_output=True,text=True)
     tail=[line for line in result.stderr.splitlines() if line.startswith("Ran ")]
     if not tail:return []

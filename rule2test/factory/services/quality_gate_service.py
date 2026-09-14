@@ -94,10 +94,12 @@ class QualityGateService(WorkflowStore):
                     from factory.exceptions import ValidationError
                     raise ValidationError("Source manifest differs from archived metadata")
                 manifest[stored.document_hash] = stored.document_id
-            rules = {(r.rule_id, r.version): r for r in approved.new_rules}
+            # Keyed by content hash as well as identity: matching only (rule_id, version) would
+            # accept an execution whose recorded snapshot differs from the approved rule content.
+            rules = {(r.rule_id, r.version, content_hash(r)): r for r in approved.new_rules}
             traced = 0
             for execution in run.executions:
-                linked = [rules.get((ref.rule_id, ref.version)) for ref in execution.rules]
+                linked = [rules.get((ref.rule_id, ref.version, ref.rule_hash)) for ref in execution.rules]
                 if linked and all(rule is not None and rule.sources and
                                   all(manifest.get(s.document_hash) == s.document_id for s in rule.sources)
                                   for rule in linked):

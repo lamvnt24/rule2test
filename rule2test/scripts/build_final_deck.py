@@ -124,7 +124,18 @@ footer button{font:inherit;background:var(--panel);color:var(--fg);border:1px so
   border-radius:6px;padding:4px 10px;cursor:pointer}
 footer button:hover{border-color:var(--accent)}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
-@media print{section{display:block;page-break-after:always}footer,#bar{display:none}}
+/* Print and PDF export: one 16:9 page per slide, 338mm x 190mm (13.33in x 7.5in). */
+@page{size:338mm 190mm;margin:0}
+@media print{
+  html,body{height:auto;background:var(--bg)}
+  #deck{display:block;height:auto}
+  #bar,footer{display:none}
+  section{display:block!important;width:338mm;height:190mm;overflow:hidden;
+          padding:12mm 15mm;break-after:page;page-break-after:always;
+          background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  section:last-child{break-after:auto;page-break-after:auto}
+  .note{margin-top:12px;padding-top:9px}
+}
 """
 
 SCRIPT="""
@@ -317,14 +328,26 @@ có sẵn bản phát lại ảnh chụp ngoại tuyến kèm đúng lời dẫn
 f"""{kicker("3 · Business Case · Track 2","4 phút")}
 <h2>Cách chúng tôi tính ROI — và cách kiểm tra lại</h2>
 <p>Dự án này <strong>chưa đo</strong> thời gian tiết kiệm thực tế. Vì vậy không có con số ROI nào ở đây được
-trình bày như số đo. Thay vào đó là một mô hình công khai: mọi đầu vào đều ghi rõ căn cứ, mọi phép tính
-đều hiện công thức, và độ nhạy được trình bày đầy đủ.</p>
+trình bày như số đo. Thay vào đó là một mô hình công khai.</p>
 {legend}
-<h3>Giả định mô hình — phạm vi: {esc(ASSUMPTIONS["scope"])}</h3>
+<div class="two" style="margin-top:18px">
+<div class="card"><h4>Ba cam kết về số liệu</h4><ul style="margin:0">
+<li>Mọi đầu vào đều ghi rõ <strong>căn cứ</strong> ngay trên slide sau.</li>
+<li>Mọi phép tính đều <strong>hiện công thức</strong>.</li>
+<li>Trình bày <strong>độ nhạy</strong> thay vì bảo vệ một con số duy nhất.</li>
+</ul></div>
+<div class="card"><h4>Phạm vi cố tình chọn nhỏ</h4>
+<p class="lead" style="margin:0">{esc(ASSUMPTIONS["scope"])} — {vn(value("team_size"))} người.
+Đây là đơn vị nhỏ nhất có thể kiểm chứng. Phần nhân rộng lên BU và tập đoàn được trình bày riêng,
+tách khỏi con số gốc.</p></div></div>
+<p class="note">Nếu quý vị cho rằng một giả định của chúng tôi sai, bảng độ nhạy ở slide sau chỉ ra ngay
+kết quả sẽ thành bao nhiêu — thay vì phải tin hay không tin một con số.</p>""",
+
+f"""{kicker("3 · Business Case · Track 2")}
+<h2>Bảy giả định của mô hình</h2>
 <table><tr><th>Đầu vào</th><th>Giá trị</th><th>Căn cứ</th></tr>{assumption_rows}</table>
-<p class="note">Hệ số phủ DSL là giả định <em>thận trọng nhất</em> và cũng quan trọng nhất: hệ thống
-<strong>từ chối</strong> quy tắc nó không diễn đạt được thay vì đoán, nên chỉ một nửa số lần đổi quy tắc
-được tính vào ROI.</p>""",
+<p class="note">Hệ số phủ DSL là giả định <em>thận trọng nhất</em>: hệ thống <strong>từ chối</strong> quy tắc
+nó không diễn đạt được thay vì đoán, nên chỉ một nửa số lần đổi quy tắc được tính vào ROI.</p>""",
 
 # 10
 f"""{kicker("3 · Business Case · Track 2")}
@@ -362,17 +385,12 @@ f"""{kicker("3 · Business Case · Track 2")}
 <table><tr><th>Phạm vi</th><th>Số QA</th><th>Giờ/năm</th><th>VND/năm</th></tr>{scale_rows}</table>
 <h3>Vì sao nhân rộng được — cơ chế, không phải lời hứa</h3>
 <ul>
-<li><strong>Engine không gắn với nghiệp vụ cụ thể.</strong> Quy tắc là <em>dữ liệu</em> (bảng quyết định có phiên bản),
-không phải mã nguồn. Cùng một engine phục vụ mọi bộ quy tắc diễn đạt được bằng DSL.</li>
-<li><strong>Kho tri thức dùng chung.</strong> Test một đơn vị đã duyệt được tái sử dụng cho đơn vị khác;
-kết quả mong đợi luôn được <em>tính lại</em> theo quy tắc mới, không sao chép.</li>
-<li><strong>Không phụ thuộc hạ tầng.</strong> Lõi chỉ dùng thư viện chuẩn Python; đóng gói thành một file .exe.
-Triển khai cho đơn vị tiếp theo là chép một file.</li>
-<li><strong>Ranh giới đã tách sẵn.</strong> Thay FastAPI cho tầng vận chuyển hoặc PostgreSQL cho lưu trữ
-mà không đụng tới engine.</li>
+<li><strong>Engine không gắn nghiệp vụ cụ thể.</strong> Quy tắc là <em>dữ liệu</em>, không phải mã nguồn.</li>
+<li><strong>Kho tri thức dùng chung.</strong> Test đã duyệt tái sử dụng được; kết quả mong đợi luôn <em>tính lại</em>.</li>
+<li><strong>Không phụ thuộc hạ tầng.</strong> Lõi chỉ dùng thư viện chuẩn; triển khai đơn vị mới là chép một file.</li>
 </ul>
-<p class="note">Bảng trên là phép nhân tuyến tính từ mô hình một team. Nó chưa tính chi phí triển khai,
-đào tạo và vận hành khi mở rộng — nêu ra để quý vị trừ đi theo cách của mình.</p>""",
+<p class="note">Bảng trên là phép nhân tuyến tính từ mô hình một team, chưa trừ chi phí triển khai, đào tạo
+và vận hành khi mở rộng.</p>""",
 
 # 13
 f"""{kicker("3 · Business Case · Track 2")}
@@ -388,8 +406,8 @@ Mutation score: <strong>{esc(mut)}</strong> trên cùng kịch bản.
 Cổng chất lượng: <strong>{esc(gate)}</strong> kịch bản đúng kết luận, kể cả các ca cố tình phải NO-GO.</p></div>
 <div class="card"><h4>Giá trị — chưa đo</h4>
 <p>{tagged("assumed")}</p>
-<p class="lead">Chi phí một lỗi lệch ngưỡng lọt ra thật phụ thuộc quy mô hợp đồng, mức bồi hoàn khách hàng
-và rủi ro pháp lý. Đây là con số <strong>của quý vị</strong>, không phải của chúng tôi.</p></div></div>
+<p class="lead">Phụ thuộc quy mô hợp đồng, mức bồi hoàn và rủi ro pháp lý. Đây là con số
+<strong>của quý vị</strong>.</p></div></div>
 <p>Chúng tôi chứng minh được phần <strong>cơ chế</strong>: lỗi lệch một đơn vị ở đúng ngưỡng bị bắt, và cổng
 chuyển sang NO-GO. Quý vị nhân nó với chi phí một lỗi lọt trong tổ chức mình.</p>
 <p class="note">Chúng tôi chủ động không nhân sẵn con số đó để trình bày như ROI. Làm vậy sẽ biến một giả định
@@ -405,12 +423,10 @@ f"""{kicker("4 · Differentiation / Innovation","2 phút")}
 <tr><td><strong>Rule2Test</strong></td><td>Máy + AI đề xuất</td><td><strong>Oracle kiểu tĩnh</strong></td><td><strong>Trích dẫn đúng dòng + băm</strong></td><td><strong>Cổng GO/NO-GO</strong></td></tr></table>
 <h3>Ba điểm mới thực sự</h3>
 <ul>
-<li><strong>Trích dẫn nguyên văn là điều kiện bắt buộc, không phải tính năng phụ.</strong> AI nói mà không chỉ được
-dòng gốc thì output bị loại. Đây là cách duy nhất để người duyệt kiểm lại được trong thời gian hữu hạn.</li>
-<li><strong>Hai bên tính độc lập.</strong> Oracle tính mong đợi, hệ thống riêng tính thực tế, không chia sẻ mã.
-Lỗi chung chỉ xảy ra khi cả hai cùng hiểu sai đặc tả — và đó chính là lúc cần con người.</li>
-<li><strong>Bằng chứng gắn revision.</strong> Sửa một test là phê duyệt của nó hết hiệu lực. Mở lại phiên duyệt là
-kết luận GO mất hiệu lực. Không có "bằng chứng" nào tồn tại tách rời khỏi phiên bản sinh ra nó.</li>
+<li><strong>Trích dẫn nguyên văn là điều kiện bắt buộc.</strong> AI không chỉ được dòng gốc thì output bị loại —
+cách duy nhất để người duyệt kiểm lại trong thời gian hữu hạn.</li>
+<li><strong>Hai bên tính độc lập.</strong> Oracle tính mong đợi, hệ thống riêng tính thực tế, không chia sẻ mã.</li>
+<li><strong>Bằng chứng gắn revision.</strong> Sửa test là phê duyệt hết hiệu lực; mở lại phiên duyệt là GO mất hiệu lực.</li>
 </ul>""",
 
 # 15

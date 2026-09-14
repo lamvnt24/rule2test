@@ -47,7 +47,20 @@ footer button{font:inherit;background:var(--panel);color:var(--fg);border:1px so
   border-radius:6px;padding:5px 11px;cursor:pointer}
 footer button:hover{border-color:var(--accent)}
 .note{color:var(--muted);font-size:clamp(12px,1.2vw,14px);margin-top:18px;border-top:1px solid var(--line);padding-top:12px;max-width:72ch}
-@media print{section{display:block;page-break-after:always}footer,#bar{display:none}}
+/* Print and PDF export: one 16:9 page per slide. */
+@page{size:338mm 190mm;margin:0}
+@media print{
+  html,body{height:auto;background:var(--bg)}
+  #deck{display:block;height:auto}
+  #bar,footer{display:none}
+  section{display:block!important;width:338mm;height:190mm;overflow:hidden;
+          padding:11mm 14mm;break-after:page;page-break-after:always;
+          background:var(--bg);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  section:last-child{break-after:auto;page-break-after:auto}
+  img{max-height:104mm}
+  .grid ~ figure img{max-height:74mm}  /* slides that carry a stat row above the screenshot */
+  .note{margin-top:10px;padding-top:8px}
+}
 """
 
 SCRIPT="""

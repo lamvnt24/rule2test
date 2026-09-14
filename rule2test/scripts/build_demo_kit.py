@@ -150,7 +150,8 @@ every step that can fail are in `docs/COMPETITION_DEMO.md`.
 | `MANIFEST.json` | Every file with its SHA-256, so you can verify nothing was altered in transit |
 | `docs/` | Demo script, benchmarks, architecture diagrams, observability and packaging guides |
 | `docs/vi/` | Vietnamese system overview, roadmap and step-by-step user guide |
-| `docs/slides/final-round2.html` | Round 2 final-submission deck for Track 2, in Vietnamese |
+| `docs/slides/final-round2.pdf` | Round 2 final-submission deck for Track 2, in Vietnamese — hand this to the organisers |
+| `docs/slides/final-round2.html` | The same deck as a live page, for presenting |
 | `docs/slides/index.html` | General pitch deck; open it from disk, arrow keys to navigate |
 | `data/import/` | Versioned JSON and XLSX documents to import through **Document intake** |
 | `data/ai-extraction/` | Japanese rule-document pairs for **AI rule review**, with separate truth files |
@@ -217,7 +218,7 @@ def build(target,*,force):
     vietnamese=ROOT/"docs"/"vi"
     if vietnamese.is_dir():copy_tree(vietnamese,docs/"vi","*.md")
     (docs/"slides").mkdir()
-    for name in ("index.html","final-round2.html"):
+    for name in ("index.html","final-round2.html","index.pdf","final-round2.pdf"):
         source=ROOT/"docs"/"slides"/name
         if source.is_file():shutil.copy2(source,docs/"slides"/name)
 

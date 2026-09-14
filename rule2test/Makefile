@@ -1,4 +1,4 @@
-.PHONY: demo check test seed reset import-demo quality-gate benchmarks ai-doctor exe kit deck
+.PHONY: demo check test seed reset import-demo quality-gate benchmarks ai-doctor exe kit deck pdf
 
 PY = py -3 -B
 
@@ -37,3 +37,8 @@ kit:
 
 deck:
 	$(PY) scripts/build_final_deck.py
+
+pdf:
+	$(PY) scripts/build_final_deck.py
+	$(PY) scripts/export_deck_pdf.py
+	$(PY) scripts/export_deck_pdf.py --source docs/slides/index.html

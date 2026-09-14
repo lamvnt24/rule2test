@@ -27,6 +27,15 @@ HEADLINE="eligibility"
 def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
+def stale(executable):
+    """A frozen build embeds web/ and factory/ at build time. If it predates them it serves a
+    different interface than the docs, screenshots and expectations in this same kit describe —
+    which is exactly the kind of mismatch nobody notices until a demo."""
+    sources=[p for p in (ROOT/"web").rglob("*") if p.is_file()]
+    sources+=[p for p in (ROOT/"factory").rglob("*.py")]
+    newest=max((p.stat().st_mtime for p in sources),default=0)
+    return newest>executable.stat().st_mtime
+
 def run_scenarios():
     """Drive every profile and fault through the real services and record what actually happens."""
     rows=[];coverage={}
@@ -199,7 +208,7 @@ explains the diagnostics surface; `docs/COMPETITION_DEMO.md` has the recovery ta
 - SHA-256 in `MANIFEST.json` detects corruption in transit. It is not a signature.
 """
 
-def build(target,*,force):
+def build(target,*,force,allow_stale=False):
     if target.exists():
         if not force:raise ValueError(f"{target} already exists; pass --force to rebuild it")
         try:shutil.rmtree(target)
@@ -252,6 +261,11 @@ def build(target,*,force):
 
     executable=ROOT/"dist"/"rule2test.exe"
     has_executable=executable.is_file()
+    if has_executable and stale(executable) and not allow_stale:
+        raise ValueError("dist/rule2test.exe is older than web/ or factory/ and would serve an "
+                         "interface this kit does not describe. Rebuild it with "
+                         "'py -3 -m PyInstaller packaging/rule2test.spec --noconfirm --clean', "
+                         "or pass --allow-stale-executable to ship it anyway.")
     if has_executable:
         (target/"app").mkdir();shutil.copy2(executable,target/"app"/"rule2test.exe")
 
@@ -275,9 +289,11 @@ def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output",type=Path,default=KIT)
     parser.add_argument("--force",action="store_true",help="Replace an existing kit folder")
+    parser.add_argument("--allow-stale-executable",action="store_true",
+        help="Ship dist/rule2test.exe even when it predates the sources it embeds")
     args=parser.parse_args(argv)
     try:
-        manifest,has_executable=build(args.output,force=args.force)
+        manifest,has_executable=build(args.output,force=args.force,allow_stale=args.allow_stale_executable)
         print(json.dumps(dict(kit=str(args.output),files=len(manifest["files"]),
             megabytes=round(manifest["total_bytes"]/1048576,1),executable_included=has_executable),
             ensure_ascii=False,indent=2))

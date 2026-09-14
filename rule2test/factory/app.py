@@ -1,5 +1,6 @@
 """Single entry point for the packaged application: preflight, workspace, and local AI inspection."""
 import argparse,json,os,socket,sqlite3,sys,threading,webbrowser
+from datetime import datetime
 from pathlib import Path
 from factory.exceptions import FactoryError,ConfigurationError
 from factory.observability import logger
@@ -27,6 +28,12 @@ def preflight(port,db):
         actual=str(parent),requirement="Data directory must exist and be writable"))
     checks.append(dict(check="bundled_assets",status="PASS" if (resources()/"web"/"workspace.html").is_file() else "FAIL",
         actual=str(resources()),requirement="Browser workspace assets must be present"))
+    if FROZEN:
+        # A frozen build embeds the interface at build time. Printing when it was built is the only
+        # way an operator can tell a stale executable from a current one before the demo starts.
+        built=datetime.fromtimestamp(Path(sys.executable).stat().st_mtime).isoformat(timespec="seconds")
+        checks.append(dict(check="build_date",status="PASS",actual=built,
+            requirement="Rebuild after changing web/ or factory/, or this serves the older interface"))
     checks.append(dict(check="port_available",status="PASS" if port_free(port) else "FAIL",
         actual=port,requirement="Loopback port must be free; the workspace refuses to share a port"))
     exists=Path(db).exists();migrations=[]

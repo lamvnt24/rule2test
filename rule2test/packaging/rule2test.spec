@@ -35,6 +35,9 @@ hiddenimports = [
 excludes = [
     "playwright", "faiss", "numpy", "pytest", "unittest", "tkinter",
     "PyInstaller", "setuptools", "pip", "streamlit",
+    # openpyxl imports Pillow only for images in sheets, which this application never reads.
+    # pypdfium2 is a build-time verification tool. Both are several megabytes of dead weight.
+    "PIL", "Pillow", "pypdfium2", "pypdfium2_raw",
 ]
 
 a = Analysis(

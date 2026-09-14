@@ -21,7 +21,8 @@ from factory.exceptions import ConfigurationError
 from factory.observability import logger as diagnostics_log,metrics
 from .schemas.requests import body_keys
 
-ROOT=Path(__file__).resolve().parents[2]
+from factory.paths import resources,database
+ROOT=resources()  # Read-only bundled assets; writable paths come from factory.paths.
 DEFAULT_AI_TIMEOUT_SECONDS=60
 # Reported by /api/v1/diagnostics. Secrets are listed only as set/unset and never by value.
 SETTINGS=("RULE2TEST_EXTRACTION_PROVIDER","RULE2TEST_EXTRACTION_MODEL","RULE2TEST_EXTRACTION_DIGEST",

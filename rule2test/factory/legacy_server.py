@@ -3,11 +3,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from .core import analyze, execute, digest, validate
-ROOT=Path(__file__).resolve().parent.parent
-DB=ROOT/"data"/"factory.db"
+from factory.paths import resources,database
+ROOT=resources()
 def connect():
-    DB.parent.mkdir(exist_ok=True)
-    c=sqlite3.connect(DB)
+    # Resolved per call: the writable root is only known at run time in a frozen build.
+    c=sqlite3.connect(database("factory.db"))
     c.execute("CREATE TABLE IF NOT EXISTS records(id TEXT PRIMARY KEY, kind TEXT, payload TEXT)")
     return c
 def save(kind,value):

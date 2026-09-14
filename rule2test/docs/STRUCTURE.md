@@ -149,3 +149,13 @@ See [OBSERVABILITY.md](OBSERVABILITY.md).
 - scripts/build_slides.py: self-contained pitch deck at docs/slides/index.html, numbers read from the benchmark summary.
 - docs/COMPETITION_DEMO.md: timed 5 and 10 minute scripts with recovery paths.
 - docs/DIAGRAMS.md: trust boundary, layer and review state-machine diagrams.
+
+## Packaging
+
+- factory/paths.py: separates bundled read-only assets from the writable data root, so a frozen build
+  never writes into the one-file extraction directory the operating system deletes on exit.
+- factory/app.py: the packaged entry point (serve, check, doctor) with the shared preflight.
+- packaging/launcher.py and packaging/rule2test.spec: PyInstaller build inputs.
+- make exe produces dist/rule2test.exe, a single portable Windows console application.
+
+See [PACKAGING.md](PACKAGING.md).

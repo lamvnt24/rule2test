@@ -2,6 +2,21 @@
 
 A runnable Python 3.11+ hackathon project that turns insurance rule changes into reviewed regression tests and traceable execution evidence. The core, JSON import and web workspace use the standard library. Excel import and FAISS are optional.
 
+## Portable executable
+
+```powershell
+py -3 -m PyInstaller packaging/rule2test.spec --noconfirm --clean
+.\dist\rule2test.exe
+```
+
+One self-contained Windows file, about 12 MB: bundled CPython, the whole `factory` package, the browser
+workspace and the demo fixtures. Copy it to another Windows machine and run it — no Python, no install, no
+download at startup. Databases are written beside the executable, never into the temporary extraction
+directory, so workflows and evidence survive restarts and travel with the file.
+
+`rule2test.exe check` runs the preflight alone; `rule2test.exe doctor` inspects the local model inventory.
+Windows x64 only, unsigned. See [packaging guide](docs/PACKAGING.md).
+
 ## Run the workspace
 
 Open PowerShell in the project directory:
@@ -112,7 +127,7 @@ Files under factory/models are importable package modules, not standalone entry 
 - SHA-256 is an integrity check, not a digital signature or protection from an administrator rewriting both data and hashes.
 - The workspace exposes the independent mock SUT. The HTTP SUT adapter remains available through Python.
 
-See [benchmarks](docs/BENCHMARKS.md), [diagrams](docs/DIAGRAMS.md), [observability](docs/OBSERVABILITY.md), [competition demo](docs/COMPETITION_DEMO.md), [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [project structure](docs/STRUCTURE.md), [domain models](docs/DOMAIN_MODELS.md), [engines](docs/ENGINES.md), [analysis](docs/ANALYSIS_SERVICES.md), [workflows](docs/WORKFLOWS.md), [AI extraction](docs/AI_EXTRACTION.md) and [pitch](docs/PITCH.md).
+See [packaging](docs/PACKAGING.md), [benchmarks](docs/BENCHMARKS.md), [diagrams](docs/DIAGRAMS.md), [observability](docs/OBSERVABILITY.md), [competition demo](docs/COMPETITION_DEMO.md), [API](docs/API.md), [architecture](docs/ARCHITECTURE.md), [project structure](docs/STRUCTURE.md), [domain models](docs/DOMAIN_MODELS.md), [engines](docs/ENGINES.md), [analysis](docs/ANALYSIS_SERVICES.md), [workflows](docs/WORKFLOWS.md), [AI extraction](docs/AI_EXTRACTION.md) and [pitch](docs/PITCH.md).
 
 ## Next development
 

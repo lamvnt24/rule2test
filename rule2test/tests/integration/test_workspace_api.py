@@ -5,7 +5,9 @@ from urllib.request import Request,urlopen
 from urllib.error import HTTPError
 from unittest.mock import MagicMock,patch
 from factory.api.dependencies import Application
-from factory.server import WorkspaceServer
+from email.message import Message
+from io import BytesIO
+from factory.server import WorkspaceServer,Handler,DRAIN_LIMIT
 from factory.parsers.templates import demo_payload,json_bytes
 from scripts.run_retrieval_demo import reviewed_source,target_workflow
 
@@ -113,6 +115,21 @@ class WorkspaceAPITests(unittest.TestCase):
     def test_client_cannot_send_expected_to_execution(self):
         w=self.create()
         self.post("/workflows/"+w["workflow_id"]+"/execute",dict(revision=w["revision"],actor="QA",sut=SUT,expected="ALLOW"),expected=400)
+    def test_every_rejected_post_still_delivers_its_response(self):
+        # A rejection written before the request body was read left unread bytes in the receive
+        # buffer, and closing the connection then made Windows abort it, discarding the response.
+        # About one rejected request in fourteen reached the client as a network error instead.
+        body=dict(profile="eligibility",actor="QA")
+        rejections=(({"X-CSRF-Token":"wrong"},403),({"Origin":"https://attacker.example"},403),
+                    ({"Content-Type":"text/plain"},415),({"Host":"attacker.example"},403))
+        # Timing-dependent over HTTP, so this is a smoke check; TransportDrainTests below pins the
+        # actual behaviour deterministically.
+        for round_number in range(5):
+            for headers,expected in rejections:
+                with self.subTest(round=round_number,headers=tuple(headers)):
+                    self.post("/demo",body,headers=headers,expected=expected)
+        self.assertEqual(self.get("/workflows"),[])
+
     def test_csrf_origin_host_and_content_type_guards(self):
         body=dict(profile="eligibility",actor="QA")
         self.post("/demo",body,headers={"X-CSRF-Token":""},expected=403)
@@ -174,3 +191,43 @@ class WorkspaceAPITests(unittest.TestCase):
 if __name__=="__main__":unittest.main()
 
 
+class TransportDrainTests(unittest.TestCase):
+    """A rejected request body must be consumed before the error is written, or closing the
+    connection discards the response. Exercised directly because the HTTP-level symptom is
+    timing-dependent and appears in roughly one rejected request in several hundred."""
+    def handler(self,headers,body):
+        stub=Handler.__new__(Handler)
+        message=Message()
+        for key,value in headers.items():message[key]=value
+        stub.headers=message;stub.rfile=BytesIO(body)
+        return stub
+
+    def test_the_declared_body_is_consumed(self):
+        stub=self.handler({"Content-Length":"5000"},b"x"*5000)
+        Handler.drain(stub)
+        self.assertEqual(stub.rfile.read(),b"")
+
+    def test_consumption_is_bounded(self):
+        stub=self.handler({"Content-Length":str(DRAIN_LIMIT+4096)},b"x"*(DRAIN_LIMIT+4096))
+        Handler.drain(stub)
+        self.assertEqual(len(stub.rfile.read()),4096)
+
+    def test_a_short_body_stops_at_end_of_stream(self):
+        stub=self.handler({"Content-Length":"5000"},b"x"*10)
+        Handler.drain(stub)
+        self.assertEqual(stub.rfile.read(),b"")
+
+    def test_chunked_and_unparsable_lengths_are_left_alone(self):
+        for headers in ({"Transfer-Encoding":"chunked","Content-Length":"10"},{"Content-Length":"abc"},{}):
+            with self.subTest(headers=tuple(headers)):
+                stub=self.handler(headers,b"x"*10)
+                Handler.drain(stub)
+                self.assertEqual(stub.rfile.read(),b"x"*10)
+
+    def test_refuse_drains_before_writing(self):
+        stub=self.handler({"Content-Length":"64"},b"y"*64)
+        written=[]
+        stub.reply=lambda value,status:written.append((value,status,stub.rfile.read()))
+        Handler.refuse(stub,"Origin or Host denied",403)
+        self.assertEqual(written[0][1],403)
+        self.assertEqual(written[0][2],b"","the body must already be consumed when the error is written")

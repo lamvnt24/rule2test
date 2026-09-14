@@ -172,9 +172,9 @@
     },
     {
       "name": "Automated test suite",
-      "value": "280 passing",
+      "value": "286 passing",
       "source": "tests/",
-      "measures": "Unit, integration and evaluation tests on the machine producing this summary (ran 280 tests in 47.371s).",
+      "measures": "Unit, integration and evaluation tests on the machine producing this summary (ran 286 tests in 47.572s).",
       "does_not_prove": "Test count is not a quality metric; it does not measure insurance-domain correctness.",
       "created_at": ""
     }

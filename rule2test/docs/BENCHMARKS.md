@@ -26,7 +26,7 @@ Regenerate with `py -3 -B scripts/collect_benchmarks.py --force`.
 | Live cloud model, prompt v2 — retrieval top-1 | **9/9** | Hybrid lexical+vector ranking put the expected workflow first. MRR@3 1.000. | Only three approved test records are indexed, so this measures ranking on a tiny corpus, not embedding quality. | `data/generated/phase10-cloud-prompt-v2/report.json` |
 | Live cloud model, prompt v2 — age-66 ALLOW witness found | **True** | One fixed witness: the retrieved age-66 input is recomputed as ALLOW against the new 18..70 policy. | A single witness plus grounding checks. The host oracle computes the expected outcome, so this is not model reasoning accuracy. | `data/generated/phase10-cloud-prompt-v2/report.json` |
 | Live cloud model, prompt v2 — evaluated proposals auto-approved | **False** | The evaluator never approves, promotes or attaches anything it generated. | Nothing. This is a guardrail check, not a performance measurement. | `data/generated/phase10-cloud-prompt-v2/report.json` |
-| Automated test suite | **280 passing** | Unit, integration and evaluation tests on the machine producing this summary (ran 280 tests in 47.371s). | Test count is not a quality metric; it does not measure insurance-domain correctness. | `tests/` |
+| Automated test suite | **286 passing** | Unit, integration and evaluation tests on the machine producing this summary (ran 286 tests in 47.572s). | Test count is not a quality metric; it does not measure insurance-domain correctness. | `tests/` |
 
 ## How to read these numbers
 

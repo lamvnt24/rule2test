@@ -5,12 +5,14 @@ from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit,parse_qs,quote
 from factory.legacy_server import Handler as LegacyHandler
 from factory.api.dependencies import Application,ROOT
+from factory.paths import database
 from factory.api.routes.workspace import WorkspaceRoutes,Download
 from factory.observability import logger,metrics,tracing
 from factory.parsers.common import strict_json,ImportFailure
 from factory.exceptions import NotFoundError,ConflictError,ConfigurationError,ProviderError,ValidationError
 
 MAX_REQUEST=16*1024*1024
+DRAIN_LIMIT=2*1024*1024
 ASSETS={"/":("workspace.html","text/html; charset=utf-8"),
     "/workspace.js":("workspace.js","text/javascript; charset=utf-8"),"/workspace.css":("workspace.css","text/css; charset=utf-8")}
 # Log and metric labels use this vocabulary only, so a workflow, document or proposal identifier
@@ -70,6 +72,22 @@ class Handler(LegacyHandler):
     def reply(self,value,status=200):
         self.send_bytes(json.dumps(value,ensure_ascii=False,allow_nan=False).encode("utf-8"),"application/json; charset=utf-8",status)
 
+    def drain(self):
+        """Consume a rejected request body before answering. Closing a connection while unread data
+        sits in the receive buffer makes Windows abort it, and the client then never sees the error
+        we just wrote. Bounded, so a rejected request cannot be used to make us read without limit."""
+        if self.headers.get("Transfer-Encoding"):return
+        try:length=int(self.headers.get("Content-Length","0") or 0)
+        except ValueError:return
+        remaining=min(max(length,0),DRAIN_LIMIT)
+        while remaining>0:
+            chunk=self.rfile.read(min(65536,remaining))
+            if not chunk:break
+            remaining-=len(chunk)
+
+    def refuse(self,message,status):
+        self.drain();return self.reply(dict(error=message),status)
+
     def origin_allowed(self):
         allowed={f"127.0.0.1:{self.server.server_port}",f"localhost:{self.server.server_port}"}
         host=self.headers.get("Host","")
@@ -125,7 +143,7 @@ class Handler(LegacyHandler):
     def do_POST(self):self._serve("POST",self._post)
 
     def _get(self):
-        if not self.origin_allowed():return self.reply(dict(error="Origin or Host denied"),403)
+        if not self.origin_allowed():return self.refuse("Origin or Host denied",403)
         parsed=urlsplit(self.path);path=parsed.path
         if path=="/api/v1/session":return self.reply(dict(csrf_token=self.server.csrf_token,providers=self.server.app.providers(),api_version=1))
         if path.startswith("/api/v1/"):
@@ -140,41 +158,43 @@ class Handler(LegacyHandler):
         return self.reply(dict(error="Not found"),404)
 
     def _post(self):
-        if not self.origin_allowed():return self.reply(dict(error="Origin or Host denied"),403)
+        if not self.origin_allowed():return self.refuse("Origin or Host denied",403)
         path=urlsplit(self.path).path
         if not path.startswith("/api/v1/"):
             if int(self.headers.get("Content-Length","0") or 0)>MAX_REQUEST:
-                return self.reply(dict(error="Request exceeds the 16 MiB limit"),413)
+                return self.refuse("Request exceeds the 16 MiB limit",413)
             return LegacyHandler.do_POST(self)
         token=self.headers.get("X-CSRF-Token","")
-        if not secrets.compare_digest(token,self.server.csrf_token):return self.reply(dict(error="Missing or invalid session token; reload the workspace"),403)
-        if self.headers.get("Content-Type","").split(";")[0].strip()!="application/json":return self.reply(dict(error="Expected application/json"),415)
-        if self.headers.get("Transfer-Encoding"):return self.reply(dict(error="Transfer encoding is unsupported"),400)
+        if not secrets.compare_digest(token,self.server.csrf_token):return self.refuse("Missing or invalid session token; reload the workspace",403)
+        if self.headers.get("Content-Type","").split(";")[0].strip()!="application/json":return self.refuse("Expected application/json",415)
+        if self.headers.get("Transfer-Encoding"):return self.refuse("Transfer encoding is unsupported",400)
         length=int(self.headers.get("Content-Length","0"))
-        if not 0<length<=MAX_REQUEST:return self.reply(dict(error="Request exceeds the 16 MiB limit or is empty"),413)
+        if not 0<length<=MAX_REQUEST:return self.refuse("Request exceeds the 16 MiB limit or is empty",413)
         data=self.rfile.read(length)
         if len(data)!=length:return self.reply(dict(error="Incomplete request body"),400)
         body=strict_json(data.decode("utf-8"))
         return self.reply(WorkspaceRoutes(self.server.app).post(path,body))
 
-    def do_OPTIONS(self):self.reply(dict(error="Cross-origin requests are not enabled"),403)
+    def do_OPTIONS(self):self.refuse("Cross-origin requests are not enabled",403)
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db",type=Path,default=ROOT/"data"/"workspace.db")
+    parser.add_argument("--db",type=Path,default=None)
     parser.add_argument("--port",type=int,default=8000)
+    parser.add_argument("--quiet",action="store_true",help="Suppress the banner when a launcher already printed it")
     args=parser.parse_args(argv)
     if not 1<=args.port<=65535:parser.error("Port must be 1..65535")
     diagnostics=logger.configure()
-    app=Application(args.db)
+    app=Application(args.db or database())
     try:server=WorkspaceServer(("127.0.0.1",args.port),app)
     except OSError as exc:
         raise ConfigurationError(f"Port {args.port} is already in use; stop the other process or pass --port") from exc
     with server:
         logger.info("workspace_started",port=args.port,schema_version=1,
             level_configured=diagnostics["level"],destination=diagnostics["destination"])
-        print(f"Rule2Test workspace: http://127.0.0.1:{args.port} | database: {app.db.path}",flush=True)
-        print(f"Diagnostics: http://127.0.0.1:{args.port}/api/v1/diagnostics | logs: {diagnostics['destination']} at level {diagnostics['level']}",flush=True)
+        if not args.quiet:
+            print(f"Rule2Test workspace: http://127.0.0.1:{args.port} | database: {app.db.path}",flush=True)
+            print(f"Diagnostics: http://127.0.0.1:{args.port}/api/v1/diagnostics | logs: {diagnostics['destination']} at level {diagnostics['level']}",flush=True)
         try:server.serve_forever()
         except KeyboardInterrupt:pass
 if __name__=="__main__":main()

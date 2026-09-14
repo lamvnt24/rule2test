@@ -218,7 +218,7 @@ async function perform(name) {
 async function guarded(fn) {
   if(state.busy)return;
   state.busy=true;
-  const buttons=[...document.querySelectorAll("button")],disabled=buttons.map(b=>b.disabled);
+  const buttons=[...document.querySelectorAll('button,select,input[type="checkbox"],input[type="file"]')],disabled=buttons.map(b=>b.disabled);
   buttons.forEach(b=>b.disabled=true);
   notice("Working…");
   try {const message=await fn();if(message)notice(message);else $("notice").hidden=true;}

@@ -129,6 +129,7 @@ Synthetic data throughout.
 
 {start}
 2. Type any reviewer name in the header. It is self-declared; there is no authentication.
+   Vietnamese readers: `docs/vi/HUONG-DAN-SU-DUNG.md` walks through everything below in detail.
 3. **Document intake → Eligibility · age 60 → 65 → Create synthetic workflow.**
 4. **Analyze & generate.** You should get **{coverage[HEADLINE]['tests']} candidate tests**.
 5. **Open test review**, select all, write a reason, **Approve selected**, then **Finalize review**.
@@ -148,6 +149,7 @@ every step that can fail are in `docs/COMPETITION_DEMO.md`.
 | `expectations.json` | The same results as data, for automated checking |
 | `MANIFEST.json` | Every file with its SHA-256, so you can verify nothing was altered in transit |
 | `docs/` | Demo script, benchmarks, architecture diagrams, observability and packaging guides |
+| `docs/vi/` | Vietnamese system overview, roadmap and step-by-step user guide |
 | `docs/slides/index.html` | Self-contained pitch deck; open it from disk, arrow keys to navigate |
 | `data/import/` | Versioned JSON and XLSX documents to import through **Document intake** |
 | `data/ai-extraction/` | Japanese rule-document pairs for **AI rule review**, with separate truth files |
@@ -211,6 +213,8 @@ def build(target,*,force):
                  "QUALITY_GATE.md","LIVE_AI.md","WORKSPACE.md","IMPORT_FORMAT.md"):
         source=ROOT/"docs"/name
         if source.is_file():shutil.copy2(source,docs/name)
+    vietnamese=ROOT/"docs"/"vi"
+    if vietnamese.is_dir():copy_tree(vietnamese,docs/"vi","*.md")
     slides=ROOT/"docs"/"slides"/"index.html"
     if slides.is_file():
         (docs/"slides").mkdir();shutil.copy2(slides,docs/"slides"/"index.html")

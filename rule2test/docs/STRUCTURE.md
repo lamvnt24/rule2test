@@ -162,3 +162,10 @@ See [OBSERVABILITY.md](OBSERVABILITY.md).
   every number is produced by executing the real services while the kit is built. make kit rebuilds it.
 
 See [PACKAGING.md](PACKAGING.md).
+
+## Vietnamese documentation
+
+- docs/vi/TONG-QUAN-VA-ROADMAP.md: system overview, what each phase delivered, measured numbers, honest limits, known technical debt and the roadmap for phases 13-16.
+- docs/vi/HUONG-DAN-SU-DUNG.md: step-by-step user guide, troubleshooting table and glossary, written for a non-programmer.
+
+Both are shipped inside demo-kit/docs/vi/.

@@ -20,13 +20,18 @@ class Database:
         with self.transaction() as connection:
             connection.execute("CREATE TABLE IF NOT EXISTS wf_schema_migrations(version INTEGER PRIMARY KEY)")
             versions={r[0] for r in connection.execute("SELECT version FROM wf_schema_migrations")}
-            if versions-{1,2}:raise ConfigurationError("Database contains an unsupported workflow migration")
+            if versions-{1,2,3}:raise ConfigurationError("Database contains an unsupported workflow migration")
             if 1 not in versions:
                 for statement in _MIGRATION_1:connection.execute(statement)
                 connection.execute("INSERT INTO wf_schema_migrations VALUES(1)")
             if 2 not in versions:
                 connection.execute("CREATE TABLE wf_source_documents(workflow_id TEXT NOT NULL,document_hash TEXT NOT NULL,metadata TEXT NOT NULL,data BLOB NOT NULL,PRIMARY KEY(workflow_id,document_hash),FOREIGN KEY(workflow_id) REFERENCES wf_heads(workflow_id))")
                 connection.execute("INSERT INTO wf_schema_migrations VALUES(2)")
+            if 3 not in versions:
+                # Test-case files are archived before any workflow exists, so this archive is keyed by an
+                # arbitrary scope instead of a workflow head.
+                connection.execute("CREATE TABLE wf_documents(scope TEXT NOT NULL,document_hash TEXT NOT NULL,metadata TEXT NOT NULL,data BLOB NOT NULL,PRIMARY KEY(scope,document_hash))")
+                connection.execute("INSERT INTO wf_schema_migrations VALUES(3)")
 
     def _connect(self):
         c=sqlite3.connect(self.path,timeout=10,isolation_level=None)

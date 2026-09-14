@@ -69,7 +69,7 @@ class ImportWorkflowTests(unittest.TestCase):
         self.assertEqual(restored,w);self.assertNotIn("documents",restored.to_dict())
         with self.db.read() as c:
             self.assertEqual(c.execute("SELECT hash FROM wf_objects WHERE kind='workflow'").fetchone()[0],before)
-            self.assertEqual(c.execute("SELECT count(*) FROM wf_schema_migrations").fetchone()[0],2)
+            self.assertEqual(c.execute("SELECT count(*) FROM wf_schema_migrations").fetchone()[0],3)
     def call(self,args,code=0):
         out=io.StringIO();err=io.StringIO()
         with redirect_stdout(out),redirect_stderr(err):actual=main(args)

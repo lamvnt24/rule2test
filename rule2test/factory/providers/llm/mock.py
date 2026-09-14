@@ -17,7 +17,7 @@ class MockLLMProvider:
     def extract(self,request,*,system_prompt,timeout_seconds):
         sources={s.label:s for s in request.sources}
         profile=next((key for key,pair in SOURCE_PAIRS.items()
-            if self._lines(sources["v1"].text)==self._lines(pair[0])
+            if "v1" in sources and self._lines(sources["v1"].text)==self._lines(pair[0])
             and self._lines(sources["v2"].text)==self._lines(pair[1])),None)
         if profile is None:
             return json.dumps(dict(status="needs_clarification",

@@ -51,7 +51,7 @@ class DiagnosticsAPITests(unittest.TestCase):
     def test_diagnostics_reports_configuration_metrics_and_limits(self):
         _,_,body=self.call("/api/v1/diagnostics")
         self.assertEqual(body["schema_version"],1)
-        self.assertEqual(body["database"]["migrations"],[1,2])
+        self.assertEqual(body["database"]["migrations"],[1,2,3])
         self.assertIn("counters",body["metrics"]);self.assertIn("durations",body["metrics"])
         self.assertLessEqual(body["metrics"]["series"],body["metrics"]["max_series"])
         self.assertIn("reset on restart",body["limitation"])

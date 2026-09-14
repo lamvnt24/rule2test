@@ -7,6 +7,28 @@ from .common import LocatedRow,ImportFailure,ImportIssue,document,read_input,MAX
 from .schema import MANIFEST_KEYS,SHEETS
 from ._builder import compile_document
 
+def open_workbook(data,name,*,data_only=False):
+    """Bounded, macro-free, link-free workbook load shared by every XLSX reader."""
+    try:
+        import defusedxml  # noqa: F401  openpyxl uses it when present
+        from openpyxl import load_workbook
+    except ImportError as exc:
+        raise ConfigurationError("Excel import requires: python -m pip install --user -r requirements-excel.txt") from exc
+    try:
+        with ZipFile(BytesIO(data)) as archive:
+            parts=archive.infolist()
+            if len(parts)>2000 or sum(p.file_size for p in parts)>50*1024*1024:
+                raise ValueError("XLSX archive exceeds 2000 parts or 50 MiB expanded size")
+            names=[p.filename for p in parts]
+            if len(set(names))!=len(names):raise ValueError("Duplicate ZIP entries")
+            if any("vbaproject" in n.lower() or "/externallinks/" in n.lower() for n in names):
+                raise ValueError("Macros and external workbook links are unsupported")
+        return load_workbook(BytesIO(data),data_only=data_only,read_only=False,keep_links=False)
+    except (BadZipFile,ValueError,KeyError,OSError,EOFError) as exc:
+        raise ImportFailure((ImportIssue(name,"Cannot read XLSX: "+str(exc)),)) from exc
+    except Exception as exc:
+        raise ImportFailure((ImportIssue(name,"Cannot read XLSX: "+str(exc)),)) from exc
+
 class ExcelParser:
     def __init__(self,header_mapping=None):
         self.mapping=header_mapping or {}
@@ -22,24 +44,8 @@ class ExcelParser:
 
     def parse(self,data,name="import.xlsx"):
         doc=document(data,name,"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        try:
-            import defusedxml
-            from openpyxl import load_workbook
-            from openpyxl.utils import get_column_letter
-        except ImportError as exc:
-            raise ConfigurationError("Excel import requires: python -m pip install --user -r requirements-excel.txt") from exc
-        try:
-            with ZipFile(BytesIO(data)) as archive:
-                parts=archive.infolist()
-                if len(parts)>2000 or sum(p.file_size for p in parts)>50*1024*1024:
-                    raise ValueError("XLSX archive exceeds 2000 parts or 50 MiB expanded size")
-                names=[p.filename for p in parts]
-                if len(set(names))!=len(names):raise ValueError("Duplicate ZIP entries")
-                if any("vbaproject" in n.lower() or "/externallinks/" in n.lower() for n in names):
-                    raise ValueError("Macros and external workbook links are unsupported")
-            workbook=load_workbook(BytesIO(data),data_only=False,read_only=False,keep_links=False)
-        except Exception as exc:
-            raise ImportFailure((ImportIssue(name,"Cannot read XLSX: "+str(exc)),)) from exc
+        workbook=open_workbook(data,name)
+        from openpyxl.utils import get_column_letter
         try:
             issues=[];tables={};manifest=None
             required={"Manifest",*SHEETS}

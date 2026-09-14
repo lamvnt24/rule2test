@@ -44,7 +44,7 @@ class WorkflowTests(unittest.TestCase):
             c.execute("INSERT INTO records VALUES('old','legacy')")
         Database(self.path)
         with self.db.read() as c:
-            self.assertEqual(c.execute("SELECT count(*) FROM wf_schema_migrations").fetchone()[0],2)
+            self.assertEqual(c.execute("SELECT count(*) FROM wf_schema_migrations").fetchone()[0],3)
             self.assertEqual(c.execute("SELECT payload FROM records").fetchone()[0],"legacy")
     def test_restart_roundtrip_and_complete_evidence(self):
         w=self.reviewed()

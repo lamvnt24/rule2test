@@ -25,10 +25,15 @@ class ExtractionRequest(Model):
     existing_tests_json: str = "[]"
     def __post_init__(self):
         super().__post_init__()
-        require(len(self.sources)==2 and {s.label for s in self.sources}=={"v1","v2"},"Exactly one source per version is required")
-        require(len({s.document_id for s in self.sources})==2,"Source IDs must be unique")
-        require(len({s.document_hash for s in self.sources})==2,"Source versions have identical bytes; supply distinct versioned documents")
+        labels={s.label for s in self.sources}
+        require(len(self.sources)==len(labels) and labels in ({"v1","v2"},{"v2"}),"Supply the new rule as v2, optionally with the current rule as v1")
+        require(len({s.document_id for s in self.sources})==len(self.sources),"Source IDs must be unique")
+        require(len({s.document_hash for s in self.sources})==len(self.sources),"Source versions have identical bytes; supply distinct versioned documents")
         require(len(self.existing_tests_json.encode("utf-8"))<=MAX_RESPONSE_BYTES,"Existing tests exceed 256 KiB")
+    @property
+    def baseline_known(self):
+        """False when only the new rule was supplied: tests can be checked against it, but nothing can be said about what changed."""
+        return any(s.label=="v1" for s in self.sources)
 
 @dataclass(frozen=True,kw_only=True)
 class ExtractionProposal(Model):

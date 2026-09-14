@@ -13,9 +13,16 @@ from factory.services.coverage_service import CoverageService
 from factory.services.quality_gate_service import QualityGateService,canonical_report
 from factory.services.mutation_service import MutationService
 from factory.repositories.knowledge_repository import KnowledgeRepository,RetrievalBatchRepository
+from factory.repositories.suite_repository import SuiteRepository,SuiteLinkRepository,SCOPE as SUITES
+from factory.services.change_proposal_service import build as change_proposal,suggest_sut
+from factory.services.rule_delta_service import RuleDeltaService
+from factory.services.extraction_service import ExtractionService
+from factory.providers.llm.patterns import PatternRuleProvider
+from factory.validators.extraction_validator import compile_proposal
 from factory.observability import span
 from factory.exceptions import NotFoundError
 from ..schemas.requests import body_keys,actor,upload
+from .suites import SuiteRoutes
 
 @dataclass
 class Download:
@@ -23,12 +30,21 @@ class Download:
     media_type: str
     filename: str
 
-def workflow_summary(w):
+def workflow_summary(w,link=None,suite=None):
     decisions={a.subject_id:a.decision.value for a in w.approvals}
-    return dict(workflow_id=w.workflow_id,revision=w.revision,status=w.status.value,
-        title=w.new_rules[0].title if w.new_rules else w.new_table.table_id,
+    title=w.new_rules[0].title if w.new_rules else w.new_table.table_id
+    if suite is not None:title+=" · "+suite.title
+    return dict(workflow_id=w.workflow_id,revision=w.revision,status=w.status.value,title=title,
         tests=len(w.tests),pending=sum(t.test_id not in decisions or decisions[t.test_id]=="changes_requested" for t in w.tests),
-        approved=sum(v=="approved" for v in decisions.values()),created_by=w.metadata.created_by)
+        approved=sum(v=="approved" for v in decisions.values()),created_by=w.metadata.created_by,
+        suite_id=link.suite_id if link else None,proposal_id=link.proposal_id if link else None,created_at=w.metadata.created_at.isoformat())
+
+def linked(c,workflow_id):
+    """(link, suite) for a workflow created from a test-case file, else (None, None)."""
+    try:link=SuiteLinkRepository().get(c,SUITES,workflow_id,1)
+    except NotFoundError:return None,None
+    try:return link,SuiteRepository().get(c,SUITES,link.suite_id,1)
+    except NotFoundError:return link,None
 
 def metrics(report):
     return dict(mode=report.mode,**{key:dict(covered=getattr(report,key).covered,total=getattr(report,key).total,percent=getattr(report,key).percent)
@@ -44,11 +60,18 @@ class WorkspaceRoutes:
         if path=="/api/v1/workflows":
             with app.db.read() as c:
                 ids=[r[0] for r in c.execute("SELECT workflow_id FROM wf_heads ORDER BY rowid DESC LIMIT 100")]
-                return [workflow_summary(app.workflow.workflows.current(c,wid)) for wid in ids]
+                return [workflow_summary(app.workflow.workflows.current(c,wid),*linked(c,wid)) for wid in ids]
         if path=="/api/v1/proposals":
             with app.db.read() as c:
                 rows=c.execute("SELECT payload,hash FROM wf_objects WHERE scope='extraction' AND kind='extraction_proposal' ORDER BY rowid DESC LIMIT 100")
-                return [self.proposal_summary(app.extraction().proposals.decode(r)) for r in rows]
+                result=[]
+                for row in rows:
+                    p=app.extraction().proposals.decode(row)
+                    try:review=app.extraction().reviews.get(c,"extraction",p.proposal_id,1).decision
+                    except NotFoundError:review=None
+                    result.append(dict(self.proposal_summary(p),review=review))
+                return result
+        if path.startswith("/api/v1/suites") or path.startswith("/api/v1/rules/"):return SuiteRoutes(app).get(path,query)
         if path=="/api/v1/indexes":
             with app.db.read() as c:
                 rows=c.execute("SELECT payload,hash FROM wf_objects WHERE scope='knowledge' AND kind='knowledge_index' ORDER BY rowid DESC LIMIT 100")
@@ -69,12 +92,20 @@ class WorkspaceRoutes:
         if len(parts)>=4 and parts[:3]==["api","v1","workflows"]:
             wid=parts[3]
             if len(parts)==4:
-                w=app.workflow.get(wid)
+                with app.db.read() as c:
+                    w=app.workflow.workflows.current(c,wid);link,suite=linked(c,wid)
+                    baseline=True
+                    if link is not None:
+                        try:baseline=app.extraction().proposals.get(c,"extraction",link.proposal_id,1).request.baseline_known
+                        except NotFoundError:baseline=True
                 coverage=None
                 if w.tests:
                     with span("coverage_measure",component="service",workflow_id=wid,count=len(w.tests)):
                         coverage=metrics(CoverageService().measure(w.new_table,w.new_rules,w.tests,as_of=w.new_as_of))
-                return dict(workflow=w.to_dict(),summary=workflow_summary(w),coverage=coverage)
+                with span("change_proposal",component="service",workflow_id=wid,count=len(w.tests)):
+                    proposal=change_proposal(w,link=link,suite=suite,baseline_known=baseline)
+                return dict(workflow=w.to_dict(),summary=workflow_summary(w,link,suite),coverage=coverage,proposal=proposal,
+                    sut_suggestion=suggest_sut(w),link=link.to_dict() if link else None,suite=dict(suite_id=suite.suite_id,title=suite.title,sheet=suite.sheet) if suite else None)
             if len(parts)==5 and parts[4] in ("quality-gate","quality-gate-report"):
                 with span("quality_gate_evaluate",component="service",workflow_id=wid):
                     report=QualityGateService(app.db).evaluate(wid)
@@ -105,7 +136,13 @@ class WorkspaceRoutes:
             try:review=app.extraction().review_record(p.proposal_id).to_dict()
             except NotFoundError:review=None
             output=json.loads(p.response_json) if p.status in ("pending_review","needs_clarification") else p.response_json
-            return dict(summary=self.proposal_summary(p),proposal=p.to_dict(),output=output,review=review)
+            compiled=None
+            if p.status=="pending_review":
+                bundle,_=compile_proposal(p)
+                compiled=dict(old_rules=[r.to_dict() for r in bundle.old_rules],new_rules=[r.to_dict() for r in bundle.new_rules],
+                    old_default=bundle.old_table.default_action.to_dict(),new_default=bundle.new_table.default_action.to_dict(),
+                    delta=RuleDeltaService().compare(bundle.old_rules,bundle.new_rules).to_dict(),baseline_known=p.request.baseline_known)
+            return dict(summary=self.proposal_summary(p),proposal=p.to_dict(),output=output,review=review,compiled=compiled)
         if len(parts)==4 and parts[:3]==["api","v1","batches"]:
             # Inspection does not need a currently configured embedding model.
             with app.db.read() as c:b=RetrievalBatchRepository().get(c,"knowledge",parts[3],1)
@@ -119,8 +156,11 @@ class WorkspaceRoutes:
 
     @staticmethod
     def proposal_summary(p):
+        new=next((s for s in p.request.sources if s.label=="v2"),None)
+        first=next((line.strip() for line in new.text.splitlines() if line.strip()),"") if new else ""
         return dict(proposal_id=p.proposal_id,proposal_hash=content_hash(p),status=p.status,provider=p.provider,model=p.model,
-            simulated=p.simulated,issues=p.issues,created_by=p.metadata.created_by)
+            simulated=p.simulated,issues=p.issues,created_by=p.metadata.created_by,created_at=p.metadata.created_at.isoformat(),
+            baseline_known=p.request.baseline_known,title=(first[:70]+"…") if len(first)>70 else first)
 
     def post(self,path,body):
         app=self.app
@@ -138,10 +178,13 @@ class WorkspaceRoutes:
                 old_as_of=b.old_as_of,new_as_of=b.new_as_of,source_documents=((b.document,data),))
             return workflow_summary(w)
         if path=="/api/v1/extract":
-            body_keys(body,("sources","existing_tests_json","actor"),("timeout",))
-            request=ExtractionRequest(sources=tuple(SourceText.from_dict(s) for s in body["sources"]),existing_tests_json=body["existing_tests_json"])
-            p=app.extraction(provider=True).propose(request,actor=actor(body),timeout_seconds=body.get("timeout",app.ai_timeout()))
+            body_keys(body,("sources","actor"),("existing_tests_json","timeout","engine"))
+            require(body.get("engine","provider") in ("provider","pattern"),"engine must be provider or pattern")
+            request=ExtractionRequest(sources=tuple(SourceText.from_dict(s) for s in body["sources"]),existing_tests_json=body.get("existing_tests_json","[]"))
+            service=ExtractionService(app.db,PatternRuleProvider()) if body.get("engine")=="pattern" else app.extraction(provider=True)
+            p=service.propose(request,actor=actor(body),timeout_seconds=body.get("timeout",app.ai_timeout()))
             return self.proposal_summary(p)
+        if path.startswith("/api/v1/suites"):return SuiteRoutes(app).post(path,body)
         if path=="/api/v1/indexes":
             body_keys(body,("workflow_ids","actor"))
             index=app.knowledge().build(tuple(body["workflow_ids"]),actor=actor(body))

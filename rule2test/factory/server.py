@@ -21,7 +21,7 @@ ROUTE_WORDS={"api","v1","workflows","proposals","batches","indexes","samples","s
     "import","demo","session","ai-status","diagnostics","runs","evidence","sources","history","mutation",
     "quality-gate","quality-gate-report","review","promote","attach","analyze","start-review","finalize",
     "reopen-review","recover","edit-test","revise-rules","execute","legacy","workspace.js","workspace.css",
-    "health","analyze-legacy","run"}
+    "health","analyze-legacy","run","suites","inspect","preview","link","samples","source","rules","examples"}
 
 def route_label(path):
     parts=[part if part in ROUTE_WORDS else ":id" for part in path.strip("/").split("/") if part]
